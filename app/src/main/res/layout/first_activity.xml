@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:background="@color/blue_background"
+    android:padding="16dp">
+
+    <RelativeLayout
+        android:id="@+id/panel_heade"
+        android:layout_width="360dp"
+        android:layout_height="56dp">
+
+        <TextView
+            android:layout_width="154dp"
+            android:layout_height="30dp"
+            android:text="@string/title"
+            android:textAppearance="@style/title"
+            android:gravity="top"/>
+
+    </RelativeLayout>
+
+    <Button
+        android:id="@+id/button_search"
+        android:layout_width="match_parent"
+        android:text="Gjbcr"
+        android:textColor="@color/black"
+        style="@style/button_style"
+        app:cornerRadius="16dp"
+        app:icon="@drawable/search_light_mode"
+        app:iconGravity="textStart"
+        app:iconPadding="@dimen/primary_text_size"
+        app:iconTint="@color/black">
+    </Button>
+
+    <Button
+        android:id="@+id/button_library"
+        android:layout_width="match_parent"
+        style="@style/button_style"
+        app:cornerRadius="16dp">
+    </Button>
+
+    <Button
+        android:id="@+id/button_settings"
+        android:layout_width="match_parent"
+        style="@style/button_style"
+        app:cornerRadius="16dp">
+    </Button>
+
+
+
+</LinearLayout>
