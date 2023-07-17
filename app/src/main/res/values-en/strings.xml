@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="button_search_text">Search</string>
+    <string name="button_settings_text">Settings</string>
+    <string name="button_library_text">Library</string>
+    <string name="title_settings">Settings</string>
 </resources>
