@@ -8,19 +8,28 @@
     android:padding="16dp"
     android:clipToOutline="true">
 
-    <RelativeLayout
+    <LinearLayout
         android:id="@+id/panel_heade"
         android:layout_width="360dp"
-        android:layout_height="56dp">
+        android:layout_height="48dp"
+        android:orientation="horizontal">
+
+    <ImageView
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:scaleType="fitStart"
+        android:src="@drawable/button_back"/>
+
 
         <TextView
             android:layout_width="154dp"
-            android:layout_height="30dp"
-            android:text="@string/title"
+            android:layout_height="48dp"
+            android:text="@string/title_settings"
             android:textAppearance="@style/title"
             android:textColor="@color/black"
-            android:gravity="top"/>
+            android:textSize="26sp"
+            android:gravity="center_vertical"/>
 
-    </RelativeLayout>
+    </LinearLayout>
 
 </LinearLayout>
