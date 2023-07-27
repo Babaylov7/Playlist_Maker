@@ -1,6 +1,5 @@
 package com.example.playlistmaker
 
-import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.ImageView
@@ -12,7 +11,7 @@ class SettingsActivity : AppCompatActivity() {
 
         val buttonBack = findViewById<ImageView>(R.id.button_back)
 
-        buttonBack.setOnClickListener{
+        buttonBack.setOnClickListener {
             finish()
         }
     }
