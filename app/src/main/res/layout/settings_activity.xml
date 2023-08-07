@@ -3,9 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#ffffff"
     android:orientation="vertical"
-    android:padding="@dimen/margin_on_the_edges">
+    android:padding="@dimen/margin_on_the_edges"
+    style="@style/SettingsActivityBackground">
 
     <LinearLayout
         android:id="@+id/panel_heade"
@@ -20,11 +20,10 @@
             android:layout_height="@dimen/button_back_size"
             android:layout_gravity="center"
             android:contentDescription="@string/title_back"
-            android:scaleType="fitStart"
-            android:foreground="?attr/selectableItemBackground"
             android:clickable="true"
             android:focusable="true"
-            android:src="@drawable/button_back" />
+            android:src="@drawable/button_back"
+            style="@style/SettingsActivityTitle"/>
 
 
         <TextView
@@ -34,9 +33,10 @@
             android:layout_gravity="center"
             android:gravity="center_vertical"
             android:text="@string/title_settings"
-            android:textAppearance="@style/title"
-            android:textColor="@color/black"
-            android:textSize="@dimen/primary_text_size" />
+            android:textAppearance="@style/Title"
+            android:textSize="@dimen/primary_text_size"
+            android:fontFamily="@font/ys_display_medium"
+            style="@style/SettingsActivityTitle"/>
 
     </LinearLayout>
 
@@ -53,18 +53,22 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:text="@string/dark_theme"
-            android:textColor="@color/black"
-            android:textSize="@dimen/primary_text_size_settings_button" />
+            android:textSize="@dimen/primary_text_size_settings_button"
+            android:fontFamily="@font/ys_display_regular"
+            style="@style/SettingsActivityTextColor"/>
 
         <androidx.appcompat.widget.SwitchCompat
             android:id="@+id/dark_theme_switch"
             android:layout_width="@dimen/button_switch_compat_width"
             android:layout_height="@dimen/button_switch_compat_height"
-            android:layout_gravity="center" />
+            android:layout_gravity="center"
+
+            style="@style/ButtonSwitch"/>
 
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/sare_application"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:minHeight="@dimen/settings_element_height"
@@ -78,13 +82,15 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:text="@string/share_app"
-            android:textColor="@color/black"
             android:textSize="@dimen/primary_text_size_settings_button"
-            app:drawableEndCompat="@drawable/share_light_mode" />
+            android:fontFamily="@font/ys_display_regular"
+            app:drawableEndCompat="@drawable/share_light_mode"
+            style="@style/SettingsActivityTextColor"/>
 
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/write_to_support"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:minHeight="@dimen/settings_element_height"
@@ -98,14 +104,16 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:text="@string/write_to_support"
-            android:textColor="@color/black"
             android:textSize="@dimen/primary_text_size_settings_button"
-            app:drawableEndCompat="@drawable/support_light_mode" />
+            android:fontFamily="@font/ys_display_regular"
+            app:drawableEndCompat="@drawable/support_light_mode"
+            style="@style/SettingsActivityTextColor"/>
 
 
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/terms_of_use"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:minHeight="@dimen/settings_element_height"
@@ -119,9 +127,10 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:text="@string/user_application"
-            android:textColor="@color/black"
             android:textSize="@dimen/primary_text_size_settings_button"
-            app:drawableEndCompat="@drawable/arrow_forward_light_mode" />
+            android:fontFamily="@font/ys_display_regular"
+            app:drawableEndCompat="@drawable/arrow_forward_light_mode"
+            style="@style/SettingsActivityTextColor"/>
 
 
     </LinearLayout>
