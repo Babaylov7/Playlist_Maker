@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="Title">
+        <item name="android:textSize">@dimen/primary_text_size</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+
+    <style name="StartActivityBackground">
+        <item name="android:background">@color/yp_black</item>
+    </style>
+
+    <style name="SettingsActivityBackground">
+        <item name="android:background">@color/yp_black</item>
+
+    </style>
+
+    <style name="SettingsActivityTextColor">
+        <item name="android:textColor">@color/white</item>
+        <item name="drawableTint">@color/white</item>
+    </style>
+
+    <style name="SettingsActivityTitle">
+        <item name="android:textColor">@color/white</item>
+        <item name="tint">@color/white</item>
+    </style>
+
+    <style name="ButtonSwitch">
+        <item name="thumbTint">@color/yp_blue</item>
+        <item name="trackTint">@color/yp_blue_light</item>
+    </style>
+
+</resources>
