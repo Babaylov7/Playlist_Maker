@@ -11,5 +11,13 @@
     <string name="user_application">Пользовательское приложение</string>
     <string name="title_back">Назад</string>
     <string name="title_library" translatable="false">Экран медиатеки</string>
-    <string name="title_search" translatable="false">Экран поиска</string>
+    <string name="title_search">Поиск</string>
+    <string name="share_app_link" translatable="false">https://practicum.yandex.ru/profile/android-developer/</string>
+    <string name="share_app_type" translatable="false">text/plain</string>
+    <string name="share_app_message">Поделиться приложением</string>
+    <string name="write_to_supp_message">Спасибо разработчикам и разработчицам за крутое приложение!</string>
+    <string name="write_to_supp_theme">Сообщение разработчикам и разработчицам приложения Playlist Maker</string>
+    <string name="write_to_supp_mailto" translatable="false">mailto:</string>
+    <string name="write_to_supp_email" translatable="false">babaylov-ayu@mail.ru</string>
+    <string name="terms_of_link" translatable="false">https://yandex.ru/legal/practicum_offer/</string>
 </resources>

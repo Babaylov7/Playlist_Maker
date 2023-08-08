@@ -9,4 +9,8 @@
     <string name="write_to_support">Write to support</string>
     <string name="user_application">User Application</string>
     <string name="title_back">Back</string>
+    <string name="title_search">Search</string>
+    <string name="share_app_message">Share app</string>
+    <string name="write_to_supp_message">Thanks to the developers and developers for a cool app!</string>
+    <string name="write_to_supp_theme">A message to the developers and developers of the Playlist Maker app</string>
 </resources>

@@ -4,11 +4,15 @@
     <dimen name="primary_corner_radius_for_button">16dp</dimen>
     <dimen name="margin_on_the_edges">16dp</dimen>
     <dimen name="margin_top_24">24dp</dimen>
+    <dimen name="edit_text_height">36dp</dimen>
     <dimen name="button_back_size">48dp</dimen>
     <dimen name="button_switch_compat_height">48dp</dimen>
+
+    <dimen name="linear_layout_for_edit_text_height">52dp</dimen>
     <dimen name="button_switch_compat_width">56dp</dimen>
     <dimen name="height_panel_header">56dp</dimen>
     <dimen name="settings_element_height">61dp</dimen>
+
     <dimen name="primary_text_size_settings_button">16sp</dimen>
     <dimen name="primary_text_size">22sp</dimen>
 
