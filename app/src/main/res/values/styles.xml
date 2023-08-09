@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <!-- Стили для Стартового экрана -->
+
     <style name="Title">
         <item name="android:textSize">@dimen/primary_text_size</item>
         <item name="android:textColor">@color/white</item>
@@ -23,10 +25,11 @@
         <item name="iconTint">@color/black</item>
     </style>
 
-
     <style name="StartActivityBackground">
         <item name="android:background">@color/yp_blue</item>
     </style>
+
+    <!-- Стили для экрана Настроек -->
 
     <style name="SettingsActivityBackground">
         <item name="android:background">@color/white</item>
@@ -47,5 +50,16 @@
         <item name="trackTint">@color/yp_light_gray</item>
     </style>
 
+    <!-- Стили для экрана Поиска -->
+
+    <style name="EditTextStyle">
+        <item name="android:drawableTint">@color/yp_text_gray</item>
+        <item name="android:backgroundTint">@color/yp_light_gray</item>
+        <item name="android:textColorHint">@color/yp_text_gray</item>
+    </style>
+
+    <style name="ButtonForEditTextStyle">
+        <item name="tint">@color/yp_text_gray</item>
+    </style>
 
 </resources>
