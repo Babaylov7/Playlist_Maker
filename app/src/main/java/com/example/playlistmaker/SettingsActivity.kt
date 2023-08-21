@@ -24,27 +24,27 @@ class SettingsActivity : AppCompatActivity() {
         }
 
         sareApplicationButton.setOnClickListener {
-            val link = "https://practicum.yandex.ru/profile/android-developer/"
+            val link = getString(R.string.share_app_link)
             val intent = Intent(Intent.ACTION_SEND)
-            intent.type = "text/plain"
-            //intent.setPackage(packageName) //имя пакета приложения
+            intent.type = getString(R.string.share_app_type)
             intent.putExtra(Intent.EXTRA_TEXT, link) // текст отправки
-            startActivity(Intent.createChooser(intent, "Поделиться приложением"))
+            startActivity(Intent.createChooser(intent, getString(R.string.share_app_message)))
         }
 
         writeToSupportButton.setOnClickListener {
-            val message = "Спасибо разработчикам и разработчицам за крутое приложение!"
-            val theme = "Сообщение разработчикам и разработчицам приложения Playlist Maker"
+            val message = getString(R.string.write_to_supp_message)
+            val theme = getString(R.string.write_to_supp_theme)
             val intent = Intent(Intent.ACTION_SENDTO)
-            intent.data = Uri.parse("mailto:")
-            intent.putExtra(Intent.EXTRA_EMAIL, arrayOf("babaylov-ayu@mail.ru"))
+            intent.data = Uri.parse(getString(R.string.write_to_supp_mailto))
+            intent.putExtra(Intent.EXTRA_EMAIL, arrayOf(getString(R.string.write_to_supp_email)))
             intent.putExtra(Intent.EXTRA_TEXT, message)
             intent.putExtra(Intent.EXTRA_SUBJECT, theme)
             startActivity(intent)
         }
 
         termsOfUseButton.setOnClickListener {
-            val intent = Intent(Intent.ACTION_VIEW, Uri.parse("https://yandex.ru/legal/practicum_offer/"))
+            val intent =
+                Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.terms_of_link)))
             startActivity(intent)
         }
 
