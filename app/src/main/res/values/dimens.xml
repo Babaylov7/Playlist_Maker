@@ -5,11 +5,14 @@
     <dimen name="padding8">8dp</dimen>
     <dimen name="medium_padding">8dp</dimen>
     <dimen name="padding12">12dp</dimen>
+    <dimen name="padding16">16dp</dimen>
     <dimen name="primary_corner_radius_for_button">16dp</dimen>
     <dimen name="margin_on_the_edges">16dp</dimen>
+    <dimen name="padding24">24dp</dimen>
     <dimen name="margin_top_24">24dp</dimen>
     <dimen name="edit_text_height">36dp</dimen>
     <dimen name="height40">40dp</dimen>
+    <dimen name="album_image_size">44dp</dimen>
     <dimen name="button_back_size">48dp</dimen>
     <dimen name="button_switch_compat_height">48dp</dimen>
     <dimen name="linear_layout_for_edit_text_height">52dp</dimen>
