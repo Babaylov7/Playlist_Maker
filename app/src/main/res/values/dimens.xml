@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <dimen name="corner_radius_2">2dp</dimen>
     <dimen name="padding4">4dp</dimen>
     <dimen name="radius8">8dp</dimen>
     <dimen name="padding8">8dp</dimen>
@@ -19,7 +20,8 @@
     <dimen name="button_switch_compat_width">56dp</dimen>
     <dimen name="height_panel_header">56dp</dimen>
     <dimen name="settings_element_height">60dp</dimen>
-    <dimen name="primary_text_size_settings_button">16sp</dimen>
-    <dimen name="primary_text_size">22sp</dimen>
+    <dimen name="primary_text_size_13">13sp</dimen>
+    <dimen name="primary_text_size_16">16sp</dimen>
+    <dimen name="primary_text_size_22">22sp</dimen>
 
 </resources>
