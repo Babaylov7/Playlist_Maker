@@ -40,7 +40,7 @@
             tools:text="ООООЧень длинное название песни прям оооооочень длинное" />
 
         <LinearLayout
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content">
 
             <TextView
@@ -49,12 +49,13 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:layout_gravity="center_vertical"
                 android:ellipsize="end"
                 android:fontFamily="@font/ys_display_medium"
                 android:maxLines="1"
                 android:textSize="@dimen/primary_text_size_13"
-                app:drawableEndCompat="@drawable/cercle2"
-                tools:text="ООООООчень динное название группы прям капец" />
+                app:drawableEndCompat="@drawable/circle2"
+                tools:text="ООООООчень длинное название группы прям оооочень" />
 
             <TextView
                 android:id="@+id/track_duration"
