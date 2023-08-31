@@ -79,6 +79,10 @@ class SearchActivity : AppCompatActivity() {
 
         val tracksAdapter = TrackAdapter(listOfTracks)
         recyclerView.adapter = tracksAdapter
+
+
+
+
     }
 
     private fun clearButtonVisibility(s: CharSequence?): Int {
