@@ -1,7 +1,7 @@
 package com.example.playlistmaker
 
 import android.content.Context
-import androidx.appcompat.app.AppCompatActivity
+import android.content.res.Configuration
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -11,9 +11,16 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.ImageView
+import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
-import retrofit2.*
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 class SearchActivity : AppCompatActivity() {
@@ -30,6 +37,8 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var inputEditText: EditText
     private lateinit var clearButton: ImageButton
     private lateinit var recyclerView: RecyclerView
+    private lateinit var messageImage: ImageView
+    private lateinit var textViewMessageError: TextView
 
     private val retrofit = Retrofit.Builder()
         .baseUrl(itunesBaseUrl)
@@ -46,10 +55,14 @@ class SearchActivity : AppCompatActivity() {
         inputEditText = findViewById(R.id.editText)
         clearButton = findViewById(R.id.clearButton)
         recyclerView = findViewById(R.id.recyclerView)
+        messageImage = findViewById(R.id.messageImage)
+        textViewMessageError = findViewById(R.id.textViewMessageError)
 
         buttonBack.setOnClickListener {
             finish()
         }
+
+        var nightModeOnValue = modeNightOn()
 
         clearButton.setOnClickListener {
             inputEditText.setText("")
@@ -77,6 +90,7 @@ class SearchActivity : AppCompatActivity() {
 
         inputEditText.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
+                hideErrorElements()
                 if (inputEditText.text.isNotEmpty()) {
                     itunesService.search(inputEditText.text.toString())
                         .enqueue(object : Callback<TrackResponse> {
@@ -91,11 +105,12 @@ class SearchActivity : AppCompatActivity() {
                                         adapter.notifyDataSetChanged()
                                     }
                                     if (tracks.isEmpty()) {
-                                        Toast.makeText(
-                                            applicationContext,
-                                            "Ничего не нашлось",
-                                            Toast.LENGTH_SHORT
-                                        ).show()
+                                        showImageError(nightModeOnValue, "List is empty")
+//                                        Toast.makeText(
+//                                            applicationContext,
+//                                            "Ничего не нашлось",
+//                                            Toast.LENGTH_SHORT
+//                                        ).show()
                                     }
                                 }
                             }
@@ -104,11 +119,12 @@ class SearchActivity : AppCompatActivity() {
                                 call: Call<TrackResponse>,
                                 t: Throwable
                             ) {                                         //Возврат ошибки
-                                Toast.makeText(
-                                    applicationContext,
-                                    "Ошибка сети",
-                                    Toast.LENGTH_SHORT
-                                ).show()
+                                showImageError(nightModeOnValue, "Network error")
+//                                Toast.makeText(
+//                                    applicationContext,
+//                                    "Ошибка сети",
+//                                    Toast.LENGTH_SHORT
+//                                ).show()
                             }
                         })
                     true
@@ -137,5 +153,33 @@ class SearchActivity : AppCompatActivity() {
         editTextValue = savedInstanceState.getString(SEARCH_TEXT, "")
     }
 
+    private fun modeNightOn(): Boolean{
+        when (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) {
+            Configuration.UI_MODE_NIGHT_YES -> return true
+            Configuration.UI_MODE_NIGHT_NO -> return false
+            Configuration.UI_MODE_NIGHT_UNDEFINED -> return false
+            else -> return false
+        }
+    }
 
+    private fun showImageError(nightModeOn: Boolean, typeError: String){
+        if(typeError.equals("List is empty")){
+            Glide.with(this)
+                .load(R.drawable.nothing_was_found_light)
+                .into(messageImage)
+            textViewMessageError.text = "Ничего не нашлось"
+        } else {
+            Glide.with(this)
+                .load(R.drawable.network_problems_light)
+                .into(messageImage)
+            textViewMessageError.text = "Проблемы со связью \n\nЗагрузка не удалась. Проверьте подключение к интернету"
+        }
+        messageImage.visibility = View.VISIBLE
+        textViewMessageError.visibility = View.VISIBLE
+    }
+
+    private fun hideErrorElements() {
+        messageImage.visibility = View.GONE
+        textViewMessageError.visibility = View.GONE
+    }
 }

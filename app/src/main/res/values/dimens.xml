@@ -20,6 +20,7 @@
     <dimen name="button_switch_compat_width">56dp</dimen>
     <dimen name="height_panel_header">56dp</dimen>
     <dimen name="settings_element_height">60dp</dimen>
+    <dimen name="margin_top_80">80dp</dimen>
     <dimen name="primary_text_size_13">13sp</dimen>
     <dimen name="primary_text_size_16">16sp</dimen>
     <dimen name="primary_text_size_22">22sp</dimen>
