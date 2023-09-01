@@ -164,15 +164,27 @@ class SearchActivity : AppCompatActivity() {
 
     private fun showImageError(nightModeOn: Boolean, typeError: String){
         if(typeError.equals("List is empty")){
-            Glide.with(this)
-                .load(R.drawable.nothing_was_found_light)
-                .into(messageImage)
             textViewMessageError.text = "Ничего не нашлось"
+            if (nightModeOn){
+                Glide.with(this)
+                    .load(R.drawable.nothing_was_found_dark)
+                    .into(messageImage)
+            }else{
+                Glide.with(this)
+                    .load(R.drawable.nothing_was_found_light)
+                    .into(messageImage)
+            }
         } else {
-            Glide.with(this)
-                .load(R.drawable.network_problems_light)
-                .into(messageImage)
             textViewMessageError.text = "Проблемы со связью \n\nЗагрузка не удалась. Проверьте подключение к интернету"
+            if(nightModeOn){
+                Glide.with(this)
+                    .load(R.drawable.network_problems_dark)
+                    .into(messageImage)
+            } else {
+                Glide.with(this)
+                    .load(R.drawable.network_problems_light)
+                    .into(messageImage)
+            }
         }
         messageImage.visibility = View.VISIBLE
         textViewMessageError.visibility = View.VISIBLE
