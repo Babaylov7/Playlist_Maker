@@ -19,7 +19,6 @@ class TrackViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     private val trackDuration: TextView = itemView.findViewById(R.id.track_duration)
 
     fun bind(model: Track) {
-        groupName.updateLayoutParams { width = 0 }
         trackName.text = model.trackName
         groupName.text = model.artistName
         trackDuration.text =
