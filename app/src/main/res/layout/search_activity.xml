@@ -52,6 +52,8 @@
             android:cursorVisible="true"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:imeOptions="actionDone"
+            android:singleLine="true"
             android:minHeight="@dimen/edit_text_height"
             android:layout_marginTop="@dimen/padding8"
             android:layout_marginBottom="@dimen/padding8"
