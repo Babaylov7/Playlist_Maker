@@ -26,7 +26,8 @@ class SearchActivity : AppCompatActivity() {
 
     companion object {
         const val SEARCH_TEXT = "SEARCH_TEXT"
-        const val NETWORK_ERROR = "Проблемы со связью \n\nЗагрузка не удалась. Проверьте подключение к интернету"
+        const val NETWORK_ERROR =
+            "Проблемы со связью \n\nЗагрузка не удалась. Проверьте подключение к интернету"
         const val NOTHING_FOUND = "Ничего не нашлось"
     }
 
@@ -66,17 +67,16 @@ class SearchActivity : AppCompatActivity() {
         buttonBack.setOnClickListener {
             finish()
         }
-        buttonUpdate.setOnClickListener{
+        buttonUpdate.setOnClickListener {
             sendRequeat(nightModeOnValue)
         }
-
-
 
         clearButton.setOnClickListener {
             inputEditText.setText("")
             val inputMethodManager =
                 getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
             inputMethodManager?.hideSoftInputFromWindow(inputEditText.windowToken, 0)
+            hideRecyclerView()
         }
 
         val simpleTextWatcher = object : TextWatcher {
@@ -99,43 +99,12 @@ class SearchActivity : AppCompatActivity() {
         inputEditText.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
                 sendRequeat(nightModeOnValue)
-//                hideErrorElements()
-//                if (inputEditText.text.isNotEmpty()) {
-//                    itunesService.search(inputEditText.text.toString())
-//                        .enqueue(object : Callback<TrackResponse> {
-//                            override fun onResponse(                                //Ответ
-//                                call: Call<TrackResponse>,
-//                                response: Response<TrackResponse>
-//                            ) {
-//                                if (response.code() == 200) {
-//                                    tracks.clear()
-//                                    if (response.body()?.results?.isNotEmpty() == true) {
-//                                        tracks.addAll(response.body()?.results!!)
-//                                        adapter.notifyDataSetChanged()
-//                                    }
-//                                    if (tracks.isEmpty()) {
-//                                        showImageError(nightModeOnValue, "List is empty")
-//
-//                                    }
-//                                }
-//                            }
-//
-//                            override fun onFailure(
-//                                call: Call<TrackResponse>,
-//                                t: Throwable
-//                            ) {                                                 //Возврат ошибки
-//                                showImageError(nightModeOnValue, "Network error")
-//
-//                            }
-//                        })
-//                    true
-//                }
             }
             false
         }
     }
 
-    private fun sendRequeat(nightModeOnValue: Boolean){
+    private fun sendRequeat(nightModeOnValue: Boolean) {
         hideErrorElements()
         if (inputEditText.text.isNotEmpty()) {
             itunesService.search(inputEditText.text.toString())
@@ -151,8 +120,8 @@ class SearchActivity : AppCompatActivity() {
                                 adapter.notifyDataSetChanged()
                             }
                             if (tracks.isEmpty()) {
+                                hideRecyclerView()
                                 showImageError(nightModeOnValue, "List is empty")
-
                             }
                         }
                     }
@@ -161,14 +130,13 @@ class SearchActivity : AppCompatActivity() {
                         call: Call<TrackResponse>,
                         t: Throwable
                     ) {                                                 //Возврат ошибки
+                        hideRecyclerView()
                         showImageError(nightModeOnValue, "Network error")
-
                     }
                 })
             true
         }
     }
-
 
     private fun clearButtonVisibility(s: CharSequence?): Int {
         return if (s.isNullOrEmpty()) {
@@ -188,7 +156,7 @@ class SearchActivity : AppCompatActivity() {
         editTextValue = savedInstanceState.getString(SEARCH_TEXT, "")
     }
 
-    private fun modeNightOn(): Boolean{
+    private fun modeNightOn(): Boolean {                         //Вопрос ревьюеру - Может ли эта функция неправильно отработать? Есть ли в ней недостатки?
         when (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) {
             Configuration.UI_MODE_NIGHT_YES -> return true
             Configuration.UI_MODE_NIGHT_NO -> return false
@@ -197,21 +165,21 @@ class SearchActivity : AppCompatActivity() {
         }
     }
 
-    private fun showImageError(nightModeOn: Boolean, typeError: String){
-        if(typeError.equals("List is empty")){                      //Ничего не нашлось
+    private fun showImageError(nightModeOn: Boolean, typeError: String) {
+        if (typeError.equals("List is empty")) {                      //Ничего не нашлось
             textViewMessageError.text = NOTHING_FOUND
-            if (nightModeOn){
+            if (nightModeOn) {
                 Glide.with(this)
                     .load(R.drawable.nothing_was_found_dark)
                     .into(messageImage)
-            }else{
+            } else {
                 Glide.with(this)
                     .load(R.drawable.nothing_was_found_light)
                     .into(messageImage)
             }
         } else {                                                    //Проблемы с сетью
             textViewMessageError.text = NETWORK_ERROR
-            if(nightModeOn){
+            if (nightModeOn) {
                 Glide.with(this)
                     .load(R.drawable.network_problems_dark)
                     .into(messageImage)
@@ -220,11 +188,11 @@ class SearchActivity : AppCompatActivity() {
                     .load(R.drawable.network_problems_light)
                     .into(messageImage)
             }
+            buttonUpdate.visibility = View.VISIBLE
+            buttonUpdate.isEnabled = true
         }
         messageImage.visibility = View.VISIBLE
         textViewMessageError.visibility = View.VISIBLE
-        buttonUpdate.visibility = View.VISIBLE
-        buttonUpdate.isEnabled = true
     }
 
     private fun hideErrorElements() {
@@ -232,5 +200,10 @@ class SearchActivity : AppCompatActivity() {
         textViewMessageError.visibility = View.GONE
         buttonUpdate.visibility = View.GONE
         buttonUpdate.isEnabled = false
+    }
+
+    private fun hideRecyclerView() {
+        tracks.clear()
+        adapter.notifyDataSetChanged()
     }
 }
