@@ -78,4 +78,9 @@
         <item name="android:textColor">@color/yp_black</item>
     </style>
 
+    <style name="ButtonUpdate">
+        <item name="android:textColor">@color/white</item>
+        <item name="android:backgroundTint">@color/yp_black</item>
+    </style>
+
 </resources>

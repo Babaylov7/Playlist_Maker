@@ -8,15 +8,14 @@ import android.text.TextWatcher
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
+import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -27,6 +26,8 @@ class SearchActivity : AppCompatActivity() {
 
     companion object {
         const val SEARCH_TEXT = "SEARCH_TEXT"
+        const val NETWORK_ERROR = "Проблемы со связью \n\nЗагрузка не удалась. Проверьте подключение к интернету"
+        const val NOTHING_FOUND = "Ничего не нашлось"
     }
 
     private var editTextValue = ""
@@ -39,6 +40,7 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var messageImage: ImageView
     private lateinit var textViewMessageError: TextView
+    private lateinit var buttonUpdate: Button
 
     private val retrofit = Retrofit.Builder()
         .baseUrl(itunesBaseUrl)
@@ -52,17 +54,23 @@ class SearchActivity : AppCompatActivity() {
         setContentView(R.layout.search_activity)
 
         buttonBack = findViewById(R.id.button_back)
-        inputEditText = findViewById(R.id.editText)
-        clearButton = findViewById(R.id.clearButton)
-        recyclerView = findViewById(R.id.recyclerView)
-        messageImage = findViewById(R.id.messageImage)
-        textViewMessageError = findViewById(R.id.textViewMessageError)
+        inputEditText = findViewById(R.id.edit_text)
+        clearButton = findViewById(R.id.clear_button)
+        recyclerView = findViewById(R.id.recycler_view)
+        messageImage = findViewById(R.id.message_image)
+        textViewMessageError = findViewById(R.id.text_view_message_error)
+        buttonUpdate = findViewById(R.id.button_update)
+
+        var nightModeOnValue = modeNightOn()
 
         buttonBack.setOnClickListener {
             finish()
         }
+        buttonUpdate.setOnClickListener{
+            sendRequeat(nightModeOnValue)
+        }
 
-        var nightModeOnValue = modeNightOn()
+
 
         clearButton.setOnClickListener {
             inputEditText.setText("")
@@ -90,47 +98,74 @@ class SearchActivity : AppCompatActivity() {
 
         inputEditText.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
-                hideErrorElements()
-                if (inputEditText.text.isNotEmpty()) {
-                    itunesService.search(inputEditText.text.toString())
-                        .enqueue(object : Callback<TrackResponse> {
-                            override fun onResponse(            //Ответ
-                                call: Call<TrackResponse>,
-                                response: Response<TrackResponse>
-                            ) {
-                                if (response.code() == 200) {
-                                    tracks.clear()
-                                    if (response.body()?.results?.isNotEmpty() == true) {
-                                        tracks.addAll(response.body()?.results!!)
-                                        adapter.notifyDataSetChanged()
-                                    }
-                                    if (tracks.isEmpty()) {
-                                        showImageError(nightModeOnValue, "List is empty")
-//                                        Toast.makeText(
-//                                            applicationContext,
-//                                            "Ничего не нашлось",
-//                                            Toast.LENGTH_SHORT
-//                                        ).show()
-                                    }
-                                }
-                            }
-
-                            override fun onFailure(
-                                call: Call<TrackResponse>,
-                                t: Throwable
-                            ) {                                         //Возврат ошибки
-                                showImageError(nightModeOnValue, "Network error")
-//                                Toast.makeText(
-//                                    applicationContext,
-//                                    "Ошибка сети",
-//                                    Toast.LENGTH_SHORT
-//                                ).show()
-                            }
-                        })
-                    true
-                }
+                sendRequeat(nightModeOnValue)
+//                hideErrorElements()
+//                if (inputEditText.text.isNotEmpty()) {
+//                    itunesService.search(inputEditText.text.toString())
+//                        .enqueue(object : Callback<TrackResponse> {
+//                            override fun onResponse(                                //Ответ
+//                                call: Call<TrackResponse>,
+//                                response: Response<TrackResponse>
+//                            ) {
+//                                if (response.code() == 200) {
+//                                    tracks.clear()
+//                                    if (response.body()?.results?.isNotEmpty() == true) {
+//                                        tracks.addAll(response.body()?.results!!)
+//                                        adapter.notifyDataSetChanged()
+//                                    }
+//                                    if (tracks.isEmpty()) {
+//                                        showImageError(nightModeOnValue, "List is empty")
+//
+//                                    }
+//                                }
+//                            }
+//
+//                            override fun onFailure(
+//                                call: Call<TrackResponse>,
+//                                t: Throwable
+//                            ) {                                                 //Возврат ошибки
+//                                showImageError(nightModeOnValue, "Network error")
+//
+//                            }
+//                        })
+//                    true
+//                }
             }
             false
+        }
+    }
+
+    private fun sendRequeat(nightModeOnValue: Boolean){
+        hideErrorElements()
+        if (inputEditText.text.isNotEmpty()) {
+            itunesService.search(inputEditText.text.toString())
+                .enqueue(object : Callback<TrackResponse> {
+                    override fun onResponse(                                //Ответ
+                        call: Call<TrackResponse>,
+                        response: Response<TrackResponse>
+                    ) {
+                        if (response.code() == 200) {
+                            tracks.clear()
+                            if (response.body()?.results?.isNotEmpty() == true) {
+                                tracks.addAll(response.body()?.results!!)
+                                adapter.notifyDataSetChanged()
+                            }
+                            if (tracks.isEmpty()) {
+                                showImageError(nightModeOnValue, "List is empty")
+
+                            }
+                        }
+                    }
+
+                    override fun onFailure(
+                        call: Call<TrackResponse>,
+                        t: Throwable
+                    ) {                                                 //Возврат ошибки
+                        showImageError(nightModeOnValue, "Network error")
+
+                    }
+                })
+            true
         }
     }
 
@@ -163,8 +198,8 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun showImageError(nightModeOn: Boolean, typeError: String){
-        if(typeError.equals("List is empty")){
-            textViewMessageError.text = "Ничего не нашлось"
+        if(typeError.equals("List is empty")){                      //Ничего не нашлось
+            textViewMessageError.text = NOTHING_FOUND
             if (nightModeOn){
                 Glide.with(this)
                     .load(R.drawable.nothing_was_found_dark)
@@ -174,8 +209,8 @@ class SearchActivity : AppCompatActivity() {
                     .load(R.drawable.nothing_was_found_light)
                     .into(messageImage)
             }
-        } else {
-            textViewMessageError.text = "Проблемы со связью \n\nЗагрузка не удалась. Проверьте подключение к интернету"
+        } else {                                                    //Проблемы с сетью
+            textViewMessageError.text = NETWORK_ERROR
             if(nightModeOn){
                 Glide.with(this)
                     .load(R.drawable.network_problems_dark)
@@ -188,10 +223,14 @@ class SearchActivity : AppCompatActivity() {
         }
         messageImage.visibility = View.VISIBLE
         textViewMessageError.visibility = View.VISIBLE
+        buttonUpdate.visibility = View.VISIBLE
+        buttonUpdate.isEnabled = true
     }
 
     private fun hideErrorElements() {
         messageImage.visibility = View.GONE
         textViewMessageError.visibility = View.GONE
+        buttonUpdate.visibility = View.GONE
+        buttonUpdate.isEnabled = false
     }
 }
