@@ -21,4 +21,8 @@
     <string name="write_to_supp_email" translatable="false">babaylov-ayu@mail.ru</string>
     <string name="terms_of_link" translatable="false">https://yandex.ru/legal/practicum_offer/</string>
     <string name="button_update">Обновить</string>
+    <string name="search_text" translatable="false">SEARCH_TEXT</string>
+    <string name="network_error">Проблемы со связью \\n\\nЗагрузка не удалась. Проверьте подключение к интернету</string>
+    <string name="nothing_found">Ничего не нашлось</string>
+    <string name="itunes_base_url" translatable="false">https://itunes.apple.com</string>
 </resources>

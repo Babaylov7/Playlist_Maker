@@ -24,13 +24,6 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 class SearchActivity : AppCompatActivity() {
 
-    companion object {
-        const val SEARCH_TEXT = "SEARCH_TEXT"
-        const val NETWORK_ERROR =
-            "Проблемы со связью \n\nЗагрузка не удалась. Проверьте подключение к интернету"
-        const val NOTHING_FOUND = "Ничего не нашлось"
-    }
-
     private var editTextValue = ""
     private val itunesBaseUrl = "https://itunes.apple.com"
     private val tracks = ArrayList<Track>()
@@ -73,6 +66,7 @@ class SearchActivity : AppCompatActivity() {
 
         clearButton.setOnClickListener {
             inputEditText.setText("")
+            hideErrorElements()
             val inputMethodManager =
                 getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
             inputMethodManager?.hideSoftInputFromWindow(inputEditText.windowToken, 0)
@@ -156,43 +150,49 @@ class SearchActivity : AppCompatActivity() {
         editTextValue = savedInstanceState.getString(SEARCH_TEXT, "")
     }
 
-    private fun modeNightOn(): Boolean {                         //Вопрос ревьюеру - Может ли эта функция неправильно отработать? Есть ли в ней недостатки?
-        when (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) {
-            Configuration.UI_MODE_NIGHT_YES -> return true
-            Configuration.UI_MODE_NIGHT_NO -> return false
-            Configuration.UI_MODE_NIGHT_UNDEFINED -> return false
-            else -> return false
+    private fun modeNightOn(): Boolean {
+        return when (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) {
+            Configuration.UI_MODE_NIGHT_YES -> true
+            else -> false
         }
     }
 
     private fun showImageError(nightModeOn: Boolean, typeError: String) {
         if (typeError.equals("List is empty")) {                      //Ничего не нашлось
-            textViewMessageError.text = NOTHING_FOUND
-            if (nightModeOn) {
-                Glide.with(this)
-                    .load(R.drawable.nothing_was_found_dark)
-                    .into(messageImage)
-            } else {
-                Glide.with(this)
-                    .load(R.drawable.nothing_was_found_light)
-                    .into(messageImage)
-            }
+            showErrorNothingFound(nightModeOn)
         } else {                                                    //Проблемы с сетью
-            textViewMessageError.text = NETWORK_ERROR
-            if (nightModeOn) {
-                Glide.with(this)
-                    .load(R.drawable.network_problems_dark)
-                    .into(messageImage)
-            } else {
-                Glide.with(this)
-                    .load(R.drawable.network_problems_light)
-                    .into(messageImage)
-            }
+            showErrorNetworkError(nightModeOn)
             buttonUpdate.visibility = View.VISIBLE
             buttonUpdate.isEnabled = true
         }
         messageImage.visibility = View.VISIBLE
         textViewMessageError.visibility = View.VISIBLE
+    }
+
+    private fun showErrorNothingFound(nightModeOn: Boolean) {
+        textViewMessageError.text = getString(R.string.nothing_found)
+        if (nightModeOn) {
+            Glide.with(this)
+                .load(R.drawable.nothing_was_found_dark)
+                .into(messageImage)
+        } else {
+            Glide.with(this)
+                .load(R.drawable.nothing_was_found_light)
+                .into(messageImage)
+        }
+    }
+
+    private fun showErrorNetworkError(nightModeOn: Boolean) {
+        textViewMessageError.text = getString(R.string.network_error)
+        if (nightModeOn) {
+            Glide.with(this)
+                .load(R.drawable.network_problems_dark)
+                .into(messageImage)
+        } else {
+            Glide.with(this)
+                .load(R.drawable.network_problems_light)
+                .into(messageImage)
+        }
     }
 
     private fun hideErrorElements() {
@@ -206,4 +206,12 @@ class SearchActivity : AppCompatActivity() {
         tracks.clear()
         adapter.notifyDataSetChanged()
     }
+
+    companion object {
+        const val SEARCH_TEXT = "SEARCH_TEXT"
+    }
+
 }
+
+
+

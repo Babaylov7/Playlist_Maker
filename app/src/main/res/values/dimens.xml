@@ -13,7 +13,7 @@
     <dimen name="margin_top_24">24dp</dimen>
     <dimen name="edit_text_height">36dp</dimen>
     <dimen name="height40">40dp</dimen>
-    <dimen name="album_image_size">44dp</dimen>
+    <dimen name="album_image_size">45dp</dimen>
     <dimen name="button_back_size">48dp</dimen>
     <dimen name="button_switch_compat_height">48dp</dimen>
     <dimen name="linear_layout_for_edit_text_height">52dp</dimen>

@@ -1,6 +1,6 @@
 package com.example.playlistmaker
 
-class TrackResponse (
+class TrackResponse(
     val resultCount: Int,
     val results: List<Track>
-    )
+)

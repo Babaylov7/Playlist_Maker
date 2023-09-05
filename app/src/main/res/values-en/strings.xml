@@ -14,4 +14,6 @@
     <string name="write_to_supp_message">Thanks to the developers and developers for a cool app!</string>
     <string name="write_to_supp_theme">A message to the developers and developers of the Playlist Maker app</string>
     <string name="button_update">Update</string>
+    <string name="network_error">Communication problems \\n\\nUpload failed. Check your internet connection</string>
+    <string name="nothing_found">Nothing found</string>
 </resources>
