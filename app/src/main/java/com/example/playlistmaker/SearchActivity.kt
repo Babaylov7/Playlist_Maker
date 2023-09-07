@@ -1,7 +1,6 @@
 package com.example.playlistmaker
 
 import android.content.Context
-import android.content.res.Configuration
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -55,13 +54,11 @@ class SearchActivity : AppCompatActivity() {
         textViewMessageError = findViewById(R.id.text_view_message_error)
         buttonUpdate = findViewById(R.id.button_update)
 
-        var nightModeOnValue = modeNightOn()
-
         buttonBack.setOnClickListener {
             finish()
         }
         buttonUpdate.setOnClickListener {
-            sendRequeat(nightModeOnValue)
+            sendRequeat()
         }
 
         clearButton.setOnClickListener {
@@ -92,13 +89,13 @@ class SearchActivity : AppCompatActivity() {
 
         inputEditText.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
-                sendRequeat(nightModeOnValue)
+                sendRequeat()
             }
             false
         }
     }
 
-    private fun sendRequeat(nightModeOnValue: Boolean) {
+    private fun sendRequeat() {
         hideErrorElements()
         if (inputEditText.text.isNotEmpty()) {
             itunesService.search(inputEditText.text.toString())
@@ -115,7 +112,7 @@ class SearchActivity : AppCompatActivity() {
                             }
                             if (tracks.isEmpty()) {
                                 hideRecyclerView()
-                                showImageError(nightModeOnValue, "List is empty")
+                                showImageError("List is empty")
                             }
                         }
                     }
@@ -125,7 +122,7 @@ class SearchActivity : AppCompatActivity() {
                         t: Throwable
                     ) {                                                 //Возврат ошибки
                         hideRecyclerView()
-                        showImageError(nightModeOnValue, "Network error")
+                        showImageError("Network error")
                     }
                 })
             true
@@ -150,18 +147,11 @@ class SearchActivity : AppCompatActivity() {
         editTextValue = savedInstanceState.getString(SEARCH_TEXT, "")
     }
 
-    private fun modeNightOn(): Boolean {
-        return when (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) {
-            Configuration.UI_MODE_NIGHT_YES -> true
-            else -> false
-        }
-    }
-
-    private fun showImageError(nightModeOn: Boolean, typeError: String) {
+    private fun showImageError(typeError: String) {
         if (typeError.equals("List is empty")) {                      //Ничего не нашлось
-            showErrorNothingFound(nightModeOn)
+            showErrorNothingFound()
         } else {                                                    //Проблемы с сетью
-            showErrorNetworkError(nightModeOn)
+            showErrorNetworkError()
             buttonUpdate.visibility = View.VISIBLE
             buttonUpdate.isEnabled = true
         }
@@ -169,9 +159,9 @@ class SearchActivity : AppCompatActivity() {
         textViewMessageError.visibility = View.VISIBLE
     }
 
-    private fun showErrorNothingFound(nightModeOn: Boolean) {
+    private fun showErrorNothingFound() {
         textViewMessageError.text = getString(R.string.nothing_found)
-        if (nightModeOn) {
+        if (this.isNightModeOn()) {
             Glide.with(this)
                 .load(R.drawable.nothing_was_found_dark)
                 .into(messageImage)
@@ -182,9 +172,9 @@ class SearchActivity : AppCompatActivity() {
         }
     }
 
-    private fun showErrorNetworkError(nightModeOn: Boolean) {
+    private fun showErrorNetworkError() {
         textViewMessageError.text = getString(R.string.network_error)
-        if (nightModeOn) {
+        if (this.isNightModeOn()) {
             Glide.with(this)
                 .load(R.drawable.network_problems_dark)
                 .into(messageImage)
