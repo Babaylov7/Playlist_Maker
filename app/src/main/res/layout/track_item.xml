@@ -5,7 +5,6 @@
     style="@style/track_item_style_1"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginTop="@dimen/padding16"
     android:orientation="horizontal">
 
     <ImageView
@@ -46,7 +45,7 @@
             <TextView
                 android:id="@+id/group_name"
                 style="@style/track_item_style_2"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:layout_gravity="center_vertical"
@@ -62,6 +61,7 @@
                 style="@style/track_item_style_2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_weight="0"
                 android:fontFamily="@font/ys_display_medium"
                 android:maxLines="1"
                 android:textSize="@dimen/primary_text_size_13"
