@@ -6,18 +6,19 @@ import android.os.Bundle
 import android.widget.Button
 
 
-
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.start_activity)
 
+        val settingsSharedPreferences = applicationContext as SettingsSharedPreferences
+        settingsSharedPreferences.switchTheme(settingsSharedPreferences.getNightMomeSettings())
 
         val buttonSearch = findViewById<Button>(R.id.button_search)
         val buttonLibrary = findViewById<Button>(R.id.button_library)
         val buttonSettings = findViewById<Button>(R.id.button_settings)
 
-        buttonSearch.setOnClickListener{
+        buttonSearch.setOnClickListener {
             val displayIntent = Intent(this, SearchActivity::class.java)
             startActivity(displayIntent)
         }
@@ -31,8 +32,6 @@ class MainActivity : AppCompatActivity() {
             val displayIntent = Intent(this, SettingsActivity::class.java)
             startActivity(displayIntent)
         }
-
-
 
     }
 }
