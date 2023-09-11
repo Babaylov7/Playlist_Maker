@@ -11,6 +11,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
@@ -34,6 +35,9 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var messageImage: ImageView
     private lateinit var textViewMessageError: TextView
     private lateinit var buttonUpdate: Button
+    private lateinit var historyLayout: LinearLayout
+    private lateinit var recyclerViewSearchHistory: RecyclerView
+    private lateinit var cleanHistoryButton: Button
 
     private val retrofit = Retrofit.Builder()
         .baseUrl(itunesBaseUrl)
@@ -53,6 +57,9 @@ class SearchActivity : AppCompatActivity() {
         messageImage = findViewById(R.id.message_image)
         textViewMessageError = findViewById(R.id.text_view_message_error)
         buttonUpdate = findViewById(R.id.button_update)
+        historyLayout = findViewById(R.id.history_layout)
+        recyclerViewSearchHistory = findViewById(R.id.recycler_view_search_history)
+        cleanHistoryButton = findViewById(R.id.clean_history_button)
 
         buttonBack.setOnClickListener {
             finish()
@@ -93,6 +100,16 @@ class SearchActivity : AppCompatActivity() {
             }
             false
         }
+
+        inputEditText.setOnFocusChangeListener { view, hasFocus ->
+            inputEditText.visibility = if (hasFocus && inputEditText.text.isEmpty()) View.VISIBLE else View.GONE
+            //наполнить recycleView
+            //скрыть остальное
+
+
+        }
+
+
     }
 
     private fun sendRequeat() {
@@ -196,6 +213,7 @@ class SearchActivity : AppCompatActivity() {
         tracks.clear()
         adapter.notifyDataSetChanged()
     }
+
 
     companion object {
         const val SEARCH_TEXT = "SEARCH_TEXT"
