@@ -22,12 +22,15 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-class SearchActivity : AppCompatActivity() {
+class SearchActivity : AppCompatActivity(), ClickListenerForRecyclerView {
 
     private var editTextValue = ""
     private val itunesBaseUrl = "https://itunes.apple.com"
+    private val searchHistory = SearchHistory(applicationContext as AppSharedPreferences)
     private val tracks = ArrayList<Track>()
-    private val adapter = TrackAdapter(tracks)
+    private val tracksHistory: ArrayList<Track> = searchHistory.tracks
+    private val adapterSearch = TrackAdapter(tracks)
+    private val adapterHistory = TrackAdapter(tracksHistory)
     private lateinit var buttonBack: ImageView
     private lateinit var inputEditText: EditText
     private lateinit var clearButton: ImageButton
@@ -79,11 +82,12 @@ class SearchActivity : AppCompatActivity() {
 
         val simpleTextWatcher = object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-                // empty
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 clearButton.visibility = clearButtonVisibility(s)
+                historyLayout.visibility =
+                    if (inputEditText.hasFocus() && s?.isEmpty() == true) View.VISIBLE else View.GONE    //отображение Layout при изменении текста в строке поиска
             }
 
             override fun afterTextChanged(s: Editable?) {
@@ -92,7 +96,8 @@ class SearchActivity : AppCompatActivity() {
         }
         inputEditText.addTextChangedListener(simpleTextWatcher)
 
-        recyclerView.adapter = adapter
+        recyclerView.adapter = adapterSearch
+        recyclerViewSearchHistory.adapter = adapterHistory
 
         inputEditText.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
@@ -101,15 +106,28 @@ class SearchActivity : AppCompatActivity() {
             false
         }
 
-        inputEditText.setOnFocusChangeListener { view, hasFocus ->
-            inputEditText.visibility = if (hasFocus && inputEditText.text.isEmpty()) View.VISIBLE else View.GONE
+        inputEditText.setOnFocusChangeListener { view, hasFocus ->      //отображение Layout при фокусе строки поиска
+            historyLayout.visibility =
+                if (hasFocus && inputEditText.text.isEmpty()) View.VISIBLE else View.GONE
             //наполнить recycleView
             //скрыть остальное
 
 
         }
 
-
+//        inputEditText.addTextChangedListener(object : TextWatcher {         //отображение Layout при изменении текста в строке поиска
+//            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+//            }
+//
+//            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+//                historyLayout.visibility =
+//                    if (inputEditText.hasFocus() && p0?.isEmpty() == true) View.VISIBLE else View.GONE
+//            }
+//
+//            override fun afterTextChanged(p0: Editable?) {
+//            }
+//
+//        })
     }
 
     private fun sendRequeat() {
@@ -125,7 +143,7 @@ class SearchActivity : AppCompatActivity() {
                             tracks.clear()
                             if (response.body()?.results?.isNotEmpty() == true) {
                                 tracks.addAll(response.body()?.results!!)
-                                adapter.notifyDataSetChanged()
+                                adapterSearch.notifyDataSetChanged()
                             }
                             if (tracks.isEmpty()) {
                                 hideRecyclerView()
@@ -211,11 +229,14 @@ class SearchActivity : AppCompatActivity() {
 
     private fun hideRecyclerView() {
         tracks.clear()
-        adapter.notifyDataSetChanged()
+        adapterSearch.notifyDataSetChanged()
     }
 
+    override fun onClick(track: Track) {
+        TODO("Not yet implemented")
+    }
 
-    companion object {
+    private companion object {
         const val SEARCH_TEXT = "SEARCH_TEXT"
     }
 

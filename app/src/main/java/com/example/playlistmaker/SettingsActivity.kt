@@ -22,7 +22,7 @@ class SettingsActivity : AppCompatActivity() {
         val darkThemeSwitch = findViewById<SwitchCompat>(R.id.dark_theme_switch)
 
         darkThemeSwitch.setChecked(
-            (applicationContext as SettingsSharedPreferences)
+            (applicationContext as AppSharedPreferences)
                 .getNightMomeSettings()
         )          //выставляет значение Switch по значению из настроек
 
@@ -56,8 +56,8 @@ class SettingsActivity : AppCompatActivity() {
         }
 
         darkThemeSwitch.setOnCheckedChangeListener { switcher, checked ->
-            (applicationContext as SettingsSharedPreferences).putNightMomeSettings(checked)
-            (applicationContext as SettingsSharedPreferences).switchTheme(checked)
+            (applicationContext as AppSharedPreferences).putNightMomeSettings(checked)
+            (applicationContext as AppSharedPreferences).switchTheme(checked)
 
         }
 
