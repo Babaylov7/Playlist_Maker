@@ -29,8 +29,8 @@ class SearchActivity : AppCompatActivity(), ClickListenerForRecyclerView {
     private val searchHistory = SearchHistory(applicationContext as AppSharedPreferences)
     private val tracks = ArrayList<Track>()
     private val tracksHistory: ArrayList<Track> = searchHistory.tracks
-    private val adapterSearch = TrackAdapter(tracks)
-    private val adapterHistory = TrackAdapter(tracksHistory)
+    private val adapterSearch = TrackAdapter(tracks, this)
+    private val adapterHistory = TrackAdapter(tracksHistory, this)
     private lateinit var buttonBack: ImageView
     private lateinit var inputEditText: EditText
     private lateinit var clearButton: ImageButton
@@ -233,7 +233,7 @@ class SearchActivity : AppCompatActivity(), ClickListenerForRecyclerView {
     }
 
     override fun onClick(track: Track) {
-        TODO("Not yet implemented")
+        searchHistory.addTrack(track)
     }
 
     private companion object {
