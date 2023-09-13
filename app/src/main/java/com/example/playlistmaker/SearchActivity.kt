@@ -59,7 +59,6 @@ class SearchActivity : AppCompatActivity(), ClickListenerForRecyclerView {
         tracksHistory = searchHistory.tracks
         adapterSearch = TrackAdapter(tracks, this)
         adapterHistory = TrackAdapter(tracksHistory, this)
-
         buttonBack = findViewById(R.id.button_back)
         inputEditText = findViewById(R.id.edit_text)
         clearButton = findViewById(R.id.clear_button)
@@ -121,20 +120,6 @@ class SearchActivity : AppCompatActivity(), ClickListenerForRecyclerView {
 
 
         }
-
-//        inputEditText.addTextChangedListener(object : TextWatcher {         //отображение Layout при изменении текста в строке поиска
-//            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-//            }
-//
-//            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-//                historyLayout.visibility =
-//                    if (inputEditText.hasFocus() && p0?.isEmpty() == true) View.VISIBLE else View.GONE
-//            }
-//
-//            override fun afterTextChanged(p0: Editable?) {
-//            }
-//
-//        })
     }
 
     private fun sendRequeat() {

@@ -52,7 +52,6 @@ class AppSharedPreferences : Application() {
         return createTracksFromJson(json)
     }
 
-
     private fun createJsonFromTracks(tracks: ArrayList<Track>): String {
         return Gson().toJson(tracks)
     }

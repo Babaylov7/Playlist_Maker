@@ -11,33 +11,6 @@ class SearchHistory(
         return sharedPreferences.readSearchHistory()
     }
 
-//    fun addTrack(track: Track) {
-//        if (tracks.isEmpty()) {
-//            tracks.add(track)
-//            sharedPreferences.writeSearchHistory(tracks)
-//            return
-//        }
-//        if (tracks.isNotEmpty()) {
-//            val iterator: MutableIterator<Track> = tracks.iterator()
-//            while (iterator.hasNext()) {
-//                val nextTrack = iterator.next()
-//                if (nextTrack.trackId.equals(track.trackId)){
-//                    iterator.remove()
-//                }
-//            }
-//            tracks.add(0, track)
-//            sharedPreferences.writeSearchHistory(tracks)
-//            return
-//        }
-//        if (tracks.size < MAX_LENGTH_OF_ARRAY) {
-//            tracks.add(0, track)
-//        } else {
-//            tracks.removeLast()
-//            tracks.add(0, track)
-//        }
-//        sharedPreferences.writeSearchHistory(tracks)            //Проверили на наличие и записали все SP
-//    }
-
     fun addTrack(track: Track) {
         if (tracks.isEmpty()) {
             tracks.add(track)
@@ -68,7 +41,6 @@ class SearchHistory(
         tracks.clear()
         sharedPreferences.writeSearchHistory(tracks)
     }
-
 
     private companion object {
         const val MAX_LENGTH_OF_ARRAY = 10
