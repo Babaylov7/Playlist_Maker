@@ -113,8 +113,20 @@ class SearchActivity : AppCompatActivity(), ClickListenerForRecyclerView {
         }
 
         inputEditText.setOnFocusChangeListener { view, hasFocus ->      //отображение Layout при фокусе строки поиска
-            historyLayout.visibility =
-                if (hasFocus && inputEditText.text.isEmpty()) View.VISIBLE else View.GONE
+            if (hasFocus && inputEditText.text.isEmpty()) {
+                historyLayout.visibility = View.VISIBLE
+                recyclerView.visibility = View.GONE
+                tracksHistory = searchHistory.tracks
+                adapterHistory.notifyDataSetChanged()
+            } else {
+                historyLayout.visibility = View.GONE
+                recyclerView.visibility = View.VISIBLE
+            }
+
+//            historyLayout.visibility =
+//                if (hasFocus && inputEditText.text.isEmpty()) View.VISIBLE else View.GONE
+//            tracksHistory = searchHistory.tracks
+//            adapterHistory.notifyDataSetChanged()
             //наполнить recycleView
             //скрыть остальное
 
