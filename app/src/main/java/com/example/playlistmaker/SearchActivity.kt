@@ -13,6 +13,7 @@ import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -26,11 +27,11 @@ class SearchActivity : AppCompatActivity(), ClickListenerForRecyclerView {
 
     private var editTextValue = ""
     private val itunesBaseUrl = "https://itunes.apple.com"
-    private val searchHistory = SearchHistory(applicationContext as AppSharedPreferences)
-    private val tracks = ArrayList<Track>()
-    private val tracksHistory: ArrayList<Track> = searchHistory.tracks
-    private val adapterSearch = TrackAdapter(tracks, this)
-    private val adapterHistory = TrackAdapter(tracksHistory, this)
+    private lateinit var searchHistory: SearchHistory
+    private lateinit var tracks: ArrayList<Track>
+    private lateinit var tracksHistory: ArrayList<Track>
+    private lateinit var adapterSearch: TrackAdapter
+    private lateinit var adapterHistory: TrackAdapter
     private lateinit var buttonBack: ImageView
     private lateinit var inputEditText: EditText
     private lateinit var clearButton: ImageButton
@@ -52,6 +53,12 @@ class SearchActivity : AppCompatActivity(), ClickListenerForRecyclerView {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.search_activity)
+
+        searchHistory = SearchHistory(applicationContext as AppSharedPreferences)
+        tracks = ArrayList<Track>()
+        tracksHistory = searchHistory.tracks
+        adapterSearch = TrackAdapter(tracks, this)
+        adapterHistory = TrackAdapter(tracksHistory, this)
 
         buttonBack = findViewById(R.id.button_back)
         inputEditText = findViewById(R.id.edit_text)

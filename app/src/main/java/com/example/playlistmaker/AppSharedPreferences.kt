@@ -2,8 +2,10 @@ package com.example.playlistmaker
 
 import android.app.Application
 import android.content.SharedPreferences
+import android.util.Log
 import androidx.appcompat.app.AppCompatDelegate
 import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 
 class AppSharedPreferences : Application() {
 
@@ -56,7 +58,8 @@ class AppSharedPreferences : Application() {
     }
 
     private fun createTracksFromJson(json: String): ArrayList<Track> {
-        return Gson().fromJson(json, ArrayList<Track>()::class.java)
+        val token = object : TypeToken<ArrayList<Track>>() {}.type
+        return Gson().fromJson<ArrayList<Track>>(json, token)
     }
 
     companion object {

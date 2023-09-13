@@ -11,26 +11,56 @@ class SearchHistory(
         return sharedPreferences.readSearchHistory()
     }
 
+//    fun addTrack(track: Track) {
+//        if (tracks.isEmpty()) {
+//            tracks.add(track)
+//            sharedPreferences.writeSearchHistory(tracks)
+//            return
+//        }
+//        if (tracks.isNotEmpty()) {
+//            val iterator: MutableIterator<Track> = tracks.iterator()
+//            while (iterator.hasNext()) {
+//                val nextTrack = iterator.next()
+//                if (nextTrack.trackId.equals(track.trackId)){
+//                    iterator.remove()
+//                }
+//            }
+//            tracks.add(0, track)
+//            sharedPreferences.writeSearchHistory(tracks)
+//            return
+//        }
+//        if (tracks.size < MAX_LENGTH_OF_ARRAY) {
+//            tracks.add(0, track)
+//        } else {
+//            tracks.removeLast()
+//            tracks.add(0, track)
+//        }
+//        sharedPreferences.writeSearchHistory(tracks)            //Проверили на наличие и записали все SP
+//    }
+
     fun addTrack(track: Track) {
         if (tracks.isEmpty()) {
             tracks.add(track)
+            sharedPreferences.writeSearchHistory(tracks)
+            return
         }
         if (tracks.isNotEmpty()) {
-            for (item in tracks) {
-                if (item.trackId.equals(track.trackId)) {
-                    tracks.remove(item)
+            for (ttt in tracks) {
+                if (ttt.trackId.equals(track.trackId)) {
+                    tracks.remove(ttt)
                     tracks.add(0, track)
-                    break
+                    sharedPreferences.writeSearchHistory(tracks)
+                    return
                 }
             }
-        } else {
-            if (tracks.size < MAX_LENGTH_OF_ARRAY) {
-                tracks.add(0, track)
-            } else {
-                tracks.removeLast()
-                tracks.add(0, track)
-            }
         }
+        if (tracks.size < MAX_LENGTH_OF_ARRAY) {
+            tracks.add(0, track)
+        } else {
+            tracks.removeLast()
+            tracks.add(0, track)
+        }
+
         sharedPreferences.writeSearchHistory(tracks)            //Проверили на наличие и записали все SP
     }
 
