@@ -13,7 +13,6 @@ import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -56,7 +55,7 @@ class SearchActivity : AppCompatActivity(), ClickListenerForRecyclerView {
 
         searchHistory = SearchHistory(applicationContext as AppSharedPreferences)
         tracks = ArrayList<Track>()
-        tracksHistory = searchHistory.tracks
+        tracksHistory = searchHistory.getTracksHistory()
         adapterSearch = TrackAdapter(tracks, this)
         adapterHistory = TrackAdapter(tracksHistory, this)
         buttonBack = findViewById(R.id.button_back)
@@ -84,6 +83,12 @@ class SearchActivity : AppCompatActivity(), ClickListenerForRecyclerView {
                 getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
             inputMethodManager?.hideSoftInputFromWindow(inputEditText.windowToken, 0)
             hideRecyclerView()
+            updateRecyclerViewSearchHistory()
+        }
+
+        cleanHistoryButton.setOnClickListener {
+            hideHistoryLayout()
+            searchHistory.clean()
         }
 
         val simpleTextWatcher = object : TextWatcher {
@@ -93,7 +98,10 @@ class SearchActivity : AppCompatActivity(), ClickListenerForRecyclerView {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 clearButton.visibility = clearButtonVisibility(s)
                 historyLayout.visibility =
-                    if (inputEditText.hasFocus() && s?.isEmpty() == true) View.VISIBLE else View.GONE    //отображение Layout при изменении текста в строке поиска
+                    if (inputEditText.hasFocus()        //Есть фокус
+                        && s?.isEmpty() == true         //Строка поиска пуста
+                        && tracksHistory.isNotEmpty()   //Список треков не пустой
+                    ) View.VISIBLE else View.GONE    //отображение Layout при изменении текста в строке поиска
             }
 
             override fun afterTextChanged(s: Editable?) {
@@ -113,24 +121,14 @@ class SearchActivity : AppCompatActivity(), ClickListenerForRecyclerView {
         }
 
         inputEditText.setOnFocusChangeListener { view, hasFocus ->      //отображение Layout при фокусе строки поиска
-            if (hasFocus && inputEditText.text.isEmpty()) {
-                historyLayout.visibility = View.VISIBLE
-                recyclerView.visibility = View.GONE
-                tracksHistory = searchHistory.tracks
-                adapterHistory.notifyDataSetChanged()
+            if (hasFocus                            //Есть фокус
+                && inputEditText.text.isEmpty()     //Строка поиска пуста
+                && tracksHistory.isNotEmpty()       //Список треков не пустой
+            ) {
+                updateRecyclerViewSearchHistory()
             } else {
-                historyLayout.visibility = View.GONE
-                recyclerView.visibility = View.VISIBLE
+                hideHistoryLayout()
             }
-
-//            historyLayout.visibility =
-//                if (hasFocus && inputEditText.text.isEmpty()) View.VISIBLE else View.GONE
-//            tracksHistory = searchHistory.tracks
-//            adapterHistory.notifyDataSetChanged()
-            //наполнить recycleView
-            //скрыть остальное
-
-
         }
     }
 
@@ -167,6 +165,13 @@ class SearchActivity : AppCompatActivity(), ClickListenerForRecyclerView {
             true
         }
     }
+
+    private fun updateRecyclerViewSearchHistory() {
+        historyLayout.visibility = View.VISIBLE
+        tracksHistory = searchHistory.getTracksHistory()                //searchHistory.tracks
+        adapterHistory.notifyDataSetChanged()
+    }
+
 
     private fun clearButtonVisibility(s: CharSequence?): Int {
         return if (s.isNullOrEmpty()) {
@@ -234,6 +239,10 @@ class SearchActivity : AppCompatActivity(), ClickListenerForRecyclerView {
     private fun hideRecyclerView() {
         tracks.clear()
         adapterSearch.notifyDataSetChanged()
+    }
+
+    private fun hideHistoryLayout() {
+        historyLayout.visibility = View.GONE
     }
 
     override fun onClick(track: Track) {

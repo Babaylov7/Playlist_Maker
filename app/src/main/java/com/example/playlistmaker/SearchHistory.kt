@@ -18,9 +18,9 @@ class SearchHistory(
             return
         }
         if (tracks.isNotEmpty()) {
-            for (ttt in tracks) {
-                if (ttt.trackId.equals(track.trackId)) {
-                    tracks.remove(ttt)
+            for (item in tracks) {
+                if (item.trackId.equals(track.trackId)) {
+                    tracks.remove(item)
                     tracks.add(0, track)
                     sharedPreferences.writeSearchHistory(tracks)
                     return
@@ -35,6 +35,10 @@ class SearchHistory(
         }
 
         sharedPreferences.writeSearchHistory(tracks)            //Проверили на наличие и записали все SP
+    }
+
+    fun getTracksHistory(): ArrayList<Track>{
+        return tracks
     }
 
     fun clean() {                                                //Очистили массив, все записали в SP
