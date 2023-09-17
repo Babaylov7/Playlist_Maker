@@ -46,7 +46,6 @@
     </style>
 
     <style name="track_item_style_1">
-        <item name="android:background">@color/yp_black</item>
         <item name="android:textColor">@color/white</item>
     </style>
 

@@ -18,7 +18,7 @@ class TrackViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     private val groupName: TextView = itemView.findViewById(R.id.group_name)
     private val trackDuration: TextView = itemView.findViewById(R.id.track_duration)
 
-    fun bind(model: Track) {
+    fun bind(model: Track, listener: ClickListenerForRecyclerView) {
         trackName.text = model.trackName
         groupName.text = model.artistName
         trackDuration.text =
@@ -30,6 +30,10 @@ class TrackViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
             .centerCrop()
             .transform(RoundedCorners(itemView.resources.getDimensionPixelSize(R.dimen.corner_radius_2)))
             .into(albumImage)
+
+        itemView.setOnClickListener {
+            listener.onClick(model)
+        }
 
     }
 

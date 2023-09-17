@@ -5,6 +5,7 @@
     style="@style/track_item_style_1"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="?android:attr/selectableItemBackground"
     android:orientation="horizontal">
 
     <ImageView

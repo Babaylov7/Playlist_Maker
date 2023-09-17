@@ -1,12 +1,12 @@
 package com.example.playlistmaker
 
-import android.R.attr.text
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.widget.ImageView
 import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.SwitchCompat
 
 
 class SettingsActivity : AppCompatActivity() {
@@ -14,10 +14,17 @@ class SettingsActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.settings_activity)
 
+
         val buttonBack = findViewById<ImageView>(R.id.button_back)
         val sareApplicationButton = findViewById<LinearLayout>(R.id.sare_application)
         val writeToSupportButton = findViewById<LinearLayout>(R.id.write_to_support)
         val termsOfUseButton = findViewById<LinearLayout>(R.id.terms_of_use)
+        val darkThemeSwitch = findViewById<SwitchCompat>(R.id.dark_theme_switch)
+
+        darkThemeSwitch.setChecked(
+            (applicationContext as AppSharedPreferences)
+                .getNightMomeSettings()
+        )          //выставляет значение Switch по значению из настроек
 
         buttonBack.setOnClickListener {
             finish()
@@ -46,6 +53,12 @@ class SettingsActivity : AppCompatActivity() {
             val intent =
                 Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.terms_of_link)))
             startActivity(intent)
+        }
+
+        darkThemeSwitch.setOnCheckedChangeListener { switcher, checked ->
+            (applicationContext as AppSharedPreferences).putNightMomeSettings(checked)
+            (applicationContext as AppSharedPreferences).switchTheme(checked)
+
         }
 
     }
