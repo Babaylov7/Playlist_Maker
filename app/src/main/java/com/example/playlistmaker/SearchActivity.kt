@@ -7,14 +7,7 @@ import android.text.TextWatcher
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
-import android.widget.Button
-import android.widget.EditText
-import android.widget.ImageButton
-import android.widget.ImageView
-import android.widget.LinearLayout
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.playlistmaker.databinding.SearchActivityBinding
 import retrofit2.Call
@@ -35,17 +28,6 @@ class SearchActivity : AppCompatActivity(), ClickListenerForRecyclerView {
     private lateinit var adapterSearch: TrackAdapter
     private lateinit var adapterHistory: TrackAdapter
 
-    //private lateinit var buttonBack: ImageView
-    //private lateinit var inputEditText: EditText
-    //private lateinit var clearButton: ImageButton
-    //private lateinit var recyclerView: RecyclerView
-    //private lateinit var messageImage: ImageView
-    //private lateinit var textViewMessageError: TextView
-    //private lateinit var buttonUpdate: Button
-    private lateinit var historyLayout: LinearLayout
-    private lateinit var recyclerViewSearchHistory: RecyclerView
-    private lateinit var cleanHistoryButton: Button
-
     private val retrofit = Retrofit.Builder()
         .baseUrl(itunesBaseUrl)
         .addConverterFactory(GsonConverterFactory.create())
@@ -63,16 +45,6 @@ class SearchActivity : AppCompatActivity(), ClickListenerForRecyclerView {
         tracksHistory = searchHistory.getTracksHistory()
         adapterSearch = TrackAdapter(tracks, this)
         adapterHistory = TrackAdapter(tracksHistory, this)
-        //buttonBack = findViewById(R.id.button_back)
-        //inputEditText = findViewById(R.id.edit_text)
-        //clearButton = findViewById(R.id.clear_button)
-        //recyclerView = findViewById(R.id.recycler_view)
-        //messageImage = findViewById(R.id.message_image)
-        //textViewMessageError = findViewById(R.id.text_view_message_error)
-        //buttonUpdate = findViewById(R.id.button_update)
-        historyLayout = findViewById(R.id.history_layout)
-        recyclerViewSearchHistory = findViewById(R.id.recycler_view_search_history)
-        cleanHistoryButton = findViewById(R.id.clean_history_button)
 
         binding.buttonBack.setOnClickListener {
             finish()
@@ -92,7 +64,7 @@ class SearchActivity : AppCompatActivity(), ClickListenerForRecyclerView {
             updateRecyclerViewSearchHistory()
         }
 
-        cleanHistoryButton.setOnClickListener {
+        binding.cleanHistoryButton.setOnClickListener {
             hideHistoryLayout()
             searchHistory.clean()
         }
@@ -103,7 +75,7 @@ class SearchActivity : AppCompatActivity(), ClickListenerForRecyclerView {
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 binding.clearButton.visibility = clearButtonVisibility(s)
-                historyLayout.visibility =
+                binding.historyLayout.visibility =
                     if (binding.editText.hasFocus()        //Есть фокус
                         && s?.isEmpty() == true         //Строка поиска пуста
                         && tracksHistory.isNotEmpty()   //Список треков не пустой
@@ -117,7 +89,7 @@ class SearchActivity : AppCompatActivity(), ClickListenerForRecyclerView {
         binding.editText.addTextChangedListener(simpleTextWatcher)
 
         binding.recyclerView.adapter = adapterSearch
-        recyclerViewSearchHistory.adapter = adapterHistory
+        binding.recyclerViewSearchHistory.adapter = adapterHistory
 
         binding.editText.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
@@ -173,7 +145,7 @@ class SearchActivity : AppCompatActivity(), ClickListenerForRecyclerView {
     }
 
     private fun updateRecyclerViewSearchHistory() {
-        historyLayout.visibility = View.VISIBLE
+        binding.historyLayout.visibility = View.VISIBLE
         tracksHistory = searchHistory.getTracksHistory()                //searchHistory.tracks
         adapterHistory.notifyDataSetChanged()
     }
@@ -246,7 +218,7 @@ class SearchActivity : AppCompatActivity(), ClickListenerForRecyclerView {
     }
 
     private fun hideHistoryLayout() {
-        historyLayout.visibility = View.GONE
+        binding.historyLayout.visibility = View.GONE
     }
 
     override fun onClick(track: Track) {
