@@ -146,7 +146,7 @@ class SearchActivity : AppCompatActivity(), ClickListenerForRecyclerView {
 
     private fun updateRecyclerViewSearchHistory() {
         binding.historyLayout.visibility = View.VISIBLE
-        tracksHistory = searchHistory.getTracksHistory()                //searchHistory.tracks
+        tracksHistory = searchHistory.getTracksHistory()
         adapterHistory.notifyDataSetChanged()
     }
 
