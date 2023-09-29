@@ -26,4 +26,9 @@
     <string name="itunes_base_url" translatable="false">https://itunes.apple.com</string>
     <string name="you_were_looking_for">Вы искали</string>
     <string name="clear_the_history">Очистить историю</string>
+    <string name="duration">Длительность</string>
+    <string name="album">Альбом</string>
+    <string name="year">Год</string>
+    <string name="genre">Жанр</string>
+    <string name="country">Страна</string>
 </resources>

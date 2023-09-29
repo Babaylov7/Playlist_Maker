@@ -65,4 +65,14 @@
         <item name="android:backgroundTint">@color/white</item>
     </style>
 
+    <!-- Стили для экрана Проигрователя -->
+
+    <style name="button_play">
+        <item name="tint">@color/white</item>
+    </style>
+
+    <style name="text_style_for_player_activity">
+        <item name="android:textColor">@color/white</item>
+    </style>
+
 </resources>
