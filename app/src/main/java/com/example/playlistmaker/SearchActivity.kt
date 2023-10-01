@@ -1,6 +1,7 @@
 package com.example.playlistmaker
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -223,6 +224,9 @@ class SearchActivity : AppCompatActivity(), ClickListenerForRecyclerView {
 
     override fun onClick(track: Track) {
         searchHistory.addTrack(track)
+        val displayIntent = Intent(this, PlayerActivity()::class.java)
+        displayIntent.putExtra("track", track)
+        startActivity(displayIntent)
     }
 
     private companion object {

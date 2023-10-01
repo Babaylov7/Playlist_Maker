@@ -3,7 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    tools:context=".PlayerActivity">
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/left_border_24"
@@ -72,13 +73,13 @@
         android:fontFamily="@font/ys_display_medium"
         android:maxLines="1"
         android:textSize="@dimen/primary_text_size_22"
-        app:layout_constraintBottom_toTopOf="@id/group_name"
+        app:layout_constraintBottom_toTopOf="@id/artist_name"
         app:layout_constraintStart_toStartOf="@id/left_border_24"
         app:layout_constraintEnd_toEndOf="@id/right_border_24"
         tools:text="Yesterday (Remastered 2009)" />
 
     <TextView
-        android:id="@+id/group_name"
+        android:id="@+id/artist_name"
         style="@style/text_style_for_player_activity"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -276,10 +277,10 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginBottom="@dimen/padding4"
-        android:background="@drawable/round_button"
         android:scaleType="centerCrop"
         android:src="@drawable/button_play"
         android:clickable="true"
+        android:background="@drawable/round_button"
         app:layout_constraintBottom_toTopOf="@id/time_of_play"
         app:layout_constraintDimensionRatio="h, 1:1"
         app:layout_constraintEnd_toEndOf="@id/right_border_24"
@@ -288,11 +289,10 @@
 
     <ImageButton
         android:id="@+id/button_queue"
+        style="@style/player_button"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:alpha="0.25"
         android:background="@drawable/round_button"
-        android:backgroundTint="@color/yp_black"
         android:scaleType="centerCrop"
         android:src="@drawable/button_queue"
         android:clickable="true"
@@ -305,11 +305,10 @@
 
     <ImageButton
         android:id="@+id/button_favorite"
+        style="@style/player_button"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:alpha="0.25"
         android:background="@drawable/round_button"
-        android:backgroundTint="@color/yp_black"
         android:scaleType="centerCrop"
         android:src="@drawable/button_favorite"
         android:clickable="true"

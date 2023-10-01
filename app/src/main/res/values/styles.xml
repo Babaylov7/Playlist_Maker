@@ -85,11 +85,15 @@
     <!-- Стили для экрана Проигрователя -->
 
     <style name="button_play">
-        <item name="tint">@color/yp_black</item>
+        <item name="tint">@color/black</item>
     </style>
 
     <style name="text_style_for_player_activity">
         <item name="android:textColor">@color/yp_black</item>
+    </style>
+
+    <style name="player_button">
+        <item name="android:backgroundTint">@color/gray_button_light_mode</item>
     </style>
 
 </resources>
