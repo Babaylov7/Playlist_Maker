@@ -224,9 +224,15 @@ class SearchActivity : AppCompatActivity(), ClickListenerForRecyclerView {
 
     override fun onClick(track: Track) {
         searchHistory.addTrack(track)
-        val displayIntent = Intent(this, PlayerActivity()::class.java)
-        displayIntent.putExtra("track", track)
-        startActivity(displayIntent)
+        adapterHistory.notifyDataSetChanged()
+        Intent(this, PlayerActivity::class.java).apply{
+            putExtra("track", track)
+            startActivity(this)
+        }
+
+//        val displayIntent = Intent(this, PlayerActivity::class.java)
+//        displayIntent.putExtra("track", track)
+//        startActivity(displayIntent)
     }
 
     private companion object {
