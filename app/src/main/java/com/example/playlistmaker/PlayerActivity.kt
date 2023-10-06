@@ -1,6 +1,9 @@
 package com.example.playlistmaker
 
+import android.content.Intent
+import android.os.Build.VERSION.SDK_INT
 import android.os.Bundle
+import android.os.Parcelable
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
@@ -19,7 +22,11 @@ class PlayerActivity : AppCompatActivity() {
         binding = PlayerActiviityBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val track = intent.getParcelableExtra("track", Track::class.java)!!
+        val track = if (SDK_INT >= 33) {                        //Проверяем версию SDK и в зависимости от верстии применяем тот или иной метод для работы с intent
+            intent.getParcelableExtra("track", Track::class.java)!!
+        } else {
+            intent.getParcelableExtra<Track>("track")!!
+        }
         writeDataInActivity(track)
 
         binding.buttonBack.setOnClickListener {
@@ -27,33 +34,15 @@ class PlayerActivity : AppCompatActivity() {
         }
 
         binding.buttonQueue.setOnClickListener {
-            if (trackAddInQueue) {
-                trackAddInQueue = false
-                binding.buttonQueue.setImageResource(R.drawable.button_queue)
-            } else {
-                trackAddInQueue = true
-                binding.buttonQueue.setImageResource(R.drawable.button_add_in_queue)
-            }
+            changeButtonQueueImage()
         }
 
         binding.buttonPlay.setOnClickListener {
-            if (trackOnPause) {
-                trackOnPause = false
-                binding.buttonPlay.setImageResource(R.drawable.button_play)
-            } else {
-                trackOnPause = true
-                binding.buttonPlay.setImageResource(R.drawable.button_pause)
-            }
+            changeButtonPlayImage()
         }
 
         binding.buttonFavorite.setOnClickListener {
-            if (trackAddInFavorite) {
-                trackAddInFavorite = false
-                binding.buttonFavorite.setImageResource(R.drawable.button_favorite)
-            } else {
-                trackAddInFavorite = true
-                binding.buttonFavorite.setImageResource(R.drawable.button_add_in_favorite)
-            }
+            changeButtonFavoriteImage()
         }
     }
 
@@ -79,5 +68,35 @@ class PlayerActivity : AppCompatActivity() {
             .centerCrop()
             .transform(RoundedCorners(this.resources.getDimensionPixelSize(R.dimen.corner_radius_2)))
             .into(binding.albumImage)
+    }
+
+    private fun changeButtonQueueImage() {
+        if (trackAddInQueue) {
+            trackAddInQueue = false
+            binding.buttonQueue.setImageResource(R.drawable.button_queue)
+        } else {
+            trackAddInQueue = true
+            binding.buttonQueue.setImageResource(R.drawable.button_add_in_queue)
+        }
+    }
+
+    private fun changeButtonPlayImage() {
+        if (trackOnPause) {
+            trackOnPause = false
+            binding.buttonPlay.setImageResource(R.drawable.button_play)
+        } else {
+            trackOnPause = true
+            binding.buttonPlay.setImageResource(R.drawable.button_pause)
+        }
+    }
+
+    private fun changeButtonFavoriteImage() {
+        if (trackAddInFavorite) {
+            trackAddInFavorite = false
+            binding.buttonFavorite.setImageResource(R.drawable.button_favorite)
+        } else {
+            trackAddInFavorite = true
+            binding.buttonFavorite.setImageResource(R.drawable.button_add_in_favorite)
+        }
     }
 }
