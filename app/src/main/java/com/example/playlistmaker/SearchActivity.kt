@@ -1,21 +1,16 @@
 package com.example.playlistmaker
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
-import android.widget.Button
-import android.widget.EditText
-import android.widget.ImageButton
-import android.widget.ImageView
-import android.widget.LinearLayout
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.example.playlistmaker.databinding.SearchActivityBinding
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -26,21 +21,13 @@ class SearchActivity : AppCompatActivity(), ClickListenerForRecyclerView {
 
     private var editTextValue = ""
     private val itunesBaseUrl = "https://itunes.apple.com"
+    private lateinit var binding: SearchActivityBinding
+
     private lateinit var searchHistory: SearchHistory
     private lateinit var tracks: ArrayList<Track>
     private lateinit var tracksHistory: ArrayList<Track>
     private lateinit var adapterSearch: TrackAdapter
     private lateinit var adapterHistory: TrackAdapter
-    private lateinit var buttonBack: ImageView
-    private lateinit var inputEditText: EditText
-    private lateinit var clearButton: ImageButton
-    private lateinit var recyclerView: RecyclerView
-    private lateinit var messageImage: ImageView
-    private lateinit var textViewMessageError: TextView
-    private lateinit var buttonUpdate: Button
-    private lateinit var historyLayout: LinearLayout
-    private lateinit var recyclerViewSearchHistory: RecyclerView
-    private lateinit var cleanHistoryButton: Button
 
     private val retrofit = Retrofit.Builder()
         .baseUrl(itunesBaseUrl)
@@ -51,42 +38,34 @@ class SearchActivity : AppCompatActivity(), ClickListenerForRecyclerView {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.search_activity)
+        binding = SearchActivityBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         searchHistory = SearchHistory(applicationContext as AppSharedPreferences)
         tracks = ArrayList<Track>()
         tracksHistory = searchHistory.getTracksHistory()
         adapterSearch = TrackAdapter(tracks, this)
         adapterHistory = TrackAdapter(tracksHistory, this)
-        buttonBack = findViewById(R.id.button_back)
-        inputEditText = findViewById(R.id.edit_text)
-        clearButton = findViewById(R.id.clear_button)
-        recyclerView = findViewById(R.id.recycler_view)
-        messageImage = findViewById(R.id.message_image)
-        textViewMessageError = findViewById(R.id.text_view_message_error)
-        buttonUpdate = findViewById(R.id.button_update)
-        historyLayout = findViewById(R.id.history_layout)
-        recyclerViewSearchHistory = findViewById(R.id.recycler_view_search_history)
-        cleanHistoryButton = findViewById(R.id.clean_history_button)
 
-        buttonBack.setOnClickListener {
+        binding.buttonBack.setOnClickListener {
             finish()
         }
-        buttonUpdate.setOnClickListener {
-            sendRequeat()
+
+        binding.buttonUpdate.setOnClickListener {
+            sendRequest()
         }
 
-        clearButton.setOnClickListener {
-            inputEditText.setText("")
+        binding.clearButton.setOnClickListener {
+            binding.editText.setText("")
             hideErrorElements()
             val inputMethodManager =
                 getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
-            inputMethodManager?.hideSoftInputFromWindow(inputEditText.windowToken, 0)
+            inputMethodManager?.hideSoftInputFromWindow(binding.editText.windowToken, 0)
             hideRecyclerView()
             updateRecyclerViewSearchHistory()
         }
 
-        cleanHistoryButton.setOnClickListener {
+        binding.cleanHistoryButton.setOnClickListener {
             hideHistoryLayout()
             searchHistory.clean()
         }
@@ -96,33 +75,33 @@ class SearchActivity : AppCompatActivity(), ClickListenerForRecyclerView {
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                clearButton.visibility = clearButtonVisibility(s)
-                historyLayout.visibility =
-                    if (inputEditText.hasFocus()        //Есть фокус
+                binding.clearButton.visibility = clearButtonVisibility(s)
+                binding.historyLayout.visibility =
+                    if (binding.editText.hasFocus()        //Есть фокус
                         && s?.isEmpty() == true         //Строка поиска пуста
                         && tracksHistory.isNotEmpty()   //Список треков не пустой
                     ) View.VISIBLE else View.GONE    //отображение Layout при изменении текста в строке поиска
             }
 
             override fun afterTextChanged(s: Editable?) {
-                editTextValue = inputEditText.text.toString()
+                editTextValue = binding.editText.text.toString()
             }
         }
-        inputEditText.addTextChangedListener(simpleTextWatcher)
+        binding.editText.addTextChangedListener(simpleTextWatcher)
 
-        recyclerView.adapter = adapterSearch
-        recyclerViewSearchHistory.adapter = adapterHistory
+        binding.recyclerView.adapter = adapterSearch
+        binding.recyclerViewSearchHistory.adapter = adapterHistory
 
-        inputEditText.setOnEditorActionListener { _, actionId, _ ->
+        binding.editText.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
-                sendRequeat()
+                sendRequest()
             }
             false
         }
 
-        inputEditText.setOnFocusChangeListener { view, hasFocus ->      //отображение Layout при фокусе строки поиска
+        binding.editText.setOnFocusChangeListener { _, hasFocus ->      //отображение Layout при фокусе строки поиска
             if (hasFocus                            //Есть фокус
-                && inputEditText.text.isEmpty()     //Строка поиска пуста
+                && binding.editText.text.isEmpty()     //Строка поиска пуста
                 && tracksHistory.isNotEmpty()       //Список треков не пустой
             ) {
                 updateRecyclerViewSearchHistory()
@@ -132,10 +111,10 @@ class SearchActivity : AppCompatActivity(), ClickListenerForRecyclerView {
         }
     }
 
-    private fun sendRequeat() {
+    private fun sendRequest() {
         hideErrorElements()
-        if (inputEditText.text.isNotEmpty()) {
-            itunesService.search(inputEditText.text.toString())
+        if (binding.editText.text.isNotEmpty()) {
+            itunesService.search(binding.editText.text.toString())
                 .enqueue(object : Callback<TrackResponse> {
                     override fun onResponse(                                //Ответ
                         call: Call<TrackResponse>,
@@ -167,8 +146,8 @@ class SearchActivity : AppCompatActivity(), ClickListenerForRecyclerView {
     }
 
     private fun updateRecyclerViewSearchHistory() {
-        historyLayout.visibility = View.VISIBLE
-        tracksHistory = searchHistory.getTracksHistory()                //searchHistory.tracks
+        binding.historyLayout.visibility = View.VISIBLE
+        tracksHistory = searchHistory.getTracksHistory()
         adapterHistory.notifyDataSetChanged()
     }
 
@@ -192,48 +171,46 @@ class SearchActivity : AppCompatActivity(), ClickListenerForRecyclerView {
     }
 
     private fun showImageError(typeError: String) {
-        if (typeError.equals("List is empty")) {                      //Ничего не нашлось
+        if (typeError == "List is empty") {                      //Ничего не нашлось
             showErrorNothingFound()
         } else {                                                    //Проблемы с сетью
             showErrorNetworkError()
-            buttonUpdate.visibility = View.VISIBLE
-            buttonUpdate.isEnabled = true
+            binding.buttonUpdate.visibility = View.VISIBLE
         }
-        messageImage.visibility = View.VISIBLE
-        textViewMessageError.visibility = View.VISIBLE
+        binding.messageImage.visibility = View.VISIBLE
+        binding.textViewMessageError.visibility = View.VISIBLE
     }
 
     private fun showErrorNothingFound() {
-        textViewMessageError.text = getString(R.string.nothing_found)
+        binding.textViewMessageError.text = getString(R.string.nothing_found)
         if (this.isNightModeOn()) {
             Glide.with(this)
                 .load(R.drawable.nothing_was_found_dark)
-                .into(messageImage)
+                .into(binding.messageImage)
         } else {
             Glide.with(this)
                 .load(R.drawable.nothing_was_found_light)
-                .into(messageImage)
+                .into(binding.messageImage)
         }
     }
 
     private fun showErrorNetworkError() {
-        textViewMessageError.text = getString(R.string.network_error)
+        binding.textViewMessageError.text = getString(R.string.network_error)
         if (this.isNightModeOn()) {
             Glide.with(this)
                 .load(R.drawable.network_problems_dark)
-                .into(messageImage)
+                .into(binding.messageImage)
         } else {
             Glide.with(this)
                 .load(R.drawable.network_problems_light)
-                .into(messageImage)
+                .into(binding.messageImage)
         }
     }
 
     private fun hideErrorElements() {
-        messageImage.visibility = View.GONE
-        textViewMessageError.visibility = View.GONE
-        buttonUpdate.visibility = View.GONE
-        buttonUpdate.isEnabled = false
+        binding.messageImage.visibility = View.GONE
+        binding.textViewMessageError.visibility = View.GONE
+        binding.buttonUpdate.visibility = View.GONE
     }
 
     private fun hideRecyclerView() {
@@ -242,11 +219,20 @@ class SearchActivity : AppCompatActivity(), ClickListenerForRecyclerView {
     }
 
     private fun hideHistoryLayout() {
-        historyLayout.visibility = View.GONE
+        binding.historyLayout.visibility = View.GONE
     }
 
     override fun onClick(track: Track) {
         searchHistory.addTrack(track)
+        adapterHistory.notifyDataSetChanged()
+        Intent(this, PlayerActivity::class.java).apply{
+            putExtra("track", track)
+            startActivity(this)
+        }
+
+//        val displayIntent = Intent(this, PlayerActivity::class.java)
+//        displayIntent.putExtra("track", track)
+//        startActivity(displayIntent)
     }
 
     private companion object {

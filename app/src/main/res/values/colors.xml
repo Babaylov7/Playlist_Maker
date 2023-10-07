@@ -7,5 +7,7 @@
     <color name="yp_black">#1A1B22</color>
     <color name="yp_text_gray">#AEAFB4</color>
     <color name="yp_light_gray">#E6E8EB</color>
+    <color name="gray_button_light_mode">#C5C6C7</color>
+    <color name="gray_button_night_mode">#535459</color>
     <color name="settings_icon_color_light_mode">#AEAFB4</color>
 </resources>
