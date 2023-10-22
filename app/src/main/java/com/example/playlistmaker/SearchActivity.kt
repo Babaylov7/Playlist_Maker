@@ -3,6 +3,8 @@ package com.example.playlistmaker
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
@@ -22,6 +24,9 @@ class SearchActivity : AppCompatActivity(), ClickListenerForRecyclerView {
     private var editTextValue = ""
     private val itunesBaseUrl = "https://itunes.apple.com"
     private lateinit var binding: SearchActivityBinding
+    private var isClickAllowed = true
+
+    private val handler = Handler(Looper.getMainLooper())
 
     private lateinit var searchHistory: SearchHistory
     private lateinit var tracks: ArrayList<Track>
@@ -223,20 +228,28 @@ class SearchActivity : AppCompatActivity(), ClickListenerForRecyclerView {
     }
 
     override fun onClick(track: Track) {
-        searchHistory.addTrack(track)
-        adapterHistory.notifyDataSetChanged()
-        Intent(this, PlayerActivity::class.java).apply{
-            putExtra("track", track)
-            startActivity(this)
+        if(clickDebounce()) {
+            searchHistory.addTrack(track)
+            adapterHistory.notifyDataSetChanged()
+            Intent(this, PlayerActivity::class.java).apply{
+                putExtra("track", track)
+                startActivity(this)
+            }
         }
+    }
 
-//        val displayIntent = Intent(this, PlayerActivity::class.java)
-//        displayIntent.putExtra("track", track)
-//        startActivity(displayIntent)
+    private fun clickDebounce() : Boolean {
+        val current = isClickAllowed
+        if (isClickAllowed) {
+            isClickAllowed = false
+            handler.postDelayed({ isClickAllowed = true }, CLICK_DEBOUNCE_DELAY)
+        }
+        return current
     }
 
     private companion object {
-        const val SEARCH_TEXT = "SEARCH_TEXT"
+        private const val SEARCH_TEXT = "SEARCH_TEXT"
+        private const val CLICK_DEBOUNCE_DELAY = 1000L
     }
 
 }
