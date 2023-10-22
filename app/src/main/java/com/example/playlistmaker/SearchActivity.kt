@@ -27,6 +27,7 @@ class SearchActivity : AppCompatActivity(), ClickListenerForRecyclerView {
     private var isClickAllowed = true
 
     private val handler = Handler(Looper.getMainLooper())
+    private val searchRunnable = Runnable { sendRequest() }
 
     private lateinit var searchHistory: SearchHistory
     private lateinit var tracks: ArrayList<Track>
@@ -62,12 +63,7 @@ class SearchActivity : AppCompatActivity(), ClickListenerForRecyclerView {
 
         binding.clearButton.setOnClickListener {
             binding.editText.setText("")
-            hideErrorElements()
-            val inputMethodManager =
-                getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
-            inputMethodManager?.hideSoftInputFromWindow(binding.editText.windowToken, 0)
-            hideRecyclerView()
-            updateRecyclerViewSearchHistory()
+            changeStateWhenSearchBarIsEmpty()
         }
 
         binding.cleanHistoryButton.setOnClickListener {
@@ -89,20 +85,20 @@ class SearchActivity : AppCompatActivity(), ClickListenerForRecyclerView {
             }
 
             override fun afterTextChanged(s: Editable?) {
+
                 editTextValue = binding.editText.text.toString()
+                if (editTextValue.isEmpty()){
+                    changeStateWhenSearchBarIsEmpty()
+                }
+                else {
+                    searchDebounce()
+                }
             }
         }
         binding.editText.addTextChangedListener(simpleTextWatcher)
 
         binding.recyclerView.adapter = adapterSearch
         binding.recyclerViewSearchHistory.adapter = adapterHistory
-
-        binding.editText.setOnEditorActionListener { _, actionId, _ ->
-            if (actionId == EditorInfo.IME_ACTION_DONE) {
-                sendRequest()
-            }
-            false
-        }
 
         binding.editText.setOnFocusChangeListener { _, hasFocus ->      //отображение Layout при фокусе строки поиска
             if (hasFocus                            //Есть фокус
@@ -247,9 +243,25 @@ class SearchActivity : AppCompatActivity(), ClickListenerForRecyclerView {
         return current
     }
 
+    private fun searchDebounce() {                                          //В момент вызова функции searchDebounce() мы удаляем
+        handler.removeCallbacks(searchRunnable)                             //последнюю запланированную отправку запроса и тут же,
+        handler.postDelayed(searchRunnable, SEARCH_DEBOUNCE_DELAY)          //используя метод postDelayed(), планируем запуск этого же
+    }                                                                       //Runnable через две секунды.
+
+    private fun changeStateWhenSearchBarIsEmpty(){                                            //при пустой строке поиска выполняем следующие действия
+        hideErrorElements()
+        val inputMethodManager =
+            getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
+        inputMethodManager?.hideSoftInputFromWindow(binding.editText.windowToken, 0)
+        hideRecyclerView()
+        updateRecyclerViewSearchHistory()
+    }
+
+
     private companion object {
         private const val SEARCH_TEXT = "SEARCH_TEXT"
         private const val CLICK_DEBOUNCE_DELAY = 1000L
+        private const val SEARCH_DEBOUNCE_DELAY = 2000L
     }
 
 }
