@@ -63,11 +63,12 @@ class SearchActivity : AppCompatActivity(), ClickListenerForRecyclerView {
 
         binding.clearButton.setOnClickListener {
             binding.editText.setText("")
+            hideKeyboard()
             changeStateWhenSearchBarIsEmpty()
         }
 
-        binding.cleanHistoryButton.setOnClickListener {
-            hideHistoryLayout()
+        binding.cleanHistoryButton.setOnClickListener {         //Очистка истории поиска
+            showAndHideHistoryLayout(false)                      //Скрываем HistoryLayout
             searchHistory.clean()
         }
 
@@ -107,7 +108,7 @@ class SearchActivity : AppCompatActivity(), ClickListenerForRecyclerView {
             ) {
                 updateRecyclerViewSearchHistory()
             } else {
-                hideHistoryLayout()
+                showAndHideHistoryLayout(false)
             }
         }
     }
@@ -146,14 +147,14 @@ class SearchActivity : AppCompatActivity(), ClickListenerForRecyclerView {
         }
     }
 
-    private fun updateRecyclerViewSearchHistory() {
-        binding.historyLayout.visibility = View.VISIBLE
+    private fun updateRecyclerViewSearchHistory() {                     //Обновление RecyclerView с историей поиска
+        showAndHideHistoryLayout(true)
         tracksHistory = searchHistory.getTracksHistory()
         adapterHistory.notifyDataSetChanged()
     }
 
 
-    private fun clearButtonVisibility(s: CharSequence?): Int {
+    private fun clearButtonVisibility(s: CharSequence?): Int {          //видимость кнопки "Очистить" в строке поиска
         return if (s.isNullOrEmpty()) {
             View.GONE
         } else {
@@ -219,9 +220,9 @@ class SearchActivity : AppCompatActivity(), ClickListenerForRecyclerView {
         adapterSearch.notifyDataSetChanged()
     }
 
-    private fun hideHistoryLayout() {
-        binding.historyLayout.visibility = View.GONE
-    }
+//    private fun hideHistoryLayout() {
+//        binding.historyLayout.visibility = View.GONE
+//    }
 
     override fun onClick(track: Track) {
         if(clickDebounce()) {
@@ -250,12 +251,33 @@ class SearchActivity : AppCompatActivity(), ClickListenerForRecyclerView {
 
     private fun changeStateWhenSearchBarIsEmpty(){                                            //при пустой строке поиска выполняем следующие действия
         hideErrorElements()
-        val inputMethodManager =
-            getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
-        inputMethodManager?.hideSoftInputFromWindow(binding.editText.windowToken, 0)
         hideRecyclerView()
         updateRecyclerViewSearchHistory()
     }
+
+    private fun hideKeyboard(){
+        val inputMethodManager =
+            getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
+        inputMethodManager?.hideSoftInputFromWindow(binding.editText.windowToken, 0)
+    }
+
+    private fun showAndHideHistoryLayout(action: Boolean){
+        if(action) {
+            binding.historyLayout.visibility = View.VISIBLE
+        } else {
+            binding.historyLayout.visibility = View.GONE
+        }
+    }
+
+    private fun showAndHideProgressBar(action: Boolean){
+        if(action) {
+            binding.progressBar.visibility = View.VISIBLE
+        } else {
+            binding.progressBar.visibility = View.GONE
+        }
+    }
+
+
 
 
     private companion object {
