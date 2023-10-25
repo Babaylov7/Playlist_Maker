@@ -87,10 +87,9 @@ class SearchActivity : AppCompatActivity(), ClickListenerForRecyclerView {
 
             override fun afterTextChanged(s: Editable?) {
                 editTextValue = binding.editText.text.toString()
-                if (editTextValue.isEmpty()){
+                if (editTextValue.isEmpty()) {
                     changeStateWhenSearchBarIsEmpty()
-                }
-                else {
+                } else {
                     searchDebounce()
                 }
             }
@@ -227,17 +226,17 @@ class SearchActivity : AppCompatActivity(), ClickListenerForRecyclerView {
 //    }
 
     override fun onClick(track: Track) {
-        if(clickDebounce()) {
+        if (clickDebounce()) {
             searchHistory.addTrack(track)
             adapterHistory.notifyDataSetChanged()
-            Intent(this, PlayerActivity::class.java).apply{
+            Intent(this, PlayerActivity::class.java).apply {
                 putExtra("track", track)
                 startActivity(this)
             }
         }
     }
 
-    private fun clickDebounce() : Boolean {
+    private fun clickDebounce(): Boolean {
         val current = isClickAllowed
         if (isClickAllowed) {
             isClickAllowed = false
@@ -248,31 +247,34 @@ class SearchActivity : AppCompatActivity(), ClickListenerForRecyclerView {
 
     private fun searchDebounce() {                                          //В момент вызова функции searchDebounce() мы удаляем
         handler.removeCallbacks(searchRunnable)                             //последнюю запланированную отправку запроса и тут же,
-        handler.postDelayed(searchRunnable, SEARCH_DEBOUNCE_DELAY)          //используя метод postDelayed(), планируем запуск этого же
+        handler.postDelayed(
+            searchRunnable,
+            SEARCH_DEBOUNCE_DELAY
+        )          //используя метод postDelayed(), планируем запуск этого же
     }                                                                       //Runnable через две секунды.
 
-    private fun changeStateWhenSearchBarIsEmpty(){                                            //при пустой строке поиска выполняем следующие действия
+    private fun changeStateWhenSearchBarIsEmpty() {                                            //при пустой строке поиска выполняем следующие действия
         hideErrorElements()
         hideRecyclerView()
         updateRecyclerViewSearchHistory()
     }
 
-    private fun hideKeyboard(){
+    private fun hideKeyboard() {
         val inputMethodManager =
             getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
         inputMethodManager?.hideSoftInputFromWindow(binding.editText.windowToken, 0)
     }
 
-    private fun showAndHideHistoryLayout(action: Boolean){
-        if(action) {
+    private fun showAndHideHistoryLayout(action: Boolean) {
+        if (action && tracksHistory.isNotEmpty()) {
             binding.historyLayout.visibility = View.VISIBLE
         } else {
             binding.historyLayout.visibility = View.GONE
         }
     }
 
-    private fun showAndHideProgressBar(action: Boolean){
-        if(action) {
+    private fun showAndHideProgressBar(action: Boolean) {
+        if (action) {
             binding.progressBar.visibility = View.VISIBLE
         } else {
             binding.progressBar.visibility = View.GONE
