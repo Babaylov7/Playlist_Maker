@@ -58,7 +58,7 @@ class SearchActivity : AppCompatActivity(), ClickListenerForRecyclerView {
         }
 
         binding.buttonUpdate.setOnClickListener {
-            sendRequest()
+            searchDebounce()
         }
 
         binding.clearButton.setOnClickListener {
@@ -83,15 +83,16 @@ class SearchActivity : AppCompatActivity(), ClickListenerForRecyclerView {
                         && s?.isEmpty() == true             //Строка поиска пуста
                         && tracksHistory.isNotEmpty()       //Список треков не пустой
                     ) View.VISIBLE else View.GONE           //отображение Layout при изменении текста в строке поиска
-            }
 
-            override fun afterTextChanged(s: Editable?) {
                 editTextValue = binding.editText.text.toString()
                 if (editTextValue.isEmpty()) {
                     changeStateWhenSearchBarIsEmpty()
                 } else {
                     searchDebounce()
                 }
+            }
+
+            override fun afterTextChanged(s: Editable?) {
             }
         }
         binding.editText.addTextChangedListener(simpleTextWatcher)
@@ -113,8 +114,8 @@ class SearchActivity : AppCompatActivity(), ClickListenerForRecyclerView {
 
     private fun sendRequest() {
         hideErrorElements()
-        showAndHideProgressBar(true)
         if (binding.editText.text.isNotEmpty()) {
+            showAndHideProgressBar(true)
             itunesService.search(binding.editText.text.toString())
                 .enqueue(object : Callback<TrackResponse> {
                     override fun onResponse(                                //Ответ
@@ -221,10 +222,6 @@ class SearchActivity : AppCompatActivity(), ClickListenerForRecyclerView {
         adapterSearch.notifyDataSetChanged()
     }
 
-//    private fun hideHistoryLayout() {
-//        binding.historyLayout.visibility = View.GONE
-//    }
-
     override fun onClick(track: Track) {
         if (clickDebounce()) {
             searchHistory.addTrack(track)
@@ -250,7 +247,7 @@ class SearchActivity : AppCompatActivity(), ClickListenerForRecyclerView {
         handler.postDelayed(
             searchRunnable,
             SEARCH_DEBOUNCE_DELAY
-        )          //используя метод postDelayed(), планируем запуск этого же
+        )                                                                   //используя метод postDelayed(), планируем запуск этого же
     }                                                                       //Runnable через две секунды.
 
     private fun changeStateWhenSearchBarIsEmpty() {                                            //при пустой строке поиска выполняем следующие действия
