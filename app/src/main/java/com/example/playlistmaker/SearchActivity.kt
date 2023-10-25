@@ -79,14 +79,13 @@ class SearchActivity : AppCompatActivity(), ClickListenerForRecyclerView {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 binding.clearButton.visibility = clearButtonVisibility(s)
                 binding.historyLayout.visibility =
-                    if (binding.editText.hasFocus()        //Есть фокус
-                        && s?.isEmpty() == true         //Строка поиска пуста
-                        && tracksHistory.isNotEmpty()   //Список треков не пустой
-                    ) View.VISIBLE else View.GONE    //отображение Layout при изменении текста в строке поиска
+                    if (binding.editText.hasFocus()         //Есть фокус
+                        && s?.isEmpty() == true             //Строка поиска пуста
+                        && tracksHistory.isNotEmpty()       //Список треков не пустой
+                    ) View.VISIBLE else View.GONE           //отображение Layout при изменении текста в строке поиска
             }
 
             override fun afterTextChanged(s: Editable?) {
-
                 editTextValue = binding.editText.text.toString()
                 if (editTextValue.isEmpty()){
                     changeStateWhenSearchBarIsEmpty()
@@ -115,6 +114,7 @@ class SearchActivity : AppCompatActivity(), ClickListenerForRecyclerView {
 
     private fun sendRequest() {
         hideErrorElements()
+        showAndHideProgressBar(true)
         if (binding.editText.text.isNotEmpty()) {
             itunesService.search(binding.editText.text.toString())
                 .enqueue(object : Callback<TrackResponse> {
@@ -133,12 +133,14 @@ class SearchActivity : AppCompatActivity(), ClickListenerForRecyclerView {
                                 showImageError("List is empty")
                             }
                         }
+                        showAndHideProgressBar(false)
                     }
 
                     override fun onFailure(
                         call: Call<TrackResponse>,
                         t: Throwable
                     ) {                                                 //Возврат ошибки
+                        showAndHideProgressBar(false)
                         hideRecyclerView()
                         showImageError("Network error")
                     }
@@ -276,9 +278,6 @@ class SearchActivity : AppCompatActivity(), ClickListenerForRecyclerView {
             binding.progressBar.visibility = View.GONE
         }
     }
-
-
-
 
     private companion object {
         private const val SEARCH_TEXT = "SEARCH_TEXT"
