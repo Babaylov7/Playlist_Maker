@@ -19,9 +19,7 @@ class PlayerActivity : AppCompatActivity() {
     private var mediaPlayer = MediaPlayer()
     private var playerState = STATE_DEFAULT
 
-    //private lateinit val mainThreadHandler: Handler
     private val mainThreadHandler = Handler(Looper.getMainLooper())
-    //private val updateTimeOfPlayRunnable = Runnable { updateTimeOfPlay() }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
