@@ -5,7 +5,7 @@ class SearchHistory(
     val sharedPreferences: AppSharedPreferences
 ) {
 
-    val tracks: ArrayList<Track> = getArrayOfTracks()       //Список треков в SP или пустой массив
+    private val tracks: ArrayList<Track> = getArrayOfTracks()       //Список треков в SP или пустой массив
 
     private fun getArrayOfTracks(): ArrayList<Track> {
         return sharedPreferences.readSearchHistory()

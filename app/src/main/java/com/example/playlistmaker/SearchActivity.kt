@@ -53,6 +53,7 @@ class SearchActivity : AppCompatActivity(), ClickListenerForRecyclerView {
         adapterHistory = TrackAdapter(tracksHistory, this)
 
         binding.buttonBack.setOnClickListener {
+            handler.removeCallbacks(searchRunnable)
             finish()
         }
 
@@ -129,7 +130,7 @@ class SearchActivity : AppCompatActivity(), ClickListenerForRecyclerView {
                             }
                             if (tracks.isEmpty()) {
                                 hideRecyclerView()
-                                showImageError("List is empty")
+                                showImageError(SearchStatus.LIST_IS_EMPTY)
                             }
                         }
                         showAndHideProgressBar(false)
@@ -141,7 +142,7 @@ class SearchActivity : AppCompatActivity(), ClickListenerForRecyclerView {
                     ) {                                                 //Возврат ошибки
                         showAndHideProgressBar(false)
                         hideRecyclerView()
-                        showImageError("Network error")
+                        showImageError(SearchStatus.NETWORK_ERROR)
                     }
                 })
             true
@@ -173,8 +174,8 @@ class SearchActivity : AppCompatActivity(), ClickListenerForRecyclerView {
         editTextValue = savedInstanceState.getString(SEARCH_TEXT, "")
     }
 
-    private fun showImageError(typeError: String) {
-        if (typeError == "List is empty") {                      //Ничего не нашлось
+    private fun showImageError(typeError: SearchStatus) {
+        if (typeError == SearchStatus.LIST_IS_EMPTY) {                      //Ничего не нашлось
             showErrorNothingFound()
         } else {                                                    //Проблемы с сетью
             showErrorNetworkError()
@@ -275,6 +276,11 @@ class SearchActivity : AppCompatActivity(), ClickListenerForRecyclerView {
         } else {
             binding.progressBar.visibility = View.GONE
         }
+    }
+
+    enum class SearchStatus{
+        LIST_IS_EMPTY,
+        NETWORK_ERROR
     }
 
     private companion object {

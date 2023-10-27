@@ -12,7 +12,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.start_activity)
 
         val appSharedPreferences = applicationContext as AppSharedPreferences
-        appSharedPreferences.switchTheme(appSharedPreferences.getNightMomeSettings())
+        appSharedPreferences.switchTheme(appSharedPreferences.getNightModeSettings())
 
         val buttonSearch = findViewById<Button>(R.id.button_search)
         val buttonLibrary = findViewById<Button>(R.id.button_library)

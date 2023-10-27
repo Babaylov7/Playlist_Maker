@@ -23,7 +23,7 @@ class SettingsActivity : AppCompatActivity() {
 
         darkThemeSwitch.setChecked(
             (applicationContext as AppSharedPreferences)
-                .getNightMomeSettings()
+                .getNightModeSettings()
         )          //выставляет значение Switch по значению из настроек
 
         buttonBack.setOnClickListener {
