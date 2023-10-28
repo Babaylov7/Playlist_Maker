@@ -112,6 +112,29 @@ class SearchActivity : AppCompatActivity(), ClickListenerForRecyclerView {
         }
     }
 
+//    private fun sendRequest2(){
+//        hideErrorElements()
+//        if (binding.editText.text.isNotEmpty()) {
+//            showAndHideProgressBar(true)
+//            val networkQueryRequest = CreateNetworkRequest().sendRequest(binding.editText.text.toString())
+//            if (networkQueryRequest.searchStatus == SearchStatus.RESPONSE_RECEIVED){
+//                tracks.clear()
+//                tracks.addAll(networkQueryRequest.tracks)
+//                adapterSearch.notifyDataSetChanged()
+//            }
+//            if (networkQueryRequest.searchStatus == SearchStatus.LIST_IS_EMPTY){
+//                hideRecyclerView()
+//                showImageError(SearchStatus.LIST_IS_EMPTY)
+//            }
+//            if (networkQueryRequest.searchStatus == SearchStatus.NETWORK_ERROR){
+//                showAndHideProgressBar(false)
+//                hideRecyclerView()
+//                showImageError(SearchStatus.NETWORK_ERROR)
+//            }
+//            showAndHideProgressBar(false)
+//        }
+//    }
+
     private fun sendRequest() {
         hideErrorElements()
         if (binding.editText.text.isNotEmpty()) {
@@ -276,11 +299,6 @@ class SearchActivity : AppCompatActivity(), ClickListenerForRecyclerView {
         } else {
             binding.progressBar.visibility = View.GONE
         }
-    }
-
-    enum class SearchStatus{
-        LIST_IS_EMPTY,
-        NETWORK_ERROR
     }
 
     private companion object {

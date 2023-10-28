@@ -67,12 +67,13 @@ class PlayerActivity : AppCompatActivity() {
     }
 
     private fun updateTimeOfPlay(): Runnable {                   //Обновленеи времени проигрования трека
-        return object : Runnable{
+        return object : Runnable {
             override fun run() {
                 val currentTime = mediaPlayer.currentPosition
 
-                if(playerState == STATE_PLAYING){
-                    binding.timeOfPlay.text = SimpleDateFormat("mm:ss", Locale.getDefault()).format(currentTime) //String.format("%d:%02d", currentTime / 60000, currentTime % 60000)
+                if (playerState == STATE_PLAYING) {
+                    binding.timeOfPlay.text =
+                        SimpleDateFormat("mm:ss", Locale.getDefault()).format(currentTime)
                     mainThreadHandler.postDelayed(this, UPDATE)
                 } else if (playerState == STATE_PAUSED) {
                     mainThreadHandler.removeCallbacks(updateTimeOfPlay())
