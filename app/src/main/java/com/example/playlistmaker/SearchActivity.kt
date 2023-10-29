@@ -53,7 +53,6 @@ class SearchActivity : AppCompatActivity(), ClickListenerForRecyclerView {
         adapterHistory = TrackAdapter(tracksHistory, this)
 
         binding.buttonBack.setOnClickListener {
-            handler.removeCallbacks(searchRunnable)
             finish()
         }
 
@@ -112,28 +111,10 @@ class SearchActivity : AppCompatActivity(), ClickListenerForRecyclerView {
         }
     }
 
-//    private fun sendRequest2(){
-//        hideErrorElements()
-//        if (binding.editText.text.isNotEmpty()) {
-//            showAndHideProgressBar(true)
-//            val networkQueryRequest = CreateNetworkRequest().sendRequest(binding.editText.text.toString())
-//            if (networkQueryRequest.searchStatus == SearchStatus.RESPONSE_RECEIVED){
-//                tracks.clear()
-//                tracks.addAll(networkQueryRequest.tracks)
-//                adapterSearch.notifyDataSetChanged()
-//            }
-//            if (networkQueryRequest.searchStatus == SearchStatus.LIST_IS_EMPTY){
-//                hideRecyclerView()
-//                showImageError(SearchStatus.LIST_IS_EMPTY)
-//            }
-//            if (networkQueryRequest.searchStatus == SearchStatus.NETWORK_ERROR){
-//                showAndHideProgressBar(false)
-//                hideRecyclerView()
-//                showImageError(SearchStatus.NETWORK_ERROR)
-//            }
-//            showAndHideProgressBar(false)
-//        }
-//    }
+    override fun onDestroy() {
+        handler.removeCallbacks(searchRunnable)
+        super.onDestroy()
+    }
 
     private fun sendRequest() {
         hideErrorElements()

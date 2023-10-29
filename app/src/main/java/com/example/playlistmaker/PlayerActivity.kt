@@ -73,7 +73,7 @@ class PlayerActivity : AppCompatActivity() {
 
                 if (playerState == STATE_PLAYING) {
                     binding.timeOfPlay.text =
-                        SimpleDateFormat("mm:ss", Locale.getDefault()).format(currentTime)
+                        SimpleDateFormat("m:ss", Locale.getDefault()).format(currentTime)
                     mainThreadHandler.postDelayed(this, UPDATE)
                 } else if (playerState == STATE_PAUSED) {
                     mainThreadHandler.removeCallbacks(updateTimeOfPlay())
@@ -173,6 +173,6 @@ class PlayerActivity : AppCompatActivity() {
         private const val STATE_PREPARED = 1
         private const val STATE_PLAYING = 2
         private const val STATE_PAUSED = 3
-        private const val UPDATE = 300L
+        private const val UPDATE = 250L
     }
 }
