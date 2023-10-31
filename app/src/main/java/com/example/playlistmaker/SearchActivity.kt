@@ -3,10 +3,11 @@ package com.example.playlistmaker
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
-import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
@@ -22,6 +23,10 @@ class SearchActivity : AppCompatActivity(), ClickListenerForRecyclerView {
     private var editTextValue = ""
     private val itunesBaseUrl = "https://itunes.apple.com"
     private lateinit var binding: SearchActivityBinding
+    private var isClickAllowed = true
+
+    private val handler = Handler(Looper.getMainLooper())
+    private val searchRunnable = Runnable { sendRequest() }
 
     private lateinit var searchHistory: SearchHistory
     private lateinit var tracks: ArrayList<Track>
@@ -52,21 +57,17 @@ class SearchActivity : AppCompatActivity(), ClickListenerForRecyclerView {
         }
 
         binding.buttonUpdate.setOnClickListener {
-            sendRequest()
+            searchDebounce()
         }
 
         binding.clearButton.setOnClickListener {
             binding.editText.setText("")
-            hideErrorElements()
-            val inputMethodManager =
-                getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
-            inputMethodManager?.hideSoftInputFromWindow(binding.editText.windowToken, 0)
-            hideRecyclerView()
-            updateRecyclerViewSearchHistory()
+            hideKeyboard()
+            changeStateWhenSearchBarIsEmpty()
         }
 
-        binding.cleanHistoryButton.setOnClickListener {
-            hideHistoryLayout()
+        binding.cleanHistoryButton.setOnClickListener {         //Очистка истории поиска
+            showAndHideHistoryLayout(false)                      //Скрываем HistoryLayout
             searchHistory.clean()
         }
 
@@ -77,27 +78,26 @@ class SearchActivity : AppCompatActivity(), ClickListenerForRecyclerView {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 binding.clearButton.visibility = clearButtonVisibility(s)
                 binding.historyLayout.visibility =
-                    if (binding.editText.hasFocus()        //Есть фокус
-                        && s?.isEmpty() == true         //Строка поиска пуста
-                        && tracksHistory.isNotEmpty()   //Список треков не пустой
-                    ) View.VISIBLE else View.GONE    //отображение Layout при изменении текста в строке поиска
+                    if (binding.editText.hasFocus()         //Есть фокус
+                        && s?.isEmpty() == true             //Строка поиска пуста
+                        && tracksHistory.isNotEmpty()       //Список треков не пустой
+                    ) View.VISIBLE else View.GONE           //отображение Layout при изменении текста в строке поиска
+
+                editTextValue = binding.editText.text.toString()
+                if (editTextValue.isEmpty()) {
+                    changeStateWhenSearchBarIsEmpty()
+                } else {
+                    searchDebounce()
+                }
             }
 
             override fun afterTextChanged(s: Editable?) {
-                editTextValue = binding.editText.text.toString()
             }
         }
         binding.editText.addTextChangedListener(simpleTextWatcher)
 
         binding.recyclerView.adapter = adapterSearch
         binding.recyclerViewSearchHistory.adapter = adapterHistory
-
-        binding.editText.setOnEditorActionListener { _, actionId, _ ->
-            if (actionId == EditorInfo.IME_ACTION_DONE) {
-                sendRequest()
-            }
-            false
-        }
 
         binding.editText.setOnFocusChangeListener { _, hasFocus ->      //отображение Layout при фокусе строки поиска
             if (hasFocus                            //Есть фокус
@@ -106,14 +106,20 @@ class SearchActivity : AppCompatActivity(), ClickListenerForRecyclerView {
             ) {
                 updateRecyclerViewSearchHistory()
             } else {
-                hideHistoryLayout()
+                showAndHideHistoryLayout(false)
             }
         }
+    }
+
+    override fun onDestroy() {
+        handler.removeCallbacks(searchRunnable)
+        super.onDestroy()
     }
 
     private fun sendRequest() {
         hideErrorElements()
         if (binding.editText.text.isNotEmpty()) {
+            showAndHideProgressBar(true)
             itunesService.search(binding.editText.text.toString())
                 .enqueue(object : Callback<TrackResponse> {
                     override fun onResponse(                                //Ответ
@@ -128,31 +134,33 @@ class SearchActivity : AppCompatActivity(), ClickListenerForRecyclerView {
                             }
                             if (tracks.isEmpty()) {
                                 hideRecyclerView()
-                                showImageError("List is empty")
+                                showImageError(SearchStatus.LIST_IS_EMPTY)
                             }
                         }
+                        showAndHideProgressBar(false)
                     }
 
                     override fun onFailure(
                         call: Call<TrackResponse>,
                         t: Throwable
                     ) {                                                 //Возврат ошибки
+                        showAndHideProgressBar(false)
                         hideRecyclerView()
-                        showImageError("Network error")
+                        showImageError(SearchStatus.NETWORK_ERROR)
                     }
                 })
             true
         }
     }
 
-    private fun updateRecyclerViewSearchHistory() {
-        binding.historyLayout.visibility = View.VISIBLE
+    private fun updateRecyclerViewSearchHistory() {                     //Обновление RecyclerView с историей поиска
+        showAndHideHistoryLayout(true)
         tracksHistory = searchHistory.getTracksHistory()
         adapterHistory.notifyDataSetChanged()
     }
 
 
-    private fun clearButtonVisibility(s: CharSequence?): Int {
+    private fun clearButtonVisibility(s: CharSequence?): Int {          //видимость кнопки "Очистить" в строке поиска
         return if (s.isNullOrEmpty()) {
             View.GONE
         } else {
@@ -170,8 +178,8 @@ class SearchActivity : AppCompatActivity(), ClickListenerForRecyclerView {
         editTextValue = savedInstanceState.getString(SEARCH_TEXT, "")
     }
 
-    private fun showImageError(typeError: String) {
-        if (typeError == "List is empty") {                      //Ничего не нашлось
+    private fun showImageError(typeError: SearchStatus) {
+        if (typeError == SearchStatus.LIST_IS_EMPTY) {                      //Ничего не нашлось
             showErrorNothingFound()
         } else {                                                    //Проблемы с сетью
             showErrorNetworkError()
@@ -218,25 +226,66 @@ class SearchActivity : AppCompatActivity(), ClickListenerForRecyclerView {
         adapterSearch.notifyDataSetChanged()
     }
 
-    private fun hideHistoryLayout() {
-        binding.historyLayout.visibility = View.GONE
+    override fun onClick(track: Track) {
+        if (clickDebounce()) {
+            searchHistory.addTrack(track)
+            adapterHistory.notifyDataSetChanged()
+            Intent(this, PlayerActivity::class.java).apply {
+                putExtra("track", track)
+                startActivity(this)
+            }
+        }
     }
 
-    override fun onClick(track: Track) {
-        searchHistory.addTrack(track)
-        adapterHistory.notifyDataSetChanged()
-        Intent(this, PlayerActivity::class.java).apply{
-            putExtra("track", track)
-            startActivity(this)
+    private fun clickDebounce(): Boolean {
+        val current = isClickAllowed
+        if (isClickAllowed) {
+            isClickAllowed = false
+            handler.postDelayed({ isClickAllowed = true }, CLICK_DEBOUNCE_DELAY)
         }
+        return current
+    }
 
-//        val displayIntent = Intent(this, PlayerActivity::class.java)
-//        displayIntent.putExtra("track", track)
-//        startActivity(displayIntent)
+    private fun searchDebounce() {                                          //В момент вызова функции searchDebounce() мы удаляем
+        handler.removeCallbacks(searchRunnable)                             //последнюю запланированную отправку запроса и тут же,
+        handler.postDelayed(
+            searchRunnable,
+            SEARCH_DEBOUNCE_DELAY
+        )                                                                   //используя метод postDelayed(), планируем запуск этого же
+    }                                                                       //Runnable через две секунды.
+
+    private fun changeStateWhenSearchBarIsEmpty() {                                            //при пустой строке поиска выполняем следующие действия
+        hideErrorElements()
+        hideRecyclerView()
+        updateRecyclerViewSearchHistory()
+    }
+
+    private fun hideKeyboard() {
+        val inputMethodManager =
+            getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
+        inputMethodManager?.hideSoftInputFromWindow(binding.editText.windowToken, 0)
+    }
+
+    private fun showAndHideHistoryLayout(action: Boolean) {
+        if (action && tracksHistory.isNotEmpty()) {
+            binding.historyLayout.visibility = View.VISIBLE
+        } else {
+            binding.historyLayout.visibility = View.GONE
+        }
+    }
+
+    private fun showAndHideProgressBar(action: Boolean) {
+        if (action) {
+            binding.progressBar.visibility = View.VISIBLE
+        } else {
+            binding.progressBar.visibility = View.GONE
+        }
     }
 
     private companion object {
-        const val SEARCH_TEXT = "SEARCH_TEXT"
+        private const val SEARCH_TEXT = "SEARCH_TEXT"
+        private const val CLICK_DEBOUNCE_DELAY = 1000L
+        private const val SEARCH_DEBOUNCE_DELAY = 2000L
     }
 
 }

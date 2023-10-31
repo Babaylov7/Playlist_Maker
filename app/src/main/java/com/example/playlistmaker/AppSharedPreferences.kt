@@ -2,7 +2,6 @@ package com.example.playlistmaker
 
 import android.app.Application
 import android.content.SharedPreferences
-import android.util.Log
 import androidx.appcompat.app.AppCompatDelegate
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
@@ -25,7 +24,7 @@ class AppSharedPreferences : Application() {
             .apply()
     }
 
-    fun getNightMomeSettings(): Boolean {
+    fun getNightModeSettings(): Boolean {
         return sharedPrefs.getBoolean(NIGHT_MODE_ON, false)
     }
 
