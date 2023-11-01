@@ -1,4 +1,4 @@
-package com.example.playlistmaker
+package com.example.playlistmaker.ui.search
 
 import android.content.Context
 import android.content.Intent
@@ -11,7 +11,17 @@ import android.view.View
 import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
+import com.example.playlistmaker.data.dto.AppSharedPreferences
+import com.example.playlistmaker.ClickListenerForRecyclerView
+import com.example.playlistmaker.R
+import com.example.playlistmaker.SearchHistory
+import com.example.playlistmaker.data.dto.SearchStatus
+import com.example.playlistmaker.domain.models.Track
+import com.example.playlistmaker.data.dto.TrackSearchResponse
+import com.example.playlistmaker.data.network.ItunesApi
 import com.example.playlistmaker.databinding.SearchActivityBinding
+import com.example.playlistmaker.isNightModeOn
+import com.example.playlistmaker.ui.player.PlayerActivity
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -121,10 +131,10 @@ class SearchActivity : AppCompatActivity(), ClickListenerForRecyclerView {
         if (binding.editText.text.isNotEmpty()) {
             showAndHideProgressBar(true)
             itunesService.search(binding.editText.text.toString())
-                .enqueue(object : Callback<TrackResponse> {
+                .enqueue(object : Callback<TrackSearchResponse> {
                     override fun onResponse(                                //Ответ
-                        call: Call<TrackResponse>,
-                        response: Response<TrackResponse>
+                        call: Call<TrackSearchResponse>,
+                        response: Response<TrackSearchResponse>
                     ) {
                         if (response.code() == 200) {
                             tracks.clear()
@@ -141,7 +151,7 @@ class SearchActivity : AppCompatActivity(), ClickListenerForRecyclerView {
                     }
 
                     override fun onFailure(
-                        call: Call<TrackResponse>,
+                        call: Call<TrackSearchResponse>,
                         t: Throwable
                     ) {                                                 //Возврат ошибки
                         showAndHideProgressBar(false)
