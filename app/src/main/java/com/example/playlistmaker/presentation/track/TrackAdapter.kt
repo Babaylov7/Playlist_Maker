@@ -1,9 +1,9 @@
-package com.example.playlistmaker.ui.search
+package com.example.playlistmaker.presentation.track
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.example.playlistmaker.ClickListenerForRecyclerView
+import com.example.playlistmaker.presentation.ClickListenerForRecyclerView
 import com.example.playlistmaker.R
 import com.example.playlistmaker.domain.models.Track
 
