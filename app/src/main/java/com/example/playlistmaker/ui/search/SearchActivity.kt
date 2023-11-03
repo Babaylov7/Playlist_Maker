@@ -11,7 +11,7 @@ import android.view.View
 import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
-import com.example.playlistmaker.data.dto.AppSharedPreferences
+import com.example.playlistmaker.app.AppSharedPreferences
 import com.example.playlistmaker.presentation.ClickListenerForRecyclerView
 import com.example.playlistmaker.R
 import com.example.playlistmaker.domain.impl.SearchHistory

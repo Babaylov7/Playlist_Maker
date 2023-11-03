@@ -1,6 +1,6 @@
 package com.example.playlistmaker.domain.impl
 
-import com.example.playlistmaker.data.dto.AppSharedPreferences
+import com.example.playlistmaker.app.AppSharedPreferences
 import com.example.playlistmaker.domain.models.Track
 
 

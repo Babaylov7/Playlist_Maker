@@ -7,7 +7,7 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SwitchCompat
-import com.example.playlistmaker.data.dto.AppSharedPreferences
+import com.example.playlistmaker.app.AppSharedPreferences
 import com.example.playlistmaker.R
 
 

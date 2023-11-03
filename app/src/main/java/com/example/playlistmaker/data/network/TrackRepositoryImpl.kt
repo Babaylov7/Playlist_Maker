@@ -10,7 +10,7 @@ import com.example.playlistmaker.domain.models.Track
 class TrackRepositoryImpl(private val networkClient: NetworkClient) : TrackRepository {
 
     override fun searchTracks(expression: String): List<Track> {
-        val response = networkClient.doRequest(TrackSearchRequest(expression))
+        val response = networkClient.doTrackSearchRequest(TrackSearchRequest(expression))
         if(response.resultStatus == SearchStatus.RESPONSE_RECEIVED) {
             return (response as TrackSearchResponse).results.map {
                 Track(
