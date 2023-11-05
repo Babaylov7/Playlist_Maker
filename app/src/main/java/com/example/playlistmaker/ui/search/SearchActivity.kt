@@ -13,7 +13,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
 import com.example.playlistmaker.app.AppSharedPreferences
 import com.example.playlistmaker.R
-import com.example.playlistmaker.domain.impl.SearchHistory
+import com.example.playlistmaker.data.dto.SearchHistory
 import com.example.playlistmaker.data.dto.SearchStatus
 import com.example.playlistmaker.domain.models.Track
 import com.example.playlistmaker.data.dto.TrackSearchResponse
