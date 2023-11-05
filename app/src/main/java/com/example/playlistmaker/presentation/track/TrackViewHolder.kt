@@ -6,7 +6,6 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
-import com.example.playlistmaker.presentation.ClickListenerForRecyclerView
 import com.example.playlistmaker.R
 import com.example.playlistmaker.domain.models.Track
 import java.text.SimpleDateFormat
@@ -20,7 +19,7 @@ class TrackViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     private val groupName: TextView = itemView.findViewById(R.id.artist_name)
     private val trackDuration: TextView = itemView.findViewById(R.id.track_duration)
 
-    fun bind(model: Track, listener: ClickListenerForRecyclerView) {
+    fun bind(model: Track) {
         trackName.text = model.trackName
         groupName.text = model.artistName
         trackDuration.text =
@@ -32,11 +31,6 @@ class TrackViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
             .centerCrop()
             .transform(RoundedCorners(itemView.resources.getDimensionPixelSize(R.dimen.corner_radius_2)))
             .into(albumImage)
-
-        itemView.setOnClickListener {
-            listener.onClick(model)
-        }
-
     }
 
 }

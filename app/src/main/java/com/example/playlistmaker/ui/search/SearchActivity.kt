@@ -12,7 +12,6 @@ import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
 import com.example.playlistmaker.app.AppSharedPreferences
-import com.example.playlistmaker.presentation.ClickListenerForRecyclerView
 import com.example.playlistmaker.R
 import com.example.playlistmaker.domain.impl.SearchHistory
 import com.example.playlistmaker.data.dto.SearchStatus
@@ -29,7 +28,7 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-class SearchActivity : AppCompatActivity(), ClickListenerForRecyclerView {
+class SearchActivity : AppCompatActivity() {
 
     private var editTextValue = ""
     private val itunesBaseUrl = "https://itunes.apple.com"
@@ -52,6 +51,17 @@ class SearchActivity : AppCompatActivity(), ClickListenerForRecyclerView {
 
     private val itunesService = retrofit.create(ItunesApi::class.java)
 
+    private val onClick: (track: Track) -> Unit = {
+        if (clickDebounce()) {
+            searchHistory.addTrack(it)
+            adapterHistory.notifyDataSetChanged()
+            Intent(this, PlayerActivity::class.java).apply {
+                putExtra("track", it)
+                startActivity(this)
+            }
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = SearchActivityBinding.inflate(layoutInflater)
@@ -60,8 +70,8 @@ class SearchActivity : AppCompatActivity(), ClickListenerForRecyclerView {
         searchHistory = SearchHistory(applicationContext as AppSharedPreferences)
         tracks = ArrayList<Track>()
         tracksHistory = searchHistory.getTracksHistory()
-        adapterSearch = TrackAdapter(tracks, this)
-        adapterHistory = TrackAdapter(tracksHistory, this)
+        adapterSearch = TrackAdapter(tracks, onClick)
+        adapterHistory = TrackAdapter(tracksHistory, onClick)
 
         binding.buttonBack.setOnClickListener {
             finish()
@@ -170,7 +180,6 @@ class SearchActivity : AppCompatActivity(), ClickListenerForRecyclerView {
         adapterHistory.notifyDataSetChanged()
     }
 
-
     private fun clearButtonVisibility(s: CharSequence?): Int {          //видимость кнопки "Очистить" в строке поиска
         return if (s.isNullOrEmpty()) {
             View.GONE
@@ -235,17 +244,6 @@ class SearchActivity : AppCompatActivity(), ClickListenerForRecyclerView {
     private fun hideRecyclerView() {
         tracks.clear()
         adapterSearch.notifyDataSetChanged()
-    }
-
-    override fun onClick(track: Track) {
-        if (clickDebounce()) {
-            searchHistory.addTrack(track)
-            adapterHistory.notifyDataSetChanged()
-            Intent(this, PlayerActivity::class.java).apply {
-                putExtra("track", track)
-                startActivity(this)
-            }
-        }
     }
 
     private fun clickDebounce(): Boolean {

@@ -58,7 +58,7 @@ class SettingsActivity : AppCompatActivity() {
         }
 
         darkThemeSwitch.setOnCheckedChangeListener { switcher, checked ->
-            (applicationContext as AppSharedPreferences).putNightMomeSettings(checked)
+            (applicationContext as AppSharedPreferences).putNightModeSettings(checked)
             (applicationContext as AppSharedPreferences).switchTheme(checked)
 
         }

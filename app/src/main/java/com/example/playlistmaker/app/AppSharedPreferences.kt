@@ -19,7 +19,7 @@ class AppSharedPreferences : Application() {
         switchTheme(darkTheme)
     }
 
-    fun putNightMomeSettings(mode: Boolean) {
+    fun putNightModeSettings(mode: Boolean) {
         sharedPrefs.edit()
             .putBoolean(NIGHT_MODE_ON, mode)
             .apply()
