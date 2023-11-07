@@ -4,7 +4,7 @@ import com.example.playlistmaker.data.NetworkClient
 import com.example.playlistmaker.data.dto.SearchStatus
 import com.example.playlistmaker.data.dto.TrackSearchRequest
 import com.example.playlistmaker.data.dto.TrackSearchResponse
-import com.example.playlistmaker.domain.api.TrackRepository
+import com.example.playlistmaker.domain.api.track.TrackRepository
 import com.example.playlistmaker.domain.models.Track
 
 class TrackRepositoryImpl(private val networkClient: NetworkClient) : TrackRepository {
@@ -29,5 +29,8 @@ class TrackRepositoryImpl(private val networkClient: NetworkClient) : TrackRepos
         } else {
             return emptyList()
         }
+
+
+
     }
 }

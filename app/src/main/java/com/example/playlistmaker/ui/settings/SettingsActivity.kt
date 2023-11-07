@@ -9,13 +9,15 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SwitchCompat
 import com.example.playlistmaker.app.AppSharedPreferences
 import com.example.playlistmaker.R
-
+import com.example.playlistmaker.data.local.SavedSettingsRepositoryImpl
+import com.example.playlistmaker.domain.impl.SavedSettingsInteractorImpl
 
 class SettingsActivity : AppCompatActivity() {
+
+    private lateinit var savedSettingsInteractorImpl: SavedSettingsInteractorImpl
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.settings_activity)
-
 
         val buttonBack = findViewById<ImageView>(R.id.button_back)
         val sareApplicationButton = findViewById<LinearLayout>(R.id.sare_application)
@@ -23,9 +25,11 @@ class SettingsActivity : AppCompatActivity() {
         val termsOfUseButton = findViewById<LinearLayout>(R.id.terms_of_use)
         val darkThemeSwitch = findViewById<SwitchCompat>(R.id.dark_theme_switch)
 
+        savedSettingsInteractorImpl =
+            SavedSettingsInteractorImpl(SavedSettingsRepositoryImpl(applicationContext as AppSharedPreferences))
+
         darkThemeSwitch.setChecked(
-            (applicationContext as AppSharedPreferences)
-                .getNightModeSettings()
+            savedSettingsInteractorImpl.getNightModeSettings()
         )          //выставляет значение Switch по значению из настроек
 
         buttonBack.setOnClickListener {
@@ -58,9 +62,8 @@ class SettingsActivity : AppCompatActivity() {
         }
 
         darkThemeSwitch.setOnCheckedChangeListener { switcher, checked ->
-            (applicationContext as AppSharedPreferences).putNightModeSettings(checked)
-            (applicationContext as AppSharedPreferences).switchTheme(checked)
-
+            savedSettingsInteractorImpl.putNightModeSettings(checked)
+            savedSettingsInteractorImpl.switchTheme(checked)
         }
 
     }

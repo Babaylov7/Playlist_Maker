@@ -7,17 +7,23 @@ import android.widget.Button
 import com.example.playlistmaker.app.AppSharedPreferences
 import com.example.playlistmaker.ui.library.LibraryActivity
 import com.example.playlistmaker.R
+import com.example.playlistmaker.data.local.SavedSettingsRepositoryImpl
+import com.example.playlistmaker.domain.impl.SavedSettingsInteractorImpl
 import com.example.playlistmaker.ui.search.SearchActivity
 import com.example.playlistmaker.ui.settings.SettingsActivity
 
 
 class MainActivity : AppCompatActivity() {
+
+    private lateinit var savedSettingsInteractorImpl: SavedSettingsInteractorImpl
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.start_activity)
 
-        val appSharedPreferences = applicationContext as AppSharedPreferences
-        appSharedPreferences.switchTheme(appSharedPreferences.getNightModeSettings())
+        savedSettingsInteractorImpl =
+            SavedSettingsInteractorImpl(SavedSettingsRepositoryImpl(applicationContext as AppSharedPreferences))
+        savedSettingsInteractorImpl.switchTheme(savedSettingsInteractorImpl.getNightModeSettings())
 
         val buttonSearch = findViewById<Button>(R.id.button_search)
         val buttonLibrary = findViewById<Button>(R.id.button_library)

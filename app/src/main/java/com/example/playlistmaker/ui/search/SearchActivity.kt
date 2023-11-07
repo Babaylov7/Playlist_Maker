@@ -13,12 +13,13 @@ import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
 import com.example.playlistmaker.app.AppSharedPreferences
 import com.example.playlistmaker.R
-import com.example.playlistmaker.data.dto.SearchHistory
 import com.example.playlistmaker.data.dto.SearchStatus
 import com.example.playlistmaker.domain.models.Track
 import com.example.playlistmaker.data.dto.TrackSearchResponse
+import com.example.playlistmaker.data.local.SearchHistoryRepositoryImpl
 import com.example.playlistmaker.data.network.ItunesApi
 import com.example.playlistmaker.databinding.SearchActivityBinding
+import com.example.playlistmaker.domain.impl.TrackHistoryInteractorImpl
 import com.example.playlistmaker.presentation.track.TrackAdapter
 import com.example.playlistmaker.presentation.isNightModeOn
 import com.example.playlistmaker.ui.player.PlayerActivity
@@ -38,11 +39,12 @@ class SearchActivity : AppCompatActivity() {
     private val handler = Handler(Looper.getMainLooper())
     private val searchRunnable = Runnable { sendRequest() }
 
-    private lateinit var searchHistory: SearchHistory
     private lateinit var tracks: ArrayList<Track>
     private lateinit var tracksHistory: ArrayList<Track>
     private lateinit var adapterSearch: TrackAdapter
     private lateinit var adapterHistory: TrackAdapter
+
+    private lateinit var trackHistoryInteractorImpl: TrackHistoryInteractorImpl
 
     private val retrofit = Retrofit.Builder()
         .baseUrl(itunesBaseUrl)
@@ -53,7 +55,8 @@ class SearchActivity : AppCompatActivity() {
 
     private val onClick: (track: Track) -> Unit = {
         if (clickDebounce()) {
-            searchHistory.addTrack(it)
+            //searchHistory.addTrack(it)
+            trackHistoryInteractorImpl.addTrack(it)
             adapterHistory.notifyDataSetChanged()
             Intent(this, PlayerActivity::class.java).apply {
                 putExtra("track", it)
@@ -67,11 +70,14 @@ class SearchActivity : AppCompatActivity() {
         binding = SearchActivityBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        searchHistory = SearchHistory(applicationContext as AppSharedPreferences)
         tracks = ArrayList<Track>()
-        tracksHistory = searchHistory.getTracksHistory()
+        trackHistoryInteractorImpl =
+            TrackHistoryInteractorImpl(SearchHistoryRepositoryImpl(applicationContext as AppSharedPreferences))
+        tracksHistory = trackHistoryInteractorImpl.getTracksHistory()
         adapterSearch = TrackAdapter(tracks, onClick)
         adapterHistory = TrackAdapter(tracksHistory, onClick)
+
+
 
         binding.buttonBack.setOnClickListener {
             finish()
@@ -89,7 +95,8 @@ class SearchActivity : AppCompatActivity() {
 
         binding.cleanHistoryButton.setOnClickListener {         //Очистка истории поиска
             showAndHideHistoryLayout(false)                      //Скрываем HistoryLayout
-            searchHistory.clean()
+            //searchHistory.clean()
+            trackHistoryInteractorImpl.clean()
         }
 
         val simpleTextWatcher = object : TextWatcher {
@@ -176,7 +183,8 @@ class SearchActivity : AppCompatActivity() {
 
     private fun updateRecyclerViewSearchHistory() {                     //Обновление RecyclerView с историей поиска
         showAndHideHistoryLayout(true)
-        tracksHistory = searchHistory.getTracksHistory()
+        //tracksHistory = searchHistory.getTracksHistory()
+        tracksHistory = trackHistoryInteractorImpl.getTracksHistory()
         adapterHistory.notifyDataSetChanged()
     }
 
