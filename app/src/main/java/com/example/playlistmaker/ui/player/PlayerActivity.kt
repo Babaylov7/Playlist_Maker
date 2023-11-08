@@ -116,9 +116,7 @@ class PlayerActivity : AppCompatActivity() {
     }
 
     private fun preparePlayer(track: Track) {
-        if (track.previewUrl.isNullOrEmpty()) {
-            showMassage()
-        } else {
+        try{
             mediaPlayer.setDataSource(track.previewUrl)
             mediaPlayer.prepareAsync()
             mediaPlayer.setOnPreparedListener {
@@ -127,6 +125,8 @@ class PlayerActivity : AppCompatActivity() {
             mediaPlayer.setOnCompletionListener {
                 playerState = STATE_PREPARED
             }
+        } catch (e: Exception)  {
+            showMassage()
         }
     }
 

@@ -7,6 +7,7 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SwitchCompat
+import com.example.playlistmaker.Creator
 import com.example.playlistmaker.app.AppSharedPreferences
 import com.example.playlistmaker.R
 import com.example.playlistmaker.data.local.SavedSettingsRepositoryImpl
@@ -14,7 +15,7 @@ import com.example.playlistmaker.domain.impl.SavedSettingsInteractorImpl
 
 class SettingsActivity : AppCompatActivity() {
 
-    private lateinit var savedSettingsInteractorImpl: SavedSettingsInteractorImpl
+    private var savedSettingsInteractorImpl = Creator.provideSavedSettingsInteractor()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.settings_activity)
@@ -24,9 +25,6 @@ class SettingsActivity : AppCompatActivity() {
         val writeToSupportButton = findViewById<LinearLayout>(R.id.write_to_support)
         val termsOfUseButton = findViewById<LinearLayout>(R.id.terms_of_use)
         val darkThemeSwitch = findViewById<SwitchCompat>(R.id.dark_theme_switch)
-
-        savedSettingsInteractorImpl =
-            SavedSettingsInteractorImpl(SavedSettingsRepositoryImpl(applicationContext as AppSharedPreferences))
 
         darkThemeSwitch.setChecked(
             savedSettingsInteractorImpl.getNightModeSettings()

@@ -11,6 +11,7 @@ import android.view.View
 import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
+import com.example.playlistmaker.Creator
 import com.example.playlistmaker.app.AppSharedPreferences
 import com.example.playlistmaker.R
 import com.example.playlistmaker.data.dto.SearchStatus
@@ -28,23 +29,24 @@ import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.util.function.Consumer
 
-class SearchActivity : AppCompatActivity() {
+class SearchActivity : AppCompatActivity(), Consumer<List<Track>> {
 
     private var editTextValue = ""
     private val itunesBaseUrl = "https://itunes.apple.com"
     private lateinit var binding: SearchActivityBinding
     private var isClickAllowed = true
-
     private val handler = Handler(Looper.getMainLooper())
     private val searchRunnable = Runnable { sendRequest() }
 
     private lateinit var tracks: ArrayList<Track>
-    private lateinit var tracksHistory: ArrayList<Track>
     private lateinit var adapterSearch: TrackAdapter
     private lateinit var adapterHistory: TrackAdapter
 
-    private lateinit var searchHistoryInteractorImpl: SearchHistoryInteractorImpl
+    private var searchHistoryInteractorImpl = Creator.provideSearchHistoryInteractor()
+    private var tracksHistory = searchHistoryInteractorImpl.getTracksHistory()
+    private var trackInteractor = Creator.provideTrackInteractor()
 
     private val retrofit = Retrofit.Builder()
         .baseUrl(itunesBaseUrl)
@@ -70,13 +72,8 @@ class SearchActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         tracks = ArrayList<Track>()
-        searchHistoryInteractorImpl =
-            SearchHistoryInteractorImpl(SearchHistoryRepositoryImpl(applicationContext as AppSharedPreferences))
-        tracksHistory = searchHistoryInteractorImpl.getTracksHistory()
         adapterSearch = TrackAdapter(tracks, onClick)
         adapterHistory = TrackAdapter(tracksHistory, onClick)
-
-
 
         binding.buttonBack.setOnClickListener {
             finish()
@@ -176,6 +173,13 @@ class SearchActivity : AppCompatActivity() {
                     }
                 })
             true
+        }
+    }
+
+    private fun testSearch(){
+        hideErrorElements()
+        if(binding.editText.text.isNotEmpty()){
+            trackInteractor.searchTracks(binding.editText.text.toString(), this)
         }
     }
 
@@ -300,6 +304,10 @@ class SearchActivity : AppCompatActivity() {
         private const val SEARCH_TEXT = "SEARCH_TEXT"
         private const val CLICK_DEBOUNCE_DELAY = 1000L
         private const val SEARCH_DEBOUNCE_DELAY = 2000L
+    }
+
+    override fun accept(p0: List<Track>) {
+        TODO("Not yet implemented")
     }
 
 }
