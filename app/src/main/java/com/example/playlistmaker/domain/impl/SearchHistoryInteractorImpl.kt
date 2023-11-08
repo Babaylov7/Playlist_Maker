@@ -4,7 +4,7 @@ import com.example.playlistmaker.domain.api.history.SearchHistoryInteractor
 import com.example.playlistmaker.domain.api.history.SearchHistoryRepository
 import com.example.playlistmaker.domain.models.Track
 
-class TrackHistoryInteractorImpl(private val searchHistoryRepository: SearchHistoryRepository):
+class SearchHistoryInteractorImpl(private val searchHistoryRepository: SearchHistoryRepository):
     SearchHistoryInteractor {
     override fun addTrack(track: Track) {
         searchHistoryRepository.addTrack(track)

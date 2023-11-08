@@ -5,6 +5,7 @@ import android.os.Build.VERSION.SDK_INT
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
@@ -97,7 +98,7 @@ class PlayerActivity : AppCompatActivity() {
             SimpleDateFormat("mm:ss", Locale.getDefault()).format(track.trackTimeMillis)
         binding.albumName.text =
             if (track.collectionName!!.isNotEmpty()) track.collectionName else ""
-        binding.songYear.text = if (track.releaseDate!!.isNotEmpty()) track.releaseDate?.substring(
+        binding.songYear.text = if (!track.releaseDate.isNullOrEmpty()) track.releaseDate.substring(
             0,
             4
         ) else "Not found"
@@ -115,14 +116,22 @@ class PlayerActivity : AppCompatActivity() {
     }
 
     private fun preparePlayer(track: Track) {
-        mediaPlayer.setDataSource(track.previewUrl)
-        mediaPlayer.prepareAsync()
-        mediaPlayer.setOnPreparedListener {
-            playerState = STATE_PREPARED
+        if (track.previewUrl.isNullOrEmpty()) {
+            showMassage()
+        } else {
+            mediaPlayer.setDataSource(track.previewUrl)
+            mediaPlayer.prepareAsync()
+            mediaPlayer.setOnPreparedListener {
+                playerState = STATE_PREPARED
+            }
+            mediaPlayer.setOnCompletionListener {
+                playerState = STATE_PREPARED
+            }
         }
-        mediaPlayer.setOnCompletionListener {
-            playerState = STATE_PREPARED
-        }
+    }
+
+    private fun showMassage(){
+        Toast.makeText(this, getString(R.string.audio_file_not_available), Toast.LENGTH_LONG).show()
     }
 
     private fun changeButtonQueueImage() {
