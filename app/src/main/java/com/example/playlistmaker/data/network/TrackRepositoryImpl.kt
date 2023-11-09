@@ -1,7 +1,7 @@
 package com.example.playlistmaker.data.network
 
 import com.example.playlistmaker.data.NetworkClient
-import com.example.playlistmaker.data.dto.SearchStatus
+import com.example.playlistmaker.domain.models.SearchStatus
 import com.example.playlistmaker.data.dto.TrackSearchRequest
 import com.example.playlistmaker.data.dto.TrackSearchResponse
 import com.example.playlistmaker.domain.models.TrackSearchResult

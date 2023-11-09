@@ -13,26 +13,23 @@ import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
 import com.example.playlistmaker.Creator
 import com.example.playlistmaker.R
-import com.example.playlistmaker.data.dto.SearchStatus
+import com.example.playlistmaker.domain.models.SearchStatus
 import com.example.playlistmaker.domain.models.Track
 import com.example.playlistmaker.domain.models.TrackSearchResult
-import com.example.playlistmaker.data.network.ItunesApi
 import com.example.playlistmaker.databinding.SearchActivityBinding
 import com.example.playlistmaker.presentation.track.TrackAdapter
 import com.example.playlistmaker.presentation.isNightModeOn
 import com.example.playlistmaker.ui.player.PlayerActivity
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 import java.util.function.Consumer
 
 class SearchActivity : AppCompatActivity(), Consumer<TrackSearchResult> {
 
     private var editTextValue = ""
-    private lateinit var binding: SearchActivityBinding
     private var isClickAllowed = true
     private val handler = Handler(Looper.getMainLooper())
     private val searchRunnable = Runnable { sendRequest() }
 
+    private lateinit var binding: SearchActivityBinding
     private lateinit var tracks: ArrayList<Track>
     private lateinit var adapterSearch: TrackAdapter
     private lateinit var adapterHistory: TrackAdapter
