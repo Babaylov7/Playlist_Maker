@@ -1,4 +1,4 @@
-package com.example.playlistmaker.ui.search
+package com.example.playlistmaker.presentation.ui.search
 
 import android.content.Context
 import android.content.Intent
@@ -19,7 +19,7 @@ import com.example.playlistmaker.domain.models.TrackSearchResult
 import com.example.playlistmaker.databinding.SearchActivityBinding
 import com.example.playlistmaker.presentation.track.TrackAdapter
 import com.example.playlistmaker.presentation.isNightModeOn
-import com.example.playlistmaker.ui.player.PlayerActivity
+import com.example.playlistmaker.presentation.ui.player.PlayerActivity
 import java.util.function.Consumer
 
 class SearchActivity : AppCompatActivity(), Consumer<TrackSearchResult> {
@@ -247,12 +247,6 @@ class SearchActivity : AppCompatActivity(), Consumer<TrackSearchResult> {
         }
     }
 
-    private companion object {
-        private const val SEARCH_TEXT = "SEARCH_TEXT"
-        private const val CLICK_DEBOUNCE_DELAY = 1000L
-        private const val SEARCH_DEBOUNCE_DELAY = 2000L
-    }
-
     override fun accept(p0: TrackSearchResult) {
         runOnUiThread {
             if (p0.resultStatus == SearchStatus.RESPONSE_RECEIVED) {
@@ -272,6 +266,12 @@ class SearchActivity : AppCompatActivity(), Consumer<TrackSearchResult> {
                 showImageError(SearchStatus.NETWORK_ERROR)
             }
         }
+    }
+
+    private companion object {
+        private const val SEARCH_TEXT = "SEARCH_TEXT"
+        private const val CLICK_DEBOUNCE_DELAY = 1000L
+        private const val SEARCH_DEBOUNCE_DELAY = 2000L
     }
 
 }

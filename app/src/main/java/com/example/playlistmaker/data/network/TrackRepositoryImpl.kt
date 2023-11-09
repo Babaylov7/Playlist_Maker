@@ -14,7 +14,7 @@ class TrackRepositoryImpl(private val networkClient: NetworkClient) : TrackRepos
         val response = networkClient.doTrackSearchRequest(TrackSearchRequest(expression))
 
         if(response.resultStatus == SearchStatus.RESPONSE_RECEIVED) {
-            var tracks2: List<Track> = (response as TrackSearchResponse).results.map {
+            var tracks: List<Track> = (response as TrackSearchResponse).results.map {
                 Track(
                     trackId = it.trackId,
                     trackName = if (it.trackName.isNullOrEmpty()) "unknown" else it.trackName,
@@ -28,13 +28,13 @@ class TrackRepositoryImpl(private val networkClient: NetworkClient) : TrackRepos
                     country = if (it.country.isNullOrEmpty()) "unknown" else it.country
                 )
             }
-            val result2: TrackSearchResult = TrackSearchResult(tracks2)
-            result2.resultStatus =  SearchStatus.RESPONSE_RECEIVED
-            return  result2
+            val result: TrackSearchResult = TrackSearchResult(tracks)
+            result.resultStatus =  SearchStatus.RESPONSE_RECEIVED
+            return  result
         } else {
-            val result2: TrackSearchResult = TrackSearchResult(emptyList())
-            result2.resultStatus =  SearchStatus.NETWORK_ERROR
-            return  result2
+            val result: TrackSearchResult = TrackSearchResult(emptyList())
+            result.resultStatus =  SearchStatus.NETWORK_ERROR
+            return  result
         }
     }
 }

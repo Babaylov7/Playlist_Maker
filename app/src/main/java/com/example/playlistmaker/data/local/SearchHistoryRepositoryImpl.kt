@@ -10,7 +10,7 @@ import com.google.gson.reflect.TypeToken
 
 class SearchHistoryRepositoryImpl(val app: AppSharedPreferences) : SearchHistoryRepository {
 
-    private var sharedPrefs: SharedPreferences = app.getSharedPreferences(SETTINGS_PREFERENCES, MODE_PRIVATE)
+    private var sharedPrefs: SharedPreferences = app.getSharedPreferences(SEARCH_HISTORY, MODE_PRIVATE)
     private val tracks: ArrayList<Track> = readSearchHistory()       //Список треков в SP или пустой массив
 
     private fun readSearchHistory(): ArrayList<Track> {
@@ -72,7 +72,6 @@ class SearchHistoryRepositoryImpl(val app: AppSharedPreferences) : SearchHistory
 
     private companion object {
         const val MAX_LENGTH_OF_ARRAY = 10
-        private const val SETTINGS_PREFERENCES = "settings_preferences"
         private const val SEARCH_HISTORY = "search_history"
     }
 

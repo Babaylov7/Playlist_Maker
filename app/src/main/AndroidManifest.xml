@@ -17,16 +17,16 @@
         tools:targetApi="33"
         >
         <activity
-            android:name=".ui.library.LibraryActivity"
+            android:name=".presentation.ui.library.LibraryActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.search.SearchActivity"
+            android:name=".presentation.ui.search.SearchActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.settings.SettingsActivity"
+            android:name=".presentation.ui.settings.SettingsActivity"
             android:exported="false"/>
         <activity
-            android:name=".ui.main.MainActivity"
+            android:name=".presentation.ui.main.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -34,7 +34,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.player.PlayerActivity"
+        <activity android:name=".presentation.ui.player.PlayerActivity"
             android:exported="false"/>
     </application>
 
