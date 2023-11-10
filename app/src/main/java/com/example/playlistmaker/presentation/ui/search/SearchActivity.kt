@@ -34,13 +34,13 @@ class SearchActivity : AppCompatActivity(), Consumer<TrackSearchResult> {
     private lateinit var adapterSearch: TrackAdapter
     private lateinit var adapterHistory: TrackAdapter
 
-    private var searchHistoryInteractorImpl = Creator.provideSearchHistoryInteractor()
-    private var tracksHistory = searchHistoryInteractorImpl.getTracksHistory()
+    private var searchHistoryInteractor = Creator.provideSearchHistoryInteractor()
     private var trackInteractor = Creator.provideTrackInteractor()
+    private var tracksHistory = searchHistoryInteractor.getTracksHistory()
 
     private val onClick: (track: Track) -> Unit = {
         if (clickDebounce()) {
-            searchHistoryInteractorImpl.addTrack(it)
+            searchHistoryInteractor.addTrack(it)
             adapterHistory.notifyDataSetChanged()
             Intent(this, PlayerActivity::class.java).apply {
                 putExtra("track", it)
@@ -74,7 +74,7 @@ class SearchActivity : AppCompatActivity(), Consumer<TrackSearchResult> {
 
         binding.cleanHistoryButton.setOnClickListener {         //Очистка истории поиска
             showAndHideHistoryLayout(false)                      //Скрываем HistoryLayout
-            searchHistoryInteractorImpl.clean()
+            searchHistoryInteractor.clean()
         }
 
         val simpleTextWatcher = object : TextWatcher {
@@ -132,7 +132,7 @@ class SearchActivity : AppCompatActivity(), Consumer<TrackSearchResult> {
 
     private fun updateRecyclerViewSearchHistory() {                     //Обновление RecyclerView с историей поиска
         showAndHideHistoryLayout(true)
-        tracksHistory = searchHistoryInteractorImpl.getTracksHistory()
+        tracksHistory = searchHistoryInteractor.getTracksHistory()
         adapterHistory.notifyDataSetChanged()
     }
 

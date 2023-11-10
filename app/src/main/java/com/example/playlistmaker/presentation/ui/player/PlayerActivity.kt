@@ -1,6 +1,5 @@
 package com.example.playlistmaker.presentation.ui.player
 
-import android.media.MediaPlayer
 import android.os.Build.VERSION.SDK_INT
 import android.os.Bundle
 import android.os.Handler
@@ -9,19 +8,22 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.example.playlistmaker.Creator
 import com.example.playlistmaker.R
 import com.example.playlistmaker.domain.models.Track
 import com.example.playlistmaker.databinding.PlayerActivityBinding
+import com.example.playlistmaker.domain.models.MediaPlayerStatus
+import com.example.playlistmaker.domain.models.PlayerProgressStatus
 import java.text.SimpleDateFormat
 import java.util.Locale
 
 class PlayerActivity : AppCompatActivity() {
     private lateinit var binding: PlayerActivityBinding
+    private lateinit var playerProgressStatus: PlayerProgressStatus
     private var trackAddInQueue = false
     private var trackAddInFavorite = false
-    private var mediaPlayer = MediaPlayer()
-    private var playerState = STATE_DEFAULT
 
+    private var mediaPlayerInteractor = Creator.provideMediaPlayerInteractor()
     private val mainThreadHandler = Handler(Looper.getMainLooper())
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -48,6 +50,7 @@ class PlayerActivity : AppCompatActivity() {
         }
 
         binding.buttonPlay.setOnClickListener {
+            playerProgressStatus = mediaPlayerInteractor.getPlayerProgressStatus()
             playbackControl()
         }
 
@@ -55,30 +58,34 @@ class PlayerActivity : AppCompatActivity() {
             changeButtonFavoriteImage()
         }
 
-        preparePlayer(track)
+        mediaPlayerInteractor.preparePlayer(track)
+        playerProgressStatus = mediaPlayerInteractor.getPlayerProgressStatus()
+        if (playerProgressStatus.mediaPlayerStatus == MediaPlayerStatus.STATE_ERROR) {
+            showMassage()
+        }
     }
 
     override fun onPause() {
+        mediaPlayerInteractor.pausePlayer()
         super.onPause()
-        pausePlayer()
     }
 
     override fun onDestroy() {
+        mediaPlayerInteractor.destroyPlayer()
+        mainThreadHandler.removeCallbacks(updateTimeOfPlay())
         super.onDestroy()
-        mainThreadHandler.removeCallbacks(updateTimeOfPlay())             //handler.removeCallbacks(searchRunnable)
-        mediaPlayer.release()
     }
 
     private fun updateTimeOfPlay(): Runnable {                   //Обновленеи времени проигрования трека
         return object : Runnable {
             override fun run() {
-                val currentTime = mediaPlayer.currentPosition
+                playerProgressStatus = mediaPlayerInteractor.getPlayerProgressStatus()
 
-                if (playerState == STATE_PLAYING) {
+                if(playerProgressStatus.mediaPlayerStatus == MediaPlayerStatus.STATE_PLAYING) {
                     binding.timeOfPlay.text =
-                        SimpleDateFormat("m:ss", Locale.getDefault()).format(currentTime)
+                        SimpleDateFormat("m:ss", Locale.getDefault()).format(playerProgressStatus.currentPosition)
                     mainThreadHandler.postDelayed(this, UPDATE)
-                } else if (playerState == STATE_PAUSED) {
+                } else if(playerProgressStatus.mediaPlayerStatus == MediaPlayerStatus.STATE_PAUSED){
                     mainThreadHandler.removeCallbacks(updateTimeOfPlay())
                 } else {
                     binding.timeOfPlay.text = "0:00"
@@ -87,8 +94,6 @@ class PlayerActivity : AppCompatActivity() {
                 }
             }
         }
-
-
     }
 
     private fun writeDataInActivity(track: Track) {
@@ -114,21 +119,6 @@ class PlayerActivity : AppCompatActivity() {
             .into(binding.albumImage)
     }
 
-    private fun preparePlayer(track: Track) {
-        try{
-            mediaPlayer.setDataSource(track.previewUrl)
-            mediaPlayer.prepareAsync()
-            mediaPlayer.setOnPreparedListener {
-                playerState = STATE_PREPARED
-            }
-            mediaPlayer.setOnCompletionListener {
-                playerState = STATE_PREPARED
-            }
-        } catch (e: Exception)  {
-            showMassage()
-        }
-    }
-
     private fun showMassage(){
         Toast.makeText(this, getString(R.string.audio_file_not_available), Toast.LENGTH_LONG).show()
     }
@@ -144,28 +134,32 @@ class PlayerActivity : AppCompatActivity() {
     }
 
     private fun playbackControl() {
-        when (playerState) {
-            STATE_PLAYING -> {
+        when (playerProgressStatus.mediaPlayerStatus){
+            MediaPlayerStatus.STATE_PLAYING -> {
                 pausePlayer()
             }
-
-            STATE_PREPARED, STATE_PAUSED -> {
+            MediaPlayerStatus.STATE_PREPARED, MediaPlayerStatus.STATE_PAUSED -> {
                 startPlayer()
+            }
+            MediaPlayerStatus.STATE_ERROR -> {
+                showMassage()
+            }
+            MediaPlayerStatus.STATE_DEFAULT ->{
             }
         }
     }
 
     private fun startPlayer() {
-        mediaPlayer.start()
+        mediaPlayerInteractor.startPlayer()
         binding.buttonPlay.setImageResource(R.drawable.button_pause)
-        playerState = STATE_PLAYING
         mainThreadHandler.post(updateTimeOfPlay())
+        playerProgressStatus = mediaPlayerInteractor.getPlayerProgressStatus()
     }
 
     private fun pausePlayer() {
-        mediaPlayer.pause()
+        mediaPlayerInteractor.pausePlayer()
         binding.buttonPlay.setImageResource(R.drawable.button_play)
-        playerState = STATE_PAUSED
+        playerProgressStatus = mediaPlayerInteractor.getPlayerProgressStatus()
     }
 
     private fun changeButtonFavoriteImage() {
@@ -179,10 +173,6 @@ class PlayerActivity : AppCompatActivity() {
     }
 
     companion object {
-        private const val STATE_DEFAULT = 0
-        private const val STATE_PREPARED = 1
-        private const val STATE_PLAYING = 2
-        private const val STATE_PAUSED = 3
         private const val UPDATE = 250L
     }
 }

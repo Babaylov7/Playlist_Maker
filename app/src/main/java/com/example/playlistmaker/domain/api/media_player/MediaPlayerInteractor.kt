@@ -1,10 +1,12 @@
 package com.example.playlistmaker.domain.api.media_player
 
+import com.example.playlistmaker.domain.models.PlayerProgressStatus
 import com.example.playlistmaker.domain.models.Track
 
-interface PlayerRepository {
+interface MediaPlayerInteractor {
     fun preparePlayer(track: Track)
     fun startPlayer()
     fun pausePlayer()
-    fun updateTimeOfPlay()
+    fun getPlayerProgressStatus(): PlayerProgressStatus
+    fun destroyPlayer()
 }
