@@ -96,16 +96,15 @@ class PlayerActivity : AppCompatActivity() {
         binding.artistName.text = track.artistName
         binding.songDuration.text =
             SimpleDateFormat("mm:ss", Locale.getDefault()).format(track.trackTimeMillis)
-        binding.albumName.text =
-            if (track.collectionName!!.isNotEmpty()) track.collectionName else ""
-        binding.songYear.text = if (!track.releaseDate.isNullOrEmpty()) track.releaseDate.substring(
+        binding.albumName.text = track.collectionName
+        binding.songYear.text = if (!track.releaseDate.equals("unknown")) track.releaseDate.substring(
             0,
             4
         ) else "Not found"
         binding.genreName.text = track.primaryGenreName
         binding.countryName.text = track.country
 
-        val artworkUrl512 = track.artworkUrl100?.replaceAfterLast('/', "512x512bb.jpg")
+        val artworkUrl512 = track.artworkUrl100.replaceAfterLast('/', "512x512bb.jpg")
 
         Glide.with(this)
             .load(artworkUrl512)
