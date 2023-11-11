@@ -31,4 +31,5 @@
     <string name="year">Год</string>
     <string name="genre">Жанр</string>
     <string name="country">Страна</string>
+    <string name="audio_file_not_available">Аудиофайл недоступен</string>
 </resources>
