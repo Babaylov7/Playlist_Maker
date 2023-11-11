@@ -247,20 +247,20 @@ class SearchActivity : AppCompatActivity(), Consumer<TrackSearchResult> {
         }
     }
 
-    override fun accept(p0: TrackSearchResult) {
+    override fun accept(trackSearchResult: TrackSearchResult) {
         runOnUiThread {
-            if (p0.resultStatus == SearchStatus.RESPONSE_RECEIVED) {
+            if (trackSearchResult.resultStatus == SearchStatus.RESPONSE_RECEIVED) {
                 tracks.clear()
-                if (p0.results.isEmpty()) {
+                if (trackSearchResult.results.isEmpty()) {
                     hideRecyclerView()
                     showImageError(SearchStatus.LIST_IS_EMPTY)
                 } else {
-                    tracks.addAll(p0.results)
+                    tracks.addAll(trackSearchResult.results)
                     adapterSearch.notifyDataSetChanged()
                 }
                 showAndHideProgressBar(false)
             }
-            if (p0.resultStatus == SearchStatus.NETWORK_ERROR) {
+            if (trackSearchResult.resultStatus == SearchStatus.NETWORK_ERROR) {
                 showAndHideProgressBar(false)
                 hideRecyclerView()
                 showImageError(SearchStatus.NETWORK_ERROR)
