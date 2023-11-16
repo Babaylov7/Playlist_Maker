@@ -7,10 +7,10 @@ import android.widget.Button
 import com.example.playlistmaker.app.AppSharedPreferences
 import com.example.playlistmaker.presentation.ui.library.LibraryActivity
 import com.example.playlistmaker.R
-import com.example.playlistmaker.data.local.SavedSettingsRepositoryImpl
-import com.example.playlistmaker.domain.impl.SavedSettingsInteractorImpl
+import com.example.playlistmaker.data.settings.impl.SavedSettingsRepositoryImpl
+import com.example.playlistmaker.domain.settings.impl.SavedSettingsInteractorImpl
 import com.example.playlistmaker.presentation.ui.search.SearchActivity
-import com.example.playlistmaker.presentation.ui.settings.SettingsActivity
+import com.example.playlistmaker.presentation.ui.settings.activity.SettingsActivity
 
 
 class MainActivity : AppCompatActivity() {
