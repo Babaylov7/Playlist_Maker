@@ -68,7 +68,7 @@
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/sare_application"
+        android:id="@+id/share_application"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:clickable="true"

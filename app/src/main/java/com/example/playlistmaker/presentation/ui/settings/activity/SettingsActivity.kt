@@ -5,23 +5,31 @@ import android.net.Uri
 import android.os.Bundle
 import android.widget.ImageView
 import android.widget.LinearLayout
+import androidx.activity.ComponentActivity
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SwitchCompat
+import androidx.lifecycle.ViewModelProvider
 import com.example.playlistmaker.creator.Creator
 import com.example.playlistmaker.R
+import com.example.playlistmaker.databinding.SettingsActivityBinding
+import com.example.playlistmaker.presentation.ui.settings.view_model.SettingsViewModel
 
-class SettingsActivity : AppCompatActivity() {
-
+class SettingsActivity : ComponentActivity() {
+    private lateinit var binding: SettingsActivityBinding
+    private lateinit var viewModel: SettingsViewModel
     private var savedSettingsInteractorImpl = Creator.provideSavedSettingsInteractor()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.settings_activity)
+        binding = SettingsActivityBinding.inflate(layoutInflater)
+        viewModel = ViewModelProvider(this)[SettingsViewModel::class.java]
 
-        val buttonBack = findViewById<ImageView>(R.id.button_back)
-        val sareApplicationButton = findViewById<LinearLayout>(R.id.sare_application)
-        val writeToSupportButton = findViewById<LinearLayout>(R.id.write_to_support)
-        val termsOfUseButton = findViewById<LinearLayout>(R.id.terms_of_use)
-        val darkThemeSwitch = findViewById<SwitchCompat>(R.id.dark_theme_switch)
+
+    val buttonBack = findViewById<ImageView>(R.id.button_back)
+    val shareApplication = findViewById<LinearLayout>(R.id.share_application)
+    val writeToSupport = findViewById<LinearLayout>(R.id.write_to_support)
+    val termsOfUse = findViewById<LinearLayout>(R.id.terms_of_use)
+    val darkThemeSwitch = findViewById<SwitchCompat>(R.id.dark_theme_switch)
 
         darkThemeSwitch.setChecked(
             savedSettingsInteractorImpl.getNightModeSettings()
@@ -31,35 +39,42 @@ class SettingsActivity : AppCompatActivity() {
             finish()
         }
 
-        sareApplicationButton.setOnClickListener {
-            val link = getString(R.string.share_app_link)
-            val intent = Intent(Intent.ACTION_SEND)
-            intent.type = getString(R.string.share_app_type)
-            intent.putExtra(Intent.EXTRA_TEXT, link) // текст отправки
-            startActivity(Intent.createChooser(intent, getString(R.string.share_app_message)))
+        shareApplication.setOnClickListener {
+            shareApplication()
         }
 
-        writeToSupportButton.setOnClickListener {
-            val message = getString(R.string.write_to_supp_message)
-            val theme = getString(R.string.write_to_supp_theme)
-            val intent = Intent(Intent.ACTION_SENDTO)
-            intent.data = Uri.parse(getString(R.string.write_to_supp_mailto))
-            intent.putExtra(Intent.EXTRA_EMAIL, arrayOf(getString(R.string.write_to_supp_email)))
-            intent.putExtra(Intent.EXTRA_TEXT, message)
-            intent.putExtra(Intent.EXTRA_SUBJECT, theme)
-            startActivity(intent)
+        writeToSupport.setOnClickListener {
+            writeToSupport()
         }
 
-        termsOfUseButton.setOnClickListener {
-            val intent =
-                Intent(Intent.ACTION_VIEW, Uri.parse(getString(R.string.terms_of_link)))
-            startActivity(intent)
+        termsOfUse.setOnClickListener {
+            termsOfUse()
         }
 
         darkThemeSwitch.setOnCheckedChangeListener { switcher, checked ->
-            savedSettingsInteractorImpl.putNightModeSettings(checked)
-            savedSettingsInteractorImpl.switchTheme(checked)
+            viewModel.putNightModeSettings(checked)
+            viewModel.switchTheme(checked)
         }
 
+    }
+
+    private fun shareApplication() {
+        val link = getString(R.string.share_app_link)
+        val tupe = getString(R.string.share_app_type)
+        val message = getString(R.string.share_app_message)
+        startActivity(viewModel.getShareApplicationIntent(link, tupe, message))
+    }
+
+    private fun writeToSupport() {
+        val message = getString(R.string.write_to_supp_message)
+        val theme = getString(R.string.write_to_supp_theme)
+        val mailTo = getString(R.string.write_to_supp_mailto)
+        val email = getString(R.string.write_to_supp_email)
+        startActivity(viewModel.getWriteToSupportIntent(message, theme, mailTo, email))
+    }
+
+    private fun termsOfUse() {
+        val link = getString(R.string.terms_of_link)
+        startActivity(viewModel.getTermsOfUseIntent(link))
     }
 }
