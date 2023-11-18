@@ -19,7 +19,7 @@ import com.example.playlistmaker.domain.search.models.TrackSearchResult
 import com.example.playlistmaker.databinding.SearchActivityBinding
 import com.example.playlistmaker.presentation.ui.search.track.TrackAdapter
 import com.example.playlistmaker.presentation.isNightModeOn
-import com.example.playlistmaker.presentation.ui.player.PlayerActivity
+import com.example.playlistmaker.presentation.ui.player.activity.PlayerActivity
 import java.util.function.Consumer
 
 class SearchActivity : AppCompatActivity(), Consumer<TrackSearchResult> {
