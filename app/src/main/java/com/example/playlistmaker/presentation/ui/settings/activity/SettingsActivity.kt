@@ -1,13 +1,13 @@
 package com.example.playlistmaker.presentation.ui.settings.activity
 
 import android.os.Bundle
-import androidx.activity.ComponentActivity
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.example.playlistmaker.databinding.SettingsActivityBinding
 import com.example.playlistmaker.presentation.ui.settings.view_model.SettingsViewModel
 import com.example.playlistmaker.presentation.ui.settings.view_model.SettingsViewModelFactory
 
-class SettingsActivity : ComponentActivity() {
+class SettingsActivity : AppCompatActivity() {
     private lateinit var binding: SettingsActivityBinding
     private lateinit var viewModel: SettingsViewModel
     override fun onCreate(savedInstanceState: Bundle?) {

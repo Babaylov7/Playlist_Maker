@@ -32,4 +32,5 @@
     <string name="genre">Жанр</string>
     <string name="country">Страна</string>
     <string name="audio_file_not_available">Аудиофайл недоступен</string>
+    <string name="player_default_time" translatable="false">0:00</string>
 </resources>

@@ -6,6 +6,7 @@ import android.os.Handler
 import android.os.Looper
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.creator.Creator
@@ -14,6 +15,8 @@ import com.example.playlistmaker.domain.search.models.Track
 import com.example.playlistmaker.databinding.PlayerActivityBinding
 import com.example.playlistmaker.domain.player.models.MediaPlayerStatus
 import com.example.playlistmaker.domain.player.models.PlayerProgressStatus
+import com.example.playlistmaker.presentation.ui.player.view_model.PlayerViewModel
+import com.example.playlistmaker.presentation.ui.player.view_model.PlayerViewModelFactory
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -23,14 +26,21 @@ class PlayerActivity : AppCompatActivity() {
     private var trackAddInQueue = false
     private var trackAddInFavorite = false
 
-    private var mediaPlayerInteractor = Creator.provideMediaPlayerInteractor()
-    private val mainThreadHandler = Handler(Looper.getMainLooper())
+    //private var mediaPlayerInteractor = Creator.provideMediaPlayerInteractor()
+    //private val mainThreadHandler = Handler(Looper.getMainLooper())
+
+    private lateinit var viewModel: PlayerViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = PlayerActivityBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        binding.timeOfPlay.text = "0:00"
+        binding.timeOfPlay.text = getString(R.string.player_default_time)
+
+        viewModel = ViewModelProvider(this, PlayerViewModelFactory(this))[PlayerViewModel::class.java]
+
+        playerProgressStatus = viewModel.playerProgressStatus.value!!
+
 
         val track =
             if (SDK_INT >= 33) {                        //Проверяем версию SDK и в зависимости от верстии применяем тот или иной метод для работы с intent
@@ -40,6 +50,7 @@ class PlayerActivity : AppCompatActivity() {
             }
 
         writeDataInActivity(track)
+        viewModel.onCreate(track)
 
         binding.buttonBack.setOnClickListener {
             finish()
@@ -49,52 +60,71 @@ class PlayerActivity : AppCompatActivity() {
             changeButtonQueueImage()
         }
 
-        binding.buttonPlay.setOnClickListener {
-            playerProgressStatus = mediaPlayerInteractor.getPlayerProgressStatus()
-            playbackControl()
-        }
-
         binding.buttonFavorite.setOnClickListener {
             changeButtonFavoriteImage()
         }
 
-        mediaPlayerInteractor.preparePlayer(track)
-        playerProgressStatus = mediaPlayerInteractor.getPlayerProgressStatus()
+        binding.buttonPlay.setOnClickListener {
+            viewModel.playbackControl()
+        }
+
+        viewModel.playerProgressStatus.observe(this){
+            playbackControl()
+        }
+
         if (playerProgressStatus.mediaPlayerStatus == MediaPlayerStatus.STATE_ERROR) {
-            showMassage()
+            viewModel.showMassage()
         }
     }
 
     override fun onPause() {
-        mediaPlayerInteractor.pausePlayer()
         super.onPause()
+        viewModel.pauseMediaPlayer()
     }
 
     override fun onDestroy() {
-        mediaPlayerInteractor.destroyPlayer()
-        mainThreadHandler.removeCallbacks(updateTimeOfPlay())
+        viewModel.destroyMediaPlayer()
+        //mainThreadHandler.removeCallbacks(updateTimeOfPlay())
         super.onDestroy()
     }
 
-    private fun updateTimeOfPlay(): Runnable {                   //Обновленеи времени проигрования трека
-        return object : Runnable {
-            override fun run() {
-                playerProgressStatus = mediaPlayerInteractor.getPlayerProgressStatus()
+    private fun playbackControl(){
+        when (playerProgressStatus.mediaPlayerStatus){
+            MediaPlayerStatus.STATE_PLAYING -> {
+                binding.buttonPlay.setImageResource(R.drawable.button_play)
+                binding.timeOfPlay.text =
+                    SimpleDateFormat("m:ss", Locale.getDefault()).format(viewModel.playerProgressStatus.value!!.currentPosition)
+            }
+            MediaPlayerStatus.STATE_PREPARED, MediaPlayerStatus.STATE_PAUSED -> {
+                binding.buttonPlay.setImageResource(R.drawable.button_pause)
+                binding.timeOfPlay.text = "0:00"
+                binding.buttonPlay.setImageResource(R.drawable.button_play)
+            }
+            MediaPlayerStatus.STATE_ERROR, MediaPlayerStatus.STATE_DEFAULT -> {
 
-                if(playerProgressStatus.mediaPlayerStatus == MediaPlayerStatus.STATE_PLAYING) {
-                    binding.timeOfPlay.text =
-                        SimpleDateFormat("m:ss", Locale.getDefault()).format(playerProgressStatus.currentPosition)
-                    mainThreadHandler.postDelayed(this, UPDATE)
-                } else if(playerProgressStatus.mediaPlayerStatus == MediaPlayerStatus.STATE_PAUSED){
-                    mainThreadHandler.removeCallbacks(updateTimeOfPlay())
-                } else {
-                    binding.timeOfPlay.text = "0:00"
-                    binding.buttonPlay.setImageResource(R.drawable.button_play)
-                    mainThreadHandler.removeCallbacks(updateTimeOfPlay())
-                }
             }
         }
     }
+
+//    private fun updateTimeOfPlay(): Runnable {                   //Обновленеи времени проигрования трека
+//        return object : Runnable {
+//            override fun run() {
+//                //playerProgressStatus = mediaPlayerInteractor.getPlayerProgressStatus()
+//
+//                if(playerProgressStatus.mediaPlayerStatus == MediaPlayerStatus.STATE_PLAYING) {
+//                    binding.timeOfPlay.text =
+//                        SimpleDateFormat("m:ss", Locale.getDefault()).format(playerProgressStatus.currentPosition)
+//                    mainThreadHandler.postDelayed(this, UPDATE)
+//                } else if(playerProgressStatus.mediaPlayerStatus == MediaPlayerStatus.STATE_PAUSED){
+//                    mainThreadHandler.removeCallbacks(updateTimeOfPlay())
+//                } else {
+//                    binding.timeOfPlay.text = "0:00"
+//                    binding.buttonPlay.setImageResource(R.drawable.button_play)
+//                    mainThreadHandler.removeCallbacks(updateTimeOfPlay())
+//                }
+//            }
+//        }
+//    }
 
     private fun writeDataInActivity(track: Track) {
         binding.trackName.text = track.trackName
@@ -119,49 +149,6 @@ class PlayerActivity : AppCompatActivity() {
             .into(binding.albumImage)
     }
 
-    private fun showMassage(){
-        Toast.makeText(this, getString(R.string.audio_file_not_available), Toast.LENGTH_LONG).show()
-    }
-
-    private fun changeButtonQueueImage() {
-        if (trackAddInQueue) {
-            trackAddInQueue = false
-            binding.buttonQueue.setImageResource(R.drawable.button_queue)
-        } else {
-            trackAddInQueue = true
-            binding.buttonQueue.setImageResource(R.drawable.button_add_in_queue)
-        }
-    }
-
-    private fun playbackControl() {
-        when (playerProgressStatus.mediaPlayerStatus){
-            MediaPlayerStatus.STATE_PLAYING -> {
-                pausePlayer()
-            }
-            MediaPlayerStatus.STATE_PREPARED, MediaPlayerStatus.STATE_PAUSED -> {
-                startPlayer()
-            }
-            MediaPlayerStatus.STATE_ERROR -> {
-                showMassage()
-            }
-            MediaPlayerStatus.STATE_DEFAULT ->{
-            }
-        }
-    }
-
-    private fun startPlayer() {
-        mediaPlayerInteractor.startPlayer()
-        binding.buttonPlay.setImageResource(R.drawable.button_pause)
-        mainThreadHandler.post(updateTimeOfPlay())
-        playerProgressStatus = mediaPlayerInteractor.getPlayerProgressStatus()
-    }
-
-    private fun pausePlayer() {
-        mediaPlayerInteractor.pausePlayer()
-        binding.buttonPlay.setImageResource(R.drawable.button_play)
-        playerProgressStatus = mediaPlayerInteractor.getPlayerProgressStatus()
-    }
-
     private fun changeButtonFavoriteImage() {
         if (trackAddInFavorite) {
             trackAddInFavorite = false
@@ -172,7 +159,13 @@ class PlayerActivity : AppCompatActivity() {
         }
     }
 
-    companion object {
-        private const val UPDATE = 250L
+    private fun changeButtonQueueImage() {
+        if (trackAddInQueue) {
+            trackAddInQueue = false
+            binding.buttonQueue.setImageResource(R.drawable.button_queue)
+        } else {
+            trackAddInQueue = true
+            binding.buttonQueue.setImageResource(R.drawable.button_add_in_queue)
+        }
     }
 }
