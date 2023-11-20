@@ -2,9 +2,6 @@ package com.example.playlistmaker.presentation.ui.player.activity
 
 import android.os.Build.VERSION.SDK_INT
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
@@ -26,9 +23,6 @@ class PlayerActivity : AppCompatActivity() {
     private var trackAddInQueue = false
     private var trackAddInFavorite = false
 
-    //private var mediaPlayerInteractor = Creator.provideMediaPlayerInteractor()
-    //private val mainThreadHandler = Handler(Looper.getMainLooper())
-
     private lateinit var viewModel: PlayerViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -37,9 +31,10 @@ class PlayerActivity : AppCompatActivity() {
         setContentView(binding.root)
         binding.timeOfPlay.text = getString(R.string.player_default_time)
 
-        viewModel = ViewModelProvider(this, PlayerViewModelFactory(this))[PlayerViewModel::class.java]
+        viewModel =
+            ViewModelProvider(this, PlayerViewModelFactory(this, Creator.provideMediaPlayerInteractor()))[PlayerViewModel::class.java]
 
-        playerProgressStatus = viewModel.playerProgressStatus.value!!
+        playerProgressStatus = viewModel._playerProgressStatus.value!!
 
 
         val track =
@@ -68,7 +63,7 @@ class PlayerActivity : AppCompatActivity() {
             viewModel.playbackControl()
         }
 
-        viewModel.playerProgressStatus.observe(this){
+        viewModel._playerProgressStatus.observe(this) {
             playbackControl()
         }
 
@@ -83,48 +78,32 @@ class PlayerActivity : AppCompatActivity() {
     }
 
     override fun onDestroy() {
-        viewModel.destroyMediaPlayer()
-        //mainThreadHandler.removeCallbacks(updateTimeOfPlay())
         super.onDestroy()
+        viewModel.destroyMediaPlayer()
     }
 
-    private fun playbackControl(){
-        when (playerProgressStatus.mediaPlayerStatus){
+    private fun playbackControl() {
+        when (playerProgressStatus.mediaPlayerStatus) {
             MediaPlayerStatus.STATE_PLAYING -> {
                 binding.buttonPlay.setImageResource(R.drawable.button_play)
                 binding.timeOfPlay.text =
-                    SimpleDateFormat("m:ss", Locale.getDefault()).format(viewModel.playerProgressStatus.value!!.currentPosition)
+                    SimpleDateFormat(
+                        "m:ss",
+                        Locale.getDefault()
+                    ).format(viewModel._playerProgressStatus.value!!.currentPosition)
             }
+
             MediaPlayerStatus.STATE_PREPARED, MediaPlayerStatus.STATE_PAUSED -> {
                 binding.buttonPlay.setImageResource(R.drawable.button_pause)
                 binding.timeOfPlay.text = "0:00"
                 binding.buttonPlay.setImageResource(R.drawable.button_play)
             }
+
             MediaPlayerStatus.STATE_ERROR, MediaPlayerStatus.STATE_DEFAULT -> {
 
             }
         }
     }
-
-//    private fun updateTimeOfPlay(): Runnable {                   //Обновленеи времени проигрования трека
-//        return object : Runnable {
-//            override fun run() {
-//                //playerProgressStatus = mediaPlayerInteractor.getPlayerProgressStatus()
-//
-//                if(playerProgressStatus.mediaPlayerStatus == MediaPlayerStatus.STATE_PLAYING) {
-//                    binding.timeOfPlay.text =
-//                        SimpleDateFormat("m:ss", Locale.getDefault()).format(playerProgressStatus.currentPosition)
-//                    mainThreadHandler.postDelayed(this, UPDATE)
-//                } else if(playerProgressStatus.mediaPlayerStatus == MediaPlayerStatus.STATE_PAUSED){
-//                    mainThreadHandler.removeCallbacks(updateTimeOfPlay())
-//                } else {
-//                    binding.timeOfPlay.text = "0:00"
-//                    binding.buttonPlay.setImageResource(R.drawable.button_play)
-//                    mainThreadHandler.removeCallbacks(updateTimeOfPlay())
-//                }
-//            }
-//        }
-//    }
 
     private fun writeDataInActivity(track: Track) {
         binding.trackName.text = track.trackName
@@ -132,10 +111,11 @@ class PlayerActivity : AppCompatActivity() {
         binding.songDuration.text =
             SimpleDateFormat("mm:ss", Locale.getDefault()).format(track.trackTimeMillis)
         binding.albumName.text = track.collectionName
-        binding.songYear.text = if (!track.releaseDate.equals("unknown")) track.releaseDate.substring(
-            0,
-            4
-        ) else "Not found"
+        binding.songYear.text =
+            if (!track.releaseDate.equals("unknown")) track.releaseDate.substring(
+                0,
+                4
+            ) else "Not found"
         binding.genreName.text = track.primaryGenreName
         binding.countryName.text = track.country
 

@@ -3,18 +3,20 @@ package com.example.playlistmaker.presentation.ui.settings.view_model
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.playlistmaker.R
-import com.example.playlistmaker.creator.Creator
+import com.example.playlistmaker.domain.settings.SavedSettingsInteractor
 
 
 class SettingsViewModel(
-    val context: Context
+    val context: Context,
+    val savedSettingsInteractorImpl: SavedSettingsInteractor
 ) : ViewModel() {
-    private var savedSettingsInteractorImpl = Creator.provideSavedSettingsInteractor()
 
-    var liveData = MutableLiveData(getNightModeSettings())
+    private var nightMode = MutableLiveData(getNightModeSettings())
+    var _nightMode: LiveData<Boolean> = nightMode
 
     private fun getNightModeSettings() : Boolean {
         return savedSettingsInteractorImpl.getNightModeSettings()

@@ -3,6 +3,7 @@ package com.example.playlistmaker.presentation.ui.settings.activity
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
+import com.example.playlistmaker.creator.Creator
 import com.example.playlistmaker.databinding.SettingsActivityBinding
 import com.example.playlistmaker.presentation.ui.settings.view_model.SettingsViewModel
 import com.example.playlistmaker.presentation.ui.settings.view_model.SettingsViewModelFactory
@@ -14,9 +15,9 @@ class SettingsActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = SettingsActivityBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        viewModel = ViewModelProvider(this, SettingsViewModelFactory(this))[SettingsViewModel::class.java]
+        viewModel = ViewModelProvider(this, SettingsViewModelFactory(this, Creator.provideSavedSettingsInteractor()))[SettingsViewModel::class.java]
 
-        val nightMode: Boolean? = viewModel.liveData.value
+        val nightMode: Boolean? = viewModel._nightMode.value
 
         binding.darkThemeSwitch.setChecked(
             nightMode ?: false
