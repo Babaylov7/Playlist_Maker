@@ -23,7 +23,6 @@ class PlayerViewModel(val context: Context, val mediaPlayerInteractor: MediaPlay
 
     fun onCreate(track: Track) {
         mediaPlayerInteractor.preparePlayer(track)
-        playerProgressStatus.value = getPlayerProgressStatus()
     }
 
     private fun getPlayerProgressStatus(): PlayerProgressStatus {
@@ -58,6 +57,7 @@ class PlayerViewModel(val context: Context, val mediaPlayerInteractor: MediaPlay
 
 
     fun playbackControl() {
+        playerProgressStatus.value = getPlayerProgressStatus()
         when (playerProgressStatus.value!!.mediaPlayerStatus) {
             MediaPlayerStatus.STATE_PLAYING -> {
                 pausePlayer()
