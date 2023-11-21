@@ -13,19 +13,21 @@ import com.example.playlistmaker.domain.player.models.MediaPlayerStatus
 import com.example.playlistmaker.domain.player.models.PlayerProgressStatus
 import com.example.playlistmaker.domain.search.models.Track
 
-class PlayerViewModel(val context: Context, val mediaPlayerInteractor: MediaPlayerInteractor) : ViewModel() {
+class PlayerViewModel(val context: Context, val mediaPlayerInteractor: MediaPlayerInteractor) :
+    ViewModel() {
     private val mainThreadHandler = Handler(Looper.getMainLooper())
 
     private var playerProgressStatus: MutableLiveData<PlayerProgressStatus> =
-        MutableLiveData(getPlayerProgressStatus())
-    var _playerProgressStatus: LiveData<PlayerProgressStatus> = playerProgressStatus
+        MutableLiveData(updatePlayerProgressStatus())
 
+    fun getPlayerProgressStatus(): LiveData<PlayerProgressStatus> = playerProgressStatus
 
     fun onCreate(track: Track) {
         mediaPlayerInteractor.preparePlayer(track)
+        playerProgressStatus.value = updatePlayerProgressStatus()
     }
 
-    private fun getPlayerProgressStatus(): PlayerProgressStatus {
+    private fun updatePlayerProgressStatus(): PlayerProgressStatus {
         return mediaPlayerInteractor.getPlayerProgressStatus()
     }
 
@@ -38,11 +40,10 @@ class PlayerViewModel(val context: Context, val mediaPlayerInteractor: MediaPlay
         mediaPlayerInteractor.destroyPlayer()
     }
 
-
     fun updateTimeOfPlay(): Runnable {                   //Обновленеи времени проигрования трека
         return object : Runnable {
             override fun run() {
-                playerProgressStatus.value = getPlayerProgressStatus()
+                playerProgressStatus.value = updatePlayerProgressStatus()
 
                 if (playerProgressStatus.value!!.mediaPlayerStatus == MediaPlayerStatus.STATE_PLAYING) {
                     mainThreadHandler.postDelayed(this, UPDATE)
@@ -55,9 +56,8 @@ class PlayerViewModel(val context: Context, val mediaPlayerInteractor: MediaPlay
         }
     }
 
-
     fun playbackControl() {
-        playerProgressStatus.value = getPlayerProgressStatus()
+        playerProgressStatus.value = updatePlayerProgressStatus()
         when (playerProgressStatus.value!!.mediaPlayerStatus) {
             MediaPlayerStatus.STATE_PLAYING -> {
                 pausePlayer()
@@ -67,11 +67,7 @@ class PlayerViewModel(val context: Context, val mediaPlayerInteractor: MediaPlay
                 startPlayer()
             }
 
-            MediaPlayerStatus.STATE_ERROR -> {
-                showMassage()
-            }
-
-            MediaPlayerStatus.STATE_DEFAULT -> {
+            MediaPlayerStatus.STATE_ERROR, MediaPlayerStatus.STATE_DEFAULT -> {
             }
         }
     }
@@ -79,14 +75,13 @@ class PlayerViewModel(val context: Context, val mediaPlayerInteractor: MediaPlay
     private fun startPlayer() {
         mediaPlayerInteractor.startPlayer()
         mainThreadHandler.post(updateTimeOfPlay())
-        playerProgressStatus.value = getPlayerProgressStatus()
+        playerProgressStatus.value = updatePlayerProgressStatus()
     }
 
     private fun pausePlayer() {
         mediaPlayerInteractor.pausePlayer()
-        playerProgressStatus.value = getPlayerProgressStatus()
+        playerProgressStatus.value = updatePlayerProgressStatus()
     }
-
 
     fun showMassage() {
         Toast.makeText(
@@ -99,5 +94,4 @@ class PlayerViewModel(val context: Context, val mediaPlayerInteractor: MediaPlay
     companion object {
         private const val UPDATE = 250L
     }
-
 }

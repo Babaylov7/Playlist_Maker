@@ -19,7 +19,6 @@ import java.util.Locale
 
 class PlayerActivity : AppCompatActivity() {
     private lateinit var binding: PlayerActivityBinding
-    private lateinit var playerProgressStatus: PlayerProgressStatus
     private var trackAddInQueue = false
     private var trackAddInFavorite = false
 
@@ -34,9 +33,6 @@ class PlayerActivity : AppCompatActivity() {
         viewModel =
             ViewModelProvider(this, PlayerViewModelFactory(this, Creator.provideMediaPlayerInteractor()))[PlayerViewModel::class.java]
 
-        playerProgressStatus = viewModel._playerProgressStatus.value!!
-
-
         val track =
             if (SDK_INT >= 33) {                        //Проверяем версию SDK и в зависимости от верстии применяем тот или иной метод для работы с intent
                 intent.getParcelableExtra("track", Track::class.java)!!
@@ -46,6 +42,10 @@ class PlayerActivity : AppCompatActivity() {
 
         writeDataInActivity(track)
         viewModel.onCreate(track)
+
+        viewModel.getPlayerProgressStatus().observe(this) { playerProgressStatus ->
+            playbackControl(playerProgressStatus)
+        }
 
         binding.buttonBack.setOnClickListener {
             finish()
@@ -62,14 +62,6 @@ class PlayerActivity : AppCompatActivity() {
         binding.buttonPlay.setOnClickListener {
             viewModel.playbackControl()
         }
-
-        viewModel._playerProgressStatus.observe(this) {
-            playbackControl()
-        }
-
-        if (playerProgressStatus.mediaPlayerStatus == MediaPlayerStatus.STATE_ERROR) {
-            viewModel.showMassage()
-        }
     }
 
     override fun onPause() {
@@ -82,24 +74,29 @@ class PlayerActivity : AppCompatActivity() {
         viewModel.destroyMediaPlayer()
     }
 
-    private fun playbackControl() {
-        when (playerProgressStatus.mediaPlayerStatus) {
+    private fun playbackControl(playerProgressStatus2: PlayerProgressStatus) {
+        when (playerProgressStatus2.mediaPlayerStatus) {
             MediaPlayerStatus.STATE_PLAYING -> {
-                binding.buttonPlay.setImageResource(R.drawable.button_play)
+                binding.buttonPlay.setImageResource(R.drawable.button_pause)
                 binding.timeOfPlay.text =
                     SimpleDateFormat(
                         "m:ss",
                         Locale.getDefault()
-                    ).format(viewModel._playerProgressStatus.value!!.currentPosition)
+                    ).format(playerProgressStatus2.currentPosition)
             }
 
-            MediaPlayerStatus.STATE_PREPARED, MediaPlayerStatus.STATE_PAUSED -> {
-                binding.buttonPlay.setImageResource(R.drawable.button_pause)
+            MediaPlayerStatus.STATE_PAUSED -> {
+                binding.buttonPlay.setImageResource(R.drawable.button_play)
+            }
+            MediaPlayerStatus.STATE_PREPARED -> {
                 binding.timeOfPlay.text = "0:00"
                 binding.buttonPlay.setImageResource(R.drawable.button_play)
             }
 
-            MediaPlayerStatus.STATE_ERROR, MediaPlayerStatus.STATE_DEFAULT -> {
+            MediaPlayerStatus.STATE_ERROR -> {
+                viewModel.showMassage()
+            }
+            MediaPlayerStatus.STATE_DEFAULT -> {
 
             }
         }
