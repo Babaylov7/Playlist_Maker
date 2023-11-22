@@ -10,6 +10,7 @@ import android.text.TextWatcher
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.example.playlistmaker.creator.Creator
 import com.example.playlistmaker.R
@@ -20,32 +21,24 @@ import com.example.playlistmaker.databinding.SearchActivityBinding
 import com.example.playlistmaker.presentation.ui.search.track.TrackAdapter
 import com.example.playlistmaker.presentation.isNightModeOn
 import com.example.playlistmaker.presentation.ui.player.activity.PlayerActivity
+import com.example.playlistmaker.presentation.ui.player.view_model.PlayerViewModel
+import com.example.playlistmaker.presentation.ui.search.view_model.SearchViewModel
+import com.example.playlistmaker.presentation.ui.search.view_model.SearchViewModelFactory
 import java.util.function.Consumer
 
-class SearchActivity : AppCompatActivity(), Consumer<TrackSearchResult> {
+class SearchActivity : AppCompatActivity() {
 
     private var editTextValue = ""
-    private var isClickAllowed = true
-    private val handler = Handler(Looper.getMainLooper())
-    private val searchRunnable = Runnable { sendRequest() }
-
     private lateinit var binding: SearchActivityBinding
-    private lateinit var tracks: ArrayList<Track>
     private lateinit var adapterSearch: TrackAdapter
     private lateinit var adapterHistory: TrackAdapter
-
-    private var searchHistoryInteractor = Creator.provideSearchHistoryInteractor()
-    private var trackInteractor = Creator.provideTrackInteractor()
-    private var tracksHistory = searchHistoryInteractor.getTracksHistory()
+    private lateinit var viewModel: SearchViewModel
 
     private val onClick: (track: Track) -> Unit = {
-        if (clickDebounce()) {
-            searchHistoryInteractor.addTrack(it)
+        if (viewModel.clickDebounce()) {
+            viewModel.addTrackInSearchHistory(it)
             adapterHistory.notifyDataSetChanged()
-            Intent(this, PlayerActivity::class.java).apply {
-                putExtra("track", it)
-                startActivity(this)
-            }
+            viewModel.startPlayerActivity(it)
         }
     }
 
@@ -54,16 +47,26 @@ class SearchActivity : AppCompatActivity(), Consumer<TrackSearchResult> {
         binding = SearchActivityBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        tracks = ArrayList<Track>()
-        adapterSearch = TrackAdapter(tracks, onClick)
-        adapterHistory = TrackAdapter(tracksHistory, onClick)
+        viewModel = ViewModelProvider(this, SearchViewModelFactory(this))[SearchViewModel::class.java]
+
+        adapterSearch = TrackAdapter(viewModel.getTracks().value!!, onClick)
+        adapterHistory = TrackAdapter(viewModel.getTracksHistory(), onClick)
+
+        viewModel.getSearchStatus().observe(this){searchStatus ->
+            processingSearchStatus(searchStatus)
+        }
+
+        viewModel.getProgressBarVisibility().observe(this){progressBarVisibility ->
+            showAndHideProgressBar(progressBarVisibility)
+        }
 
         binding.buttonBack.setOnClickListener {
             finish()
         }
 
         binding.buttonUpdate.setOnClickListener {
-            searchDebounce()
+            viewModel.changeRequestText(binding.editText.text.toString())
+            viewModel.searchDebounce()
         }
 
         binding.clearButton.setOnClickListener {
@@ -74,7 +77,7 @@ class SearchActivity : AppCompatActivity(), Consumer<TrackSearchResult> {
 
         binding.cleanHistoryButton.setOnClickListener {         //Очистка истории поиска
             showAndHideHistoryLayout(false)                      //Скрываем HistoryLayout
-            searchHistoryInteractor.clean()
+            viewModel.cleanHistory()
         }
 
         val simpleTextWatcher = object : TextWatcher {
@@ -86,14 +89,15 @@ class SearchActivity : AppCompatActivity(), Consumer<TrackSearchResult> {
                 binding.historyLayout.visibility =
                     if (binding.editText.hasFocus()         //Есть фокус
                         && s?.isEmpty() == true             //Строка поиска пуста
-                        && tracksHistory.isNotEmpty()       //Список треков не пустой
+                        && viewModel.getTracksHistory().isNotEmpty()       //Список треков не пустой
                     ) View.VISIBLE else View.GONE           //отображение Layout при изменении текста в строке поиска
 
                 editTextValue = binding.editText.text.toString()
                 if (editTextValue.isEmpty()) {
                     changeStateWhenSearchBarIsEmpty()
                 } else {
-                    searchDebounce()
+                    viewModel.changeRequestText(binding.editText.text.toString())
+                    viewModel.searchDebounce()
                 }
             }
 
@@ -108,7 +112,7 @@ class SearchActivity : AppCompatActivity(), Consumer<TrackSearchResult> {
         binding.editText.setOnFocusChangeListener { _, hasFocus ->      //отображение Layout при фокусе строки поиска
             if (hasFocus                            //Есть фокус
                 && binding.editText.text.isEmpty()     //Строка поиска пуста
-                && tracksHistory.isNotEmpty()       //Список треков не пустой
+                && viewModel.getTracksHistory().isNotEmpty()       //Список треков не пустой
             ) {
                 updateRecyclerViewSearchHistory()
             } else {
@@ -118,21 +122,13 @@ class SearchActivity : AppCompatActivity(), Consumer<TrackSearchResult> {
     }
 
     override fun onDestroy() {
-        handler.removeCallbacks(searchRunnable)
         super.onDestroy()
-    }
-
-    private fun sendRequest(){
-        hideErrorElements()
-        if(binding.editText.text.isNotEmpty()){
-            showAndHideProgressBar(true)
-            trackInteractor.searchTracks(binding.editText.text.toString(), this)
-        }
+        viewModel.onDestroy()
     }
 
     private fun updateRecyclerViewSearchHistory() {                     //Обновление RecyclerView с историей поиска
         showAndHideHistoryLayout(true)
-        tracksHistory = searchHistoryInteractor.getTracksHistory()
+        viewModel.updateTrackHistory()
         adapterHistory.notifyDataSetChanged()
     }
 
@@ -142,16 +138,6 @@ class SearchActivity : AppCompatActivity(), Consumer<TrackSearchResult> {
         } else {
             View.VISIBLE
         }
-    }
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        outState.putString(SEARCH_TEXT, editTextValue)
-    }
-
-    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
-        super.onRestoreInstanceState(savedInstanceState)
-        editTextValue = savedInstanceState.getString(SEARCH_TEXT, "")
     }
 
     private fun showImageError(typeError: SearchStatus) {
@@ -198,26 +184,9 @@ class SearchActivity : AppCompatActivity(), Consumer<TrackSearchResult> {
     }
 
     private fun hideRecyclerView() {
-        tracks.clear()
+        viewModel.cleanTracks()
         adapterSearch.notifyDataSetChanged()
-    }
-
-    private fun clickDebounce(): Boolean {
-        val current = isClickAllowed
-        if (isClickAllowed) {
-            isClickAllowed = false
-            handler.postDelayed({ isClickAllowed = true }, CLICK_DEBOUNCE_DELAY)
-        }
-        return current
-    }
-
-    private fun searchDebounce() {                                          //В момент вызова функции searchDebounce() мы удаляем
-        handler.removeCallbacks(searchRunnable)                             //последнюю запланированную отправку запроса и тут же,
-        handler.postDelayed(
-            searchRunnable,
-            SEARCH_DEBOUNCE_DELAY
-        )                                                                   //используя метод postDelayed(), планируем запуск этого же
-    }                                                                       //Runnable через две секунды.
+    }                                                                   //Runnable через две секунды.
 
     private fun changeStateWhenSearchBarIsEmpty() {                                            //при пустой строке поиска выполняем следующие действия
         hideErrorElements()
@@ -232,7 +201,7 @@ class SearchActivity : AppCompatActivity(), Consumer<TrackSearchResult> {
     }
 
     private fun showAndHideHistoryLayout(action: Boolean) {
-        if (action && tracksHistory.isNotEmpty()) {
+        if (action && viewModel.getTracksHistory().isNotEmpty()) {
             binding.historyLayout.visibility = View.VISIBLE
         } else {
             binding.historyLayout.visibility = View.GONE
@@ -247,33 +216,24 @@ class SearchActivity : AppCompatActivity(), Consumer<TrackSearchResult> {
         }
     }
 
-    override fun accept(trackSearchResult: TrackSearchResult) {
-        runOnUiThread {
-            if (trackSearchResult.resultStatus == SearchStatus.RESPONSE_RECEIVED) {
-                tracks.clear()
-                if (trackSearchResult.results.isEmpty()) {
-                    hideRecyclerView()
-                    showImageError(SearchStatus.LIST_IS_EMPTY)
-                } else {
-                    tracks.addAll(trackSearchResult.results)
-                    adapterSearch.notifyDataSetChanged()
-                }
-                showAndHideProgressBar(false)
+    private fun processingSearchStatus(searchStatus: SearchStatus){
+
+        when(searchStatus){
+            SearchStatus.RESPONSE_RECEIVED -> {
+                adapterSearch.notifyDataSetChanged()
             }
-            if (trackSearchResult.resultStatus == SearchStatus.NETWORK_ERROR) {
-                showAndHideProgressBar(false)
+            SearchStatus.LIST_IS_EMPTY -> {
+                hideRecyclerView()
+                showImageError(SearchStatus.LIST_IS_EMPTY)
+            }
+            SearchStatus.NETWORK_ERROR -> {
                 hideRecyclerView()
                 showImageError(SearchStatus.NETWORK_ERROR)
             }
+            SearchStatus.DEFAULT -> {
+            }
         }
     }
-
-    private companion object {
-        private const val SEARCH_TEXT = "SEARCH_TEXT"
-        private const val CLICK_DEBOUNCE_DELAY = 1000L
-        private const val SEARCH_DEBOUNCE_DELAY = 2000L
-    }
-
 }
 
 
