@@ -33,6 +33,7 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var adapterSearch: TrackAdapter
     private lateinit var adapterHistory: TrackAdapter
     private lateinit var viewModel: SearchViewModel
+    private lateinit var tracks : ArrayList<Track>
 
     private val onClick: (track: Track) -> Unit = {
         if (viewModel.clickDebounce()) {
@@ -48,17 +49,20 @@ class SearchActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         viewModel = ViewModelProvider(this, SearchViewModelFactory(this))[SearchViewModel::class.java]
-
-        adapterSearch = TrackAdapter(viewModel.getTracks().value!!, onClick)
+        tracks = ArrayList<Track>()
+        adapterSearch = TrackAdapter(tracks, onClick)
         adapterHistory = TrackAdapter(viewModel.getTracksHistory(), onClick)
 
-        viewModel.getSearchStatus().observe(this){searchStatus ->
-            processingSearchStatus(searchStatus)
+//        viewModel.getSearchStatus().observe(this){searchStatus ->
+//            processingSearchStatus(searchStatus)
+//        }
+        viewModel.getFoundTracks().observe(this){ it ->
+            processingSearchStatus(it)
         }
-
-        viewModel.getProgressBarVisibility().observe(this){progressBarVisibility ->
-            showAndHideProgressBar(progressBarVisibility)
-        }
+//
+//        viewModel.getProgressBarVisibility().observe(this){progressBarVisibility ->
+//            showAndHideProgressBar(progressBarVisibility)
+//        }
 
         binding.buttonBack.setOnClickListener {
             finish()
@@ -216,21 +220,28 @@ class SearchActivity : AppCompatActivity() {
         }
     }
 
-    private fun processingSearchStatus(searchStatus: SearchStatus){
-
-        when(searchStatus){
+    private fun processingSearchStatus(trackSearchResult: TrackSearchResult){
+        tracks.clear()
+        hideRecyclerView()
+        when(trackSearchResult.resultStatus){
             SearchStatus.RESPONSE_RECEIVED -> {
+                binding.progressBar.visibility = View.GONE
+                tracks.addAll(trackSearchResult.results)
                 adapterSearch.notifyDataSetChanged()
             }
             SearchStatus.LIST_IS_EMPTY -> {
-                hideRecyclerView()
+                binding.progressBar.visibility = View.GONE
                 showImageError(SearchStatus.LIST_IS_EMPTY)
             }
             SearchStatus.NETWORK_ERROR -> {
-                hideRecyclerView()
+                binding.progressBar.visibility = View.GONE
                 showImageError(SearchStatus.NETWORK_ERROR)
             }
             SearchStatus.DEFAULT -> {
+                binding.progressBar.visibility = View.GONE
+            }
+            SearchStatus.LOADING -> {
+                binding.progressBar.visibility = View.VISIBLE
             }
         }
     }
