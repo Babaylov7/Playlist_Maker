@@ -1,10 +1,7 @@
 package com.example.playlistmaker.presentation.ui.search.actyvity
 
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
@@ -12,7 +9,6 @@ import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
-import com.example.playlistmaker.creator.Creator
 import com.example.playlistmaker.R
 import com.example.playlistmaker.domain.search.models.SearchStatus
 import com.example.playlistmaker.domain.search.models.Track
@@ -20,11 +16,8 @@ import com.example.playlistmaker.domain.search.models.TrackSearchResult
 import com.example.playlistmaker.databinding.SearchActivityBinding
 import com.example.playlistmaker.presentation.ui.search.track.TrackAdapter
 import com.example.playlistmaker.presentation.isNightModeOn
-import com.example.playlistmaker.presentation.ui.player.activity.PlayerActivity
-import com.example.playlistmaker.presentation.ui.player.view_model.PlayerViewModel
 import com.example.playlistmaker.presentation.ui.search.view_model.SearchViewModel
 import com.example.playlistmaker.presentation.ui.search.view_model.SearchViewModelFactory
-import java.util.function.Consumer
 
 class SearchActivity : AppCompatActivity() {
 
@@ -53,16 +46,9 @@ class SearchActivity : AppCompatActivity() {
         adapterSearch = TrackAdapter(tracks, onClick)
         adapterHistory = TrackAdapter(viewModel.getTracksHistory(), onClick)
 
-//        viewModel.getSearchStatus().observe(this){searchStatus ->
-//            processingSearchStatus(searchStatus)
-//        }
         viewModel.getFoundTracks().observe(this){ it ->
             processingSearchStatus(it)
         }
-//
-//        viewModel.getProgressBarVisibility().observe(this){progressBarVisibility ->
-//            showAndHideProgressBar(progressBarVisibility)
-//        }
 
         binding.buttonBack.setOnClickListener {
             finish()
@@ -99,6 +85,8 @@ class SearchActivity : AppCompatActivity() {
                 editTextValue = binding.editText.text.toString()
                 if (editTextValue.isEmpty()) {
                     changeStateWhenSearchBarIsEmpty()
+                    viewModel.removeCallbacks()
+
                 } else {
                     viewModel.changeRequestText(binding.editText.text.toString())
                     viewModel.searchDebounce()
@@ -127,7 +115,7 @@ class SearchActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        viewModel.onDestroy()
+        viewModel.removeCallbacks()
     }
 
     private fun updateRecyclerViewSearchHistory() {                     //Обновление RecyclerView с историей поиска
@@ -189,8 +177,9 @@ class SearchActivity : AppCompatActivity() {
 
     private fun hideRecyclerView() {
         viewModel.cleanTracks()
-        adapterSearch.notifyDataSetChanged()
-    }                                                                   //Runnable через две секунды.
+        binding.recyclerView.visibility = View.GONE
+        //adapterSearch.notifyDataSetChanged()
+    }
 
     private fun changeStateWhenSearchBarIsEmpty() {                                            //при пустой строке поиска выполняем следующие действия
         hideErrorElements()
@@ -212,14 +201,6 @@ class SearchActivity : AppCompatActivity() {
         }
     }
 
-    private fun showAndHideProgressBar(action: Boolean) {
-        if (action) {
-            binding.progressBar.visibility = View.VISIBLE
-        } else {
-            binding.progressBar.visibility = View.GONE
-        }
-    }
-
     private fun processingSearchStatus(trackSearchResult: TrackSearchResult){
         tracks.clear()
         hideRecyclerView()
@@ -227,6 +208,7 @@ class SearchActivity : AppCompatActivity() {
             SearchStatus.RESPONSE_RECEIVED -> {
                 binding.progressBar.visibility = View.GONE
                 tracks.addAll(trackSearchResult.results)
+                binding.recyclerView.visibility = View.VISIBLE
                 adapterSearch.notifyDataSetChanged()
             }
             SearchStatus.LIST_IS_EMPTY -> {
@@ -239,6 +221,7 @@ class SearchActivity : AppCompatActivity() {
             }
             SearchStatus.DEFAULT -> {
                 binding.progressBar.visibility = View.GONE
+ //               binding.recyclerView.visibility = View.GONE
             }
             SearchStatus.LOADING -> {
                 binding.progressBar.visibility = View.VISIBLE
