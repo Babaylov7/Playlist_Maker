@@ -1,6 +1,6 @@
 package com.example.playlistmaker.data.sharing.impl
 
-import com.example.playlistmaker.data.sharing.ExternalNavigator
+import com.example.playlistmaker.domain.sharing.ExternalNavigator
 import com.example.playlistmaker.domain.sharing.model.EmailData
 
 class ExternalNavigatorImpl: ExternalNavigator {

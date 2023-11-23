@@ -7,13 +7,13 @@ import com.example.playlistmaker.data.player.network.impl.MediaPlayerRepositoryI
 import com.example.playlistmaker.data.search.network.RetrofitNetworkClient
 import com.example.playlistmaker.data.search.network.impl.TrackRepositoryImpl
 import com.example.playlistmaker.domain.search.SearchHistoryInteractor
-import com.example.playlistmaker.data.search.local.SearchHistoryRepository
+import com.example.playlistmaker.domain.search.SearchHistoryRepository
 import com.example.playlistmaker.domain.player.MediaPlayerInteractor
-import com.example.playlistmaker.data.player.network.MediaPlayerRepository
+import com.example.playlistmaker.domain.player.MediaPlayerRepository
 import com.example.playlistmaker.domain.settings.SavedSettingsInteractor
-import com.example.playlistmaker.data.settings.SavedSettingsRepository
+import com.example.playlistmaker.domain.settings.SavedSettingsRepository
 import com.example.playlistmaker.domain.search.TrackInteractor
-import com.example.playlistmaker.data.search.network.TrackRepository
+import com.example.playlistmaker.domain.search.TrackRepository
 import com.example.playlistmaker.domain.player.impl.MediaPlayerInteractorImpl
 import com.example.playlistmaker.domain.settings.impl.SavedSettingsInteractorImpl
 import com.example.playlistmaker.domain.search.impl.SearchHistoryInteractorImpl

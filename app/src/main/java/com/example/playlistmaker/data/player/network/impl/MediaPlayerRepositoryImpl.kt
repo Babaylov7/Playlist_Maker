@@ -2,7 +2,7 @@ package com.example.playlistmaker.data.player.network.impl
 
 import android.media.MediaPlayer
 import android.util.Log
-import com.example.playlistmaker.data.player.network.MediaPlayerRepository
+import com.example.playlistmaker.domain.player.MediaPlayerRepository
 import com.example.playlistmaker.domain.player.models.MediaPlayerStatus
 import com.example.playlistmaker.domain.player.models.PlayerProgressStatus
 import com.example.playlistmaker.domain.search.models.Track

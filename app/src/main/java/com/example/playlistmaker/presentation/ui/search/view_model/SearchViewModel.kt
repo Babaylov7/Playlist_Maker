@@ -19,7 +19,7 @@ class SearchViewModel(val context: Context) : ViewModel(), Consumer<TrackSearchR
     private var isClickAllowed = true
     private val handler = Handler(Looper.getMainLooper())
     private val searchRunnable = Runnable { sendRequest() }
-    private var tracks: MutableLiveData<ArrayList<Track>> = MutableLiveData(ArrayList<Track>())
+    private var tracks: MutableLiveData<List<Track>> = MutableLiveData(emptyList())
     private var searchStatus: MutableLiveData<SearchStatus> = MutableLiveData(SearchStatus.DEFAULT)
     private var progressBarVisibility: MutableLiveData<Boolean> = MutableLiveData(false)
 
@@ -36,7 +36,7 @@ class SearchViewModel(val context: Context) : ViewModel(), Consumer<TrackSearchR
         requestText = text
     }
 
-    fun getTracks(): LiveData<ArrayList<Track>> =
+    fun getTracks(): LiveData<List<Track>> =
         tracks        //Получаем LiveData со списком треков
 
     fun getSearchStatus(): LiveData<SearchStatus> =
@@ -76,7 +76,7 @@ class SearchViewModel(val context: Context) : ViewModel(), Consumer<TrackSearchR
     }
 
     fun cleanTracks() {
-        tracks.value?.clear()
+        tracks.postValue(emptyList())
     }
 
     fun sendRequest() {
@@ -95,24 +95,19 @@ class SearchViewModel(val context: Context) : ViewModel(), Consumer<TrackSearchR
 
 
     override fun accept(trackSearchResult: TrackSearchResult) {
-
+        progressBarVisibility.postValue(false)
+        tracks.postValue(emptyList())
         when (trackSearchResult.resultStatus) {
             SearchStatus.RESPONSE_RECEIVED -> {
-                tracks.value?.clear()
-                tracks.value?.addAll(trackSearchResult.results)
+                tracks.postValue(trackSearchResult.results)
             }
 
-            SearchStatus.LIST_IS_EMPTY -> {
-                tracks.value?.clear()
-            }
-
-            SearchStatus.NETWORK_ERROR, SearchStatus.DEFAULT -> {
+            SearchStatus.LIST_IS_EMPTY, SearchStatus.NETWORK_ERROR, SearchStatus.DEFAULT -> {
             }
         }
     }
 
     private companion object {
-        private const val SEARCH_TEXT = "SEARCH_TEXT"
         private const val CLICK_DEBOUNCE_DELAY = 1000L
         private const val SEARCH_DEBOUNCE_DELAY = 2000L
     }

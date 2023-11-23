@@ -1,7 +1,7 @@
 package com.example.playlistmaker.domain.settings.impl
 
 import com.example.playlistmaker.domain.settings.SavedSettingsInteractor
-import com.example.playlistmaker.data.settings.SavedSettingsRepository
+import com.example.playlistmaker.domain.settings.SavedSettingsRepository
 
 class SavedSettingsInteractorImpl(private val savedSettingsRepository: SavedSettingsRepository) :
     SavedSettingsInteractor {

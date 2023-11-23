@@ -4,7 +4,7 @@ import android.content.Context.MODE_PRIVATE
 import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatDelegate
 import com.example.playlistmaker.app.AppSharedPreferences
-import com.example.playlistmaker.data.settings.SavedSettingsRepository
+import com.example.playlistmaker.domain.settings.SavedSettingsRepository
 
 class SavedSettingsRepositoryImpl(val app: AppSharedPreferences): SavedSettingsRepository {
 

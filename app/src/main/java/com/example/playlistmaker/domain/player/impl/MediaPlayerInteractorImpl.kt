@@ -1,7 +1,7 @@
 package com.example.playlistmaker.domain.player.impl
 
 import com.example.playlistmaker.domain.player.MediaPlayerInteractor
-import com.example.playlistmaker.data.player.network.MediaPlayerRepository
+import com.example.playlistmaker.domain.player.MediaPlayerRepository
 import com.example.playlistmaker.domain.player.models.PlayerProgressStatus
 import com.example.playlistmaker.domain.search.models.Track
 
