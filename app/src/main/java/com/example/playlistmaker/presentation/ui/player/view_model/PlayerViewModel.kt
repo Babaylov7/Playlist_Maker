@@ -1,23 +1,20 @@
 package com.example.playlistmaker.presentation.ui.player.view_model
 
-import android.content.Context
 import android.os.Handler
 import android.os.Looper
-import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.playlistmaker.R
 import com.example.playlistmaker.domain.player.MediaPlayerInteractor
 import com.example.playlistmaker.domain.player.models.MediaPlayerStatus
 import com.example.playlistmaker.domain.player.models.PlayerProgressStatus
 import com.example.playlistmaker.domain.search.models.Track
 
-class PlayerViewModel(val context: Context, val mediaPlayerInteractor: MediaPlayerInteractor) :
+class PlayerViewModel(val mediaPlayerInteractor: MediaPlayerInteractor) :
     ViewModel() {
     private val mainThreadHandler = Handler(Looper.getMainLooper())
 
-    private var playerProgressStatus: MutableLiveData<PlayerProgressStatus> =
+    private val playerProgressStatus: MutableLiveData<PlayerProgressStatus> =
         MutableLiveData(updatePlayerProgressStatus())
 
     fun getPlayerProgressStatus(): LiveData<PlayerProgressStatus> = playerProgressStatus
@@ -81,14 +78,6 @@ class PlayerViewModel(val context: Context, val mediaPlayerInteractor: MediaPlay
     private fun pausePlayer() {
         mediaPlayerInteractor.pausePlayer()
         playerProgressStatus.value = updatePlayerProgressStatus()
-    }
-
-    fun showMassage() {
-        Toast.makeText(
-            context,
-            context.getString(R.string.audio_file_not_available),
-            Toast.LENGTH_LONG
-        ).show()
     }
 
     companion object {

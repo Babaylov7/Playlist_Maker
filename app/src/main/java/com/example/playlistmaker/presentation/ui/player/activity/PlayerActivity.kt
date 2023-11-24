@@ -2,6 +2,7 @@ package com.example.playlistmaker.presentation.ui.player.activity
 
 import android.os.Build.VERSION.SDK_INT
 import android.os.Bundle
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
@@ -31,7 +32,7 @@ class PlayerActivity : AppCompatActivity() {
         binding.timeOfPlay.text = getString(R.string.player_default_time)
 
         viewModel =
-            ViewModelProvider(this, PlayerViewModelFactory(this, Creator.provideMediaPlayerInteractor()))[PlayerViewModel::class.java]
+            ViewModelProvider(this, PlayerViewModelFactory(Creator.provideMediaPlayerInteractor()))[PlayerViewModel::class.java]
 
         val track =
             if (SDK_INT >= 33) {                        //Проверяем версию SDK и в зависимости от верстии применяем тот или иной метод для работы с intent
@@ -94,7 +95,7 @@ class PlayerActivity : AppCompatActivity() {
             }
 
             MediaPlayerStatus.STATE_ERROR -> {
-                viewModel.showMassage()
+                showErrorMassage()
             }
             MediaPlayerStatus.STATE_DEFAULT -> {
 
@@ -144,5 +145,12 @@ class PlayerActivity : AppCompatActivity() {
             trackAddInQueue = true
             binding.buttonQueue.setImageResource(R.drawable.button_add_in_queue)
         }
+    }
+    fun showErrorMassage() {
+        Toast.makeText(
+            this,
+            getString(R.string.audio_file_not_available),
+            Toast.LENGTH_LONG
+        ).show()
     }
 }

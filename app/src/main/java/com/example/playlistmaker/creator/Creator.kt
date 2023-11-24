@@ -1,11 +1,13 @@
 package com.example.playlistmaker.creator
 
+import android.content.Context
 import com.example.playlistmaker.app.AppSharedPreferences
 import com.example.playlistmaker.data.settings.impl.SavedSettingsRepositoryImpl
 import com.example.playlistmaker.data.search.local.impl.SearchHistoryRepositoryImpl
 import com.example.playlistmaker.data.player.network.impl.MediaPlayerRepositoryImpl
 import com.example.playlistmaker.data.search.network.RetrofitNetworkClient
 import com.example.playlistmaker.data.search.network.impl.TrackRepositoryImpl
+import com.example.playlistmaker.data.sharing.impl.SharingRepositoryImpl
 import com.example.playlistmaker.domain.search.SearchHistoryInteractor
 import com.example.playlistmaker.domain.search.SearchHistoryRepository
 import com.example.playlistmaker.domain.player.MediaPlayerInteractor
@@ -18,6 +20,9 @@ import com.example.playlistmaker.domain.player.impl.MediaPlayerInteractorImpl
 import com.example.playlistmaker.domain.settings.impl.SavedSettingsInteractorImpl
 import com.example.playlistmaker.domain.search.impl.SearchHistoryInteractorImpl
 import com.example.playlistmaker.domain.search.impl.TrackInteractorImpl
+import com.example.playlistmaker.domain.sharing.SharingInteractor
+import com.example.playlistmaker.domain.sharing.SharingRepository
+import com.example.playlistmaker.domain.sharing.impl.SharingInteractorImpl
 
 object Creator {
 
@@ -57,5 +62,13 @@ object Creator {
 
     private fun getMediaPlayerRepisitory(): MediaPlayerRepository {
         return MediaPlayerRepositoryImpl()
+    }
+
+    fun provideSharingInteractor(context: Context): SharingInteractor {         //Работа по отправки инф.о приложении
+        return SharingInteractorImpl(getSharingRepository(context))
+    }
+
+    private fun getSharingRepository(context: Context): SharingRepository {
+        return SharingRepositoryImpl(context)
     }
 }

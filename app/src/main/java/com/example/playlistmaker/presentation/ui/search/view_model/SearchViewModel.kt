@@ -1,44 +1,36 @@
 package com.example.playlistmaker.presentation.ui.search.view_model
 
-import android.content.Context
-import android.content.Intent
+
 import android.os.Handler
 import android.os.Looper
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.playlistmaker.creator.Creator
+import com.example.playlistmaker.domain.search.SearchHistoryInteractor
+import com.example.playlistmaker.domain.search.TrackInteractor
 import com.example.playlistmaker.domain.search.models.SearchStatus
 import com.example.playlistmaker.domain.search.models.Track
 import com.example.playlistmaker.domain.search.models.TrackSearchResult
-import com.example.playlistmaker.presentation.ui.player.activity.PlayerActivity
 import java.util.function.Consumer
 
-class SearchViewModel(val context: Context) : ViewModel(), Consumer<TrackSearchResult> {
+class SearchViewModel(
+    val searchHistoryInteractor: SearchHistoryInteractor,
+    val trackInteractor: TrackInteractor
+) : ViewModel(), Consumer<TrackSearchResult> {
     private var requestText = ""
     private var isClickAllowed = true
     private val handler = Handler(Looper.getMainLooper())
 
-    //private var tracks: MutableLiveData<List<Track>> = MutableLiveData(emptyList())
-
-    private var searchHistoryInteractor = Creator.provideSearchHistoryInteractor()
-    private var trackInteractor = Creator.provideTrackInteractor()
     private var tracksHistory = searchHistoryInteractor.getTracksHistory()
 
-
-
-    private var foundTracks: MutableLiveData<TrackSearchResult> = MutableLiveData(TrackSearchResult(results = emptyList()))
+    private val foundTracks: MutableLiveData<TrackSearchResult> = MutableLiveData(TrackSearchResult(results = emptyList()))
 
     private val searchRunnable = Runnable {
         foundTracks.postValue(getLoadingStatus())
         sendRequest()
     }
 
-    fun getLoadingStatus(): TrackSearchResult{
-        var loading = TrackSearchResult(results = emptyList())
-        loading.resultStatus = SearchStatus.LOADING
-        return loading
-    }
     fun getFoundTracks(): LiveData<TrackSearchResult> = foundTracks
 
     fun removeCallbacks() {
@@ -60,13 +52,6 @@ class SearchViewModel(val context: Context) : ViewModel(), Consumer<TrackSearchR
         searchHistoryInteractor.addTrack(track)
     }
 
-    fun startPlayerActivity(track: Track) {              //Запустили активити с плеером
-        Intent(context, PlayerActivity::class.java).apply {
-            putExtra("track", track)
-            context.startActivity(this)
-        }
-    }
-
     fun searchDebounce() {                                          //В момент вызова функции searchDebounce() мы удаляем
         handler.removeCallbacks(searchRunnable)                             //последнюю запланированную отправку запроса и тут же,
         handler.postDelayed(
@@ -79,14 +64,6 @@ class SearchViewModel(val context: Context) : ViewModel(), Consumer<TrackSearchR
         searchHistoryInteractor.clean()
     }
 
-    fun cleanTracks() {
-        //foundTracks.value = TrackSearchResult(results = emptyList())
-    }
-
-    fun sendRequest() {
-        trackInteractor.searchTracks(requestText, this)
-    }
-
     fun clickDebounce(): Boolean {
         val current = isClickAllowed
         if (isClickAllowed) {
@@ -96,6 +73,20 @@ class SearchViewModel(val context: Context) : ViewModel(), Consumer<TrackSearchR
         return current
     }
 
+    private fun sendRequest() {
+        trackInteractor.searchTracks(requestText, this)
+    }
+
+    private fun getLoadingStatus(): TrackSearchResult{
+        var loading = TrackSearchResult(results = emptyList())
+        loading.resultStatus = SearchStatus.LOADING
+        return loading
+    }
+
+    private companion object {
+        private const val CLICK_DEBOUNCE_DELAY = 1000L
+        private const val SEARCH_DEBOUNCE_DELAY = 2000L
+    }
 
     override fun accept(trackSearchResult: TrackSearchResult) {
         when (trackSearchResult.resultStatus) {
@@ -110,10 +101,5 @@ class SearchViewModel(val context: Context) : ViewModel(), Consumer<TrackSearchR
 
             }
         }
-    }
-
-    private companion object {
-        private const val CLICK_DEBOUNCE_DELAY = 1000L
-        private const val SEARCH_DEBOUNCE_DELAY = 2000L
     }
 }

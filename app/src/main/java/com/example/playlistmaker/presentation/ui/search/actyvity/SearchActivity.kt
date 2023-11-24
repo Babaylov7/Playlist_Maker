@@ -1,6 +1,7 @@
 package com.example.playlistmaker.presentation.ui.search.actyvity
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -16,6 +17,7 @@ import com.example.playlistmaker.domain.search.models.TrackSearchResult
 import com.example.playlistmaker.databinding.SearchActivityBinding
 import com.example.playlistmaker.presentation.ui.search.track.TrackAdapter
 import com.example.playlistmaker.presentation.isNightModeOn
+import com.example.playlistmaker.presentation.ui.player.activity.PlayerActivity
 import com.example.playlistmaker.presentation.ui.search.view_model.SearchViewModel
 import com.example.playlistmaker.presentation.ui.search.view_model.SearchViewModelFactory
 
@@ -32,7 +34,7 @@ class SearchActivity : AppCompatActivity() {
         if (viewModel.clickDebounce()) {
             viewModel.addTrackInSearchHistory(it)
             adapterHistory.notifyDataSetChanged()
-            viewModel.startPlayerActivity(it)
+            startPlayerActivity(it)
         }
     }
 
@@ -118,6 +120,13 @@ class SearchActivity : AppCompatActivity() {
         viewModel.removeCallbacks()
     }
 
+    private fun startPlayerActivity(track: Track) {              //Запустили активити с плеером
+        Intent(this, PlayerActivity::class.java).apply {
+            putExtra("track", track)
+            startActivity(this)
+        }
+    }
+
     private fun updateRecyclerViewSearchHistory() {                     //Обновление RecyclerView с историей поиска
         showAndHideHistoryLayout(true)
         viewModel.updateTrackHistory()
@@ -176,9 +185,7 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun hideRecyclerView() {
-        viewModel.cleanTracks()
         binding.recyclerView.visibility = View.GONE
-        //adapterSearch.notifyDataSetChanged()
     }
 
     private fun changeStateWhenSearchBarIsEmpty() {                                            //при пустой строке поиска выполняем следующие действия
@@ -207,8 +214,8 @@ class SearchActivity : AppCompatActivity() {
         when(trackSearchResult.resultStatus){
             SearchStatus.RESPONSE_RECEIVED -> {
                 binding.progressBar.visibility = View.GONE
-                tracks.addAll(trackSearchResult.results)
                 binding.recyclerView.visibility = View.VISIBLE
+                tracks.addAll(trackSearchResult.results)
                 adapterSearch.notifyDataSetChanged()
             }
             SearchStatus.LIST_IS_EMPTY -> {
@@ -221,7 +228,6 @@ class SearchActivity : AppCompatActivity() {
             }
             SearchStatus.DEFAULT -> {
                 binding.progressBar.visibility = View.GONE
- //               binding.recyclerView.visibility = View.GONE
             }
             SearchStatus.LOADING -> {
                 binding.progressBar.visibility = View.VISIBLE
