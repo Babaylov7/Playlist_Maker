@@ -36,9 +36,9 @@ class PlayerActivity : AppCompatActivity() {
 
         val track =
             if (SDK_INT >= 33) {                        //Проверяем версию SDK и в зависимости от верстии применяем тот или иной метод для работы с intent
-                intent.getParcelableExtra("track", Track::class.java)!!
+                intent.getParcelableExtra(TRACK_KEY, Track::class.java)!!
             } else {
-                intent.getParcelableExtra<Track>("track")!!
+                intent.getParcelableExtra<Track>(TRACK_KEY)!!
             }
 
         writeDataInActivity(track)
@@ -110,10 +110,10 @@ class PlayerActivity : AppCompatActivity() {
             SimpleDateFormat("mm:ss", Locale.getDefault()).format(track.trackTimeMillis)
         binding.albumName.text = track.collectionName
         binding.songYear.text =
-            if (!track.releaseDate.equals("unknown")) track.releaseDate.substring(
+            if (!track.releaseDate.equals(UNKNOWN)) track.releaseDate.substring(
                 0,
                 4
-            ) else "Not found"
+            ) else NOT_FOUND
         binding.genreName.text = track.primaryGenreName
         binding.countryName.text = track.country
 
@@ -152,5 +152,10 @@ class PlayerActivity : AppCompatActivity() {
             getString(R.string.audio_file_not_available),
             Toast.LENGTH_LONG
         ).show()
+    }
+    companion object {
+        private const val TRACK_KEY = "track"
+        private const val UNKNOWN = "unknown"
+        private const val NOT_FOUND = "not found"
     }
 }

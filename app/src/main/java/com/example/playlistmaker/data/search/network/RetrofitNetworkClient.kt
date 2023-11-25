@@ -1,7 +1,7 @@
 package com.example.playlistmaker.data.search.network
 
 import com.example.playlistmaker.data.NetworkClient
-import com.example.playlistmaker.domain.search.Response
+import com.example.playlistmaker.data.search.dto.Response
 import com.example.playlistmaker.domain.search.models.SearchStatus
 import com.example.playlistmaker.data.search.dto.TrackSearchRequest
 import retrofit2.Retrofit

@@ -43,7 +43,7 @@ class SearchActivity : AppCompatActivity() {
         binding = SearchActivityBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        viewModel = ViewModelProvider(this, SearchViewModelFactory(this))[SearchViewModel::class.java]
+        viewModel = ViewModelProvider(this, SearchViewModelFactory())[SearchViewModel::class.java]
         tracks = ArrayList<Track>()
         adapterSearch = TrackAdapter(tracks, onClick)
         adapterHistory = TrackAdapter(viewModel.getTracksHistory(), onClick)
@@ -122,7 +122,7 @@ class SearchActivity : AppCompatActivity() {
 
     private fun startPlayerActivity(track: Track) {              //Запустили активити с плеером
         Intent(this, PlayerActivity::class.java).apply {
-            putExtra("track", track)
+            putExtra(TRACK_KEY, track)
             startActivity(this)
         }
     }
@@ -233,6 +233,10 @@ class SearchActivity : AppCompatActivity() {
                 binding.progressBar.visibility = View.VISIBLE
             }
         }
+    }
+
+    companion object {
+        private const val TRACK_KEY = "track"
     }
 }
 

@@ -28,18 +28,13 @@ class TrackRepositoryImpl(private val networkClient: NetworkClient) : TrackRepos
                     country = if (it.country.isNullOrEmpty()) "unknown" else it.country
                 )
             }
-            val result: TrackSearchResult = TrackSearchResult(tracks)
-            if(tracks.isEmpty()) {
-                result.resultStatus =  SearchStatus.LIST_IS_EMPTY
-                return  result
-            } else {
-                result.resultStatus =  SearchStatus.RESPONSE_RECEIVED
-                return  result
+            return TrackSearchResult(tracks).apply {
+                resultStatus = if (tracks.isEmpty()) SearchStatus.LIST_IS_EMPTY else SearchStatus.RESPONSE_RECEIVED
             }
         } else {
-            val result: TrackSearchResult = TrackSearchResult(emptyList())
-            result.resultStatus =  SearchStatus.NETWORK_ERROR
-            return  result
+            return TrackSearchResult(emptyList()).apply{
+                resultStatus =  SearchStatus.NETWORK_ERROR
+            }
         }
     }
 }
