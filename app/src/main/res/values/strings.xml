@@ -33,4 +33,6 @@
     <string name="country">Страна</string>
     <string name="audio_file_not_available">Аудиофайл недоступен</string>
     <string name="player_default_time" translatable="false">0:00</string>
+    <string name="unknown" translatable="false">unknown</string>
+    <string name="not_found" translatable="false">not found</string>
 </resources>

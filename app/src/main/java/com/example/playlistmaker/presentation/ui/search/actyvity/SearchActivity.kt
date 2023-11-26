@@ -92,6 +92,7 @@ class SearchActivity : AppCompatActivity() {
                 } else {
                     viewModel.changeRequestText(binding.editText.text.toString())
                     viewModel.searchDebounce()
+                    hideErrorElements()
                 }
             }
 
@@ -211,7 +212,7 @@ class SearchActivity : AppCompatActivity() {
     private fun processingSearchStatus(trackSearchResult: TrackSearchResult){
         tracks.clear()
         hideRecyclerView()
-        when(trackSearchResult.resultStatus){
+        when(trackSearchResult.status){
             SearchStatus.RESPONSE_RECEIVED -> {
                 binding.progressBar.visibility = View.GONE
                 binding.recyclerView.visibility = View.VISIBLE

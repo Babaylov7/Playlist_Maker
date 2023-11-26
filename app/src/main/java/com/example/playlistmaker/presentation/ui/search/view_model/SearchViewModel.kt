@@ -23,7 +23,8 @@ class SearchViewModel(
 
     private var tracksHistory = searchHistoryInteractor.getTracksHistory()
 
-    private val foundTracks: MutableLiveData<TrackSearchResult> = MutableLiveData(TrackSearchResult(results = emptyList()))
+    private val foundTracks: MutableLiveData<TrackSearchResult> =
+        MutableLiveData(TrackSearchResult(results = emptyList(), SearchStatus.DEFAULT))
 
     private val searchRunnable = Runnable {
         foundTracks.postValue(getLoadingStatus())
@@ -76,19 +77,15 @@ class SearchViewModel(
         trackInteractor.searchTracks(requestText, this)
     }
 
-    private fun getLoadingStatus(): TrackSearchResult{
-        var loading = TrackSearchResult(results = emptyList())
-        loading.resultStatus = SearchStatus.LOADING
-        return loading
-    }
-
-    private companion object {
-        private const val CLICK_DEBOUNCE_DELAY = 1000L
-        private const val SEARCH_DEBOUNCE_DELAY = 2000L
+    private fun getLoadingStatus(): TrackSearchResult {
+        return TrackSearchResult(
+            results = emptyList(),
+            SearchStatus.LOADING
+        )
     }
 
     override fun accept(trackSearchResult: TrackSearchResult) {
-        when (trackSearchResult.resultStatus) {
+        when (trackSearchResult.status) {
             SearchStatus.RESPONSE_RECEIVED -> {
                 foundTracks.postValue(trackSearchResult)
             }
@@ -96,9 +93,15 @@ class SearchViewModel(
             SearchStatus.LIST_IS_EMPTY, SearchStatus.NETWORK_ERROR, SearchStatus.DEFAULT -> {
                 foundTracks.postValue(trackSearchResult)
             }
+
             SearchStatus.LOADING -> {
 
             }
         }
+    }
+
+    private companion object {
+        private const val CLICK_DEBOUNCE_DELAY = 1000L
+        private const val SEARCH_DEBOUNCE_DELAY = 2000L
     }
 }

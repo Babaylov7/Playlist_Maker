@@ -64,11 +64,11 @@ object Creator {
         return MediaPlayerRepositoryImpl()
     }
 
-    fun provideSharingInteractor(context: Context): SharingInteractor {         //Работа по отправки инф.о приложении
-        return SharingInteractorImpl(getSharingRepository(context))
+    fun provideSharingInteractor(): SharingInteractor {         //Работа по отправки инф.о приложении
+        return SharingInteractorImpl(getSharingRepository())
     }
 
-    private fun getSharingRepository(context: Context): SharingRepository {
-        return SharingRepositoryImpl(context)
+    private fun getSharingRepository(): SharingRepository {
+        return SharingRepositoryImpl(app)
     }
 }

@@ -110,10 +110,10 @@ class PlayerActivity : AppCompatActivity() {
             SimpleDateFormat("mm:ss", Locale.getDefault()).format(track.trackTimeMillis)
         binding.albumName.text = track.collectionName
         binding.songYear.text =
-            if (!track.releaseDate.equals(UNKNOWN)) track.releaseDate.substring(
+            if (!track.releaseDate.equals(getString(R.string.unknown))) track.releaseDate.substring(
                 0,
                 4
-            ) else NOT_FOUND
+            ) else getString(R.string.not_found)
         binding.genreName.text = track.primaryGenreName
         binding.countryName.text = track.country
 
@@ -155,7 +155,5 @@ class PlayerActivity : AppCompatActivity() {
     }
     companion object {
         private const val TRACK_KEY = "track"
-        private const val UNKNOWN = "unknown"
-        private const val NOT_FOUND = "not found"
     }
 }

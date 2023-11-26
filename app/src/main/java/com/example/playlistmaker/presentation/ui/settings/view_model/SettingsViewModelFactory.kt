@@ -5,11 +5,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.example.playlistmaker.creator.Creator
 
-class SettingsViewModelFactory (var context: Context) : ViewModelProvider.Factory {
+class SettingsViewModelFactory () : ViewModelProvider.Factory {
 
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         return SettingsViewModel(
-            sharingInteractorImpl = Creator.provideSharingInteractor(context),
+            sharingInteractorImpl = Creator.provideSharingInteractor(),
             savedSettingsInteractorImpl = Creator.provideSavedSettingsInteractor()
         ) as T
     }

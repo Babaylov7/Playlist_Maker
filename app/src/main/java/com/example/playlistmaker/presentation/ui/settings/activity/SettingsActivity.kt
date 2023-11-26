@@ -14,7 +14,7 @@ class SettingsActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = SettingsActivityBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        viewModel = ViewModelProvider(this, SettingsViewModelFactory(this))[SettingsViewModel::class.java]
+        viewModel = ViewModelProvider(this, SettingsViewModelFactory())[SettingsViewModel::class.java]
 
         val nightMode: Boolean? = viewModel.nightMode.value
 
