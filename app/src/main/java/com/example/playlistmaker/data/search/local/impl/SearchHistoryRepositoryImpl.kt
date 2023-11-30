@@ -2,13 +2,13 @@ package com.example.playlistmaker.data.search.local.impl
 
 import android.content.Context.MODE_PRIVATE
 import android.content.SharedPreferences
-import com.example.playlistmaker.app.AppSharedPreferences
+import com.example.playlistmaker.app.App
 import com.example.playlistmaker.domain.search.SearchHistoryRepository
 import com.example.playlistmaker.domain.search.models.Track
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 
-class SearchHistoryRepositoryImpl(val app: AppSharedPreferences) : SearchHistoryRepository {
+class SearchHistoryRepositoryImpl(val app: App) : SearchHistoryRepository {
 
     private var sharedPrefs: SharedPreferences = app.getSharedPreferences(SEARCH_HISTORY, MODE_PRIVATE)
     private val tracks: ArrayList<Track> = readSearchHistory()       //Список треков в SP или пустой массив

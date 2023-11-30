@@ -1,12 +1,10 @@
 package com.example.playlistmaker.presentation.ui.settings.view_model
 
-
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.playlistmaker.domain.settings.SavedSettingsInteractor
 import com.example.playlistmaker.domain.sharing.SharingInteractor
-
 
 class SettingsViewModel(
     val sharingInteractorImpl: SharingInteractor,

@@ -3,10 +3,10 @@ package com.example.playlistmaker.data.sharing.impl
 import android.content.Intent
 import android.net.Uri
 import com.example.playlistmaker.R
-import com.example.playlistmaker.app.AppSharedPreferences
+import com.example.playlistmaker.app.App
 import com.example.playlistmaker.domain.sharing.SharingRepository
 
-class SharingRepositoryImpl(private val app: AppSharedPreferences): SharingRepository {
+class SharingRepositoryImpl(private val app: App): SharingRepository {
 
     override fun shareApplication() {
         val link = app.getString(R.string.share_app_link)

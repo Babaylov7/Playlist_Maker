@@ -4,15 +4,25 @@ import android.app.Application
 import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatDelegate
 import com.example.playlistmaker.creator.Creator
+import com.example.playlistmaker.di.activityModule
+import com.example.playlistmaker.di.dataModule
+import com.example.playlistmaker.di.interactorModule
+import com.example.playlistmaker.di.repositoryModule
+import org.koin.android.ext.koin.androidContext
+import org.koin.core.context.GlobalContext.startKoin
 
-class AppSharedPreferences : Application() {
+class App : Application() {
 
     private var darkTheme = false
     private lateinit var sharedPrefs: SharedPreferences
 
     override fun onCreate() {
         super.onCreate()
-        Creator.initApplication(this)
+        startKoin {
+            androidContext(this@App)
+            modules(repositoryModule, dataModule, interactorModule, activityModule)
+        }
+
         sharedPrefs = getSharedPreferences(SETTINGS_PREFERENCES, MODE_PRIVATE)
         darkTheme = sharedPrefs.getBoolean(NIGHT_MODE_ON, false)
         switchTheme(darkTheme)

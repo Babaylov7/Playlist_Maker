@@ -8,7 +8,6 @@ import android.text.TextWatcher
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.ViewModelProvider
 import com.bumptech.glide.Glide
 import com.example.playlistmaker.R
 import com.example.playlistmaker.domain.search.models.SearchStatus
@@ -19,7 +18,7 @@ import com.example.playlistmaker.presentation.ui.search.track.TrackAdapter
 import com.example.playlistmaker.presentation.isNightModeOn
 import com.example.playlistmaker.presentation.ui.player.activity.PlayerActivity
 import com.example.playlistmaker.presentation.ui.search.view_model.SearchViewModel
-import com.example.playlistmaker.presentation.ui.search.view_model.SearchViewModelFactory
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SearchActivity : AppCompatActivity() {
 
@@ -27,8 +26,9 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var binding: SearchActivityBinding
     private lateinit var adapterSearch: TrackAdapter
     private lateinit var adapterHistory: TrackAdapter
-    private lateinit var viewModel: SearchViewModel
     private lateinit var tracks : ArrayList<Track>
+
+    private val viewModel by viewModel<SearchViewModel>()
 
     private val onClick: (track: Track) -> Unit = {
         if (viewModel.clickDebounce()) {
@@ -43,7 +43,6 @@ class SearchActivity : AppCompatActivity() {
         binding = SearchActivityBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        viewModel = ViewModelProvider(this, SearchViewModelFactory())[SearchViewModel::class.java]
         tracks = ArrayList<Track>()
         adapterSearch = TrackAdapter(tracks, onClick)
         adapterHistory = TrackAdapter(viewModel.getTracksHistory(), onClick)

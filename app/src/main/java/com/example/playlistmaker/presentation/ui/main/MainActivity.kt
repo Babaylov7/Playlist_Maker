@@ -17,7 +17,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.start_activity)
 
-        Creator.provideSavedSettingsInteractor().getNightModeSettings()
+        //Creator.provideSavedSettingsInteractor().getNightModeSettings()
 
         val buttonSearch = findViewById<Button>(R.id.button_search)
         val buttonLibrary = findViewById<Button>(R.id.button_library)
