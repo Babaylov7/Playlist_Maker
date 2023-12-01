@@ -6,9 +6,9 @@ import androidx.appcompat.app.AppCompatDelegate
 import com.example.playlistmaker.app.App
 import com.example.playlistmaker.domain.settings.SavedSettingsRepository
 
-class SavedSettingsRepositoryImpl(val app: App): SavedSettingsRepository {
+class SavedSettingsRepositoryImpl(private val sharedPrefs: SharedPreferences): SavedSettingsRepository {
 
-    private var sharedPrefs: SharedPreferences = app.getSharedPreferences(SETTINGS_PREFERENCES, MODE_PRIVATE)
+    //private var sharedPrefs: SharedPreferences = app.getSharedPreferences(SETTINGS_PREFERENCES, MODE_PRIVATE)
     private var darkTheme = getNightModeSettings()
 
     override fun putNightModeSettings(mode: Boolean) {

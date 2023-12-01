@@ -15,9 +15,9 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 val dataModule = module {
 
-    single(named("application_context")) {
-        App()
-    }
+//    single(named("application_context")) {
+//        App()
+//    }
 
     single<ItunesApi> {
         Retrofit.Builder()
@@ -40,7 +40,6 @@ val dataModule = module {
             Context.MODE_PRIVATE
         )
     }
-
     factory {
         Gson()
     }
