@@ -3,7 +3,6 @@ package com.example.playlistmaker.app
 import android.app.Application
 import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatDelegate
-import com.example.playlistmaker.creator.Creator
 import com.example.playlistmaker.di.activityModule
 import com.example.playlistmaker.di.dataModule
 import com.example.playlistmaker.di.interactorModule

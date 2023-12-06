@@ -2,11 +2,9 @@ package com.example.playlistmaker.di
 
 import android.content.Context
 import android.media.MediaPlayer
-import com.example.playlistmaker.app.App
 import com.example.playlistmaker.data.NetworkClient
 import com.example.playlistmaker.data.search.network.ItunesApi
 import com.example.playlistmaker.data.search.network.RetrofitNetworkClient
-import com.google.gson.Gson
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
@@ -15,9 +13,6 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 val dataModule = module {
 
-//    single(named("application_context")) {
-//        App()
-//    }
 
     single<ItunesApi> {
         Retrofit.Builder()
@@ -39,9 +34,6 @@ val dataModule = module {
             "settings_preferences",
             Context.MODE_PRIVATE
         )
-    }
-    factory {
-        Gson()
     }
 
     factory {

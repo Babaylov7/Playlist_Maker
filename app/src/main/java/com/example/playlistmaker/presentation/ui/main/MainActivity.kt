@@ -6,18 +6,14 @@ import android.os.Bundle
 import android.widget.Button
 import com.example.playlistmaker.presentation.ui.library.LibraryActivity
 import com.example.playlistmaker.R
-import com.example.playlistmaker.creator.Creator
 import com.example.playlistmaker.presentation.ui.search.actyvity.SearchActivity
 import com.example.playlistmaker.presentation.ui.settings.activity.SettingsActivity
-
 
 class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.start_activity)
-
-        //Creator.provideSavedSettingsInteractor().getNightModeSettings()
 
         val buttonSearch = findViewById<Button>(R.id.button_search)
         val buttonLibrary = findViewById<Button>(R.id.button_library)
