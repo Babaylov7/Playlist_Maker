@@ -7,10 +7,11 @@ import com.example.playlistmaker.domain.player.models.MediaPlayerStatus
 import com.example.playlistmaker.domain.player.models.PlayerProgressStatus
 import com.example.playlistmaker.domain.search.models.Track
 
-class MediaPlayerRepositoryImpl() : MediaPlayerRepository {
+class MediaPlayerRepositoryImpl(
+    private var mediaPlayer: MediaPlayer,
+    private var playerState: MediaPlayerStatus = MediaPlayerStatus.STATE_DEFAULT
+) : MediaPlayerRepository {
 
-    private var mediaPlayer = MediaPlayer()
-    private var playerState = MediaPlayerStatus.STATE_DEFAULT
 
     override fun preparePlayer(track: Track) {
         try {
