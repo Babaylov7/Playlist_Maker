@@ -21,7 +21,7 @@ val repositoryModule = module {
     }
 
     factory<SearchHistoryRepository> {
-        SearchHistoryRepositoryImpl(get(named("search_history")))
+        SearchHistoryRepositoryImpl(get(named(SEARCH_HISTORY)))
     }
 
     factory<MediaPlayerRepository> {
@@ -29,7 +29,7 @@ val repositoryModule = module {
     }
 
     factory<SavedSettingsRepository> {
-        SavedSettingsRepositoryImpl(get(named("settings_preferences")))
+        SavedSettingsRepositoryImpl(get(named(SETTINGS_PREFERENCES)))
     }
 
     factory<SharingRepository> {

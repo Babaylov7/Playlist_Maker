@@ -6,7 +6,7 @@ import com.example.playlistmaker.domain.search.models.Track
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 
-class SearchHistoryRepositoryImpl(val sharedPrefs: SharedPreferences) : SearchHistoryRepository {
+class SearchHistoryRepositoryImpl(private val sharedPrefs: SharedPreferences) : SearchHistoryRepository {
 
     private val tracks: ArrayList<Track> = readSearchHistory()       //Список треков в SP или пустой массив
 

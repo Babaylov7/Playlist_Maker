@@ -13,25 +13,24 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 val dataModule = module {
 
-
     single<ItunesApi> {
         Retrofit.Builder()
-            .baseUrl("https://itunes.apple.com")
+            .baseUrl(ITUNES_URL)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
             .create(ItunesApi::class.java)
     }
 
-    single(named("search_history")) {
+    single(named(SEARCH_HISTORY)) {
         androidContext().getSharedPreferences(
-            "search_history",
+            SEARCH_HISTORY,
             Context.MODE_PRIVATE
         )
     }
 
-    single(named("settings_preferences")) {
+    single(named(SETTINGS_PREFERENCES)) {
         androidContext().getSharedPreferences(
-            "settings_preferences",
+            SETTINGS_PREFERENCES,
             Context.MODE_PRIVATE
         )
     }
@@ -43,6 +42,8 @@ val dataModule = module {
     factory<NetworkClient> {
         RetrofitNetworkClient(get())
     }
+
+
 
 
 
