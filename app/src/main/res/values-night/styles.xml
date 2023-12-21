@@ -79,4 +79,11 @@
         <item name="android:backgroundTint">@color/gray_button_night_mode</item>
     </style>
 
+    <!-- Стили для экрана Медиатеки -->
+
+    <style name="tab_item_style_1">
+        <item name="tabTextColor">@color/white</item>
+        <item name="tabIndicatorColor">@color/white</item>
+    </style>
+
 </resources>

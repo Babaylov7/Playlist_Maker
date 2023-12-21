@@ -39,12 +39,12 @@
 
 
     <com.google.android.material.tabs.TabLayout
+        style = "@style/tab_item_style_1"
         android:id="@+id/tabLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/button_back"
-        app:tabTextColor="@color/yp_black" />
+        app:layout_constraintTop_toBottomOf="@id/button_back"/>
 
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/viewPager"
