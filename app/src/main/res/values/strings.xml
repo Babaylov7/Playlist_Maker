@@ -35,4 +35,7 @@
     <string name="player_default_time" translatable="false">0:00</string>
     <string name="unknown" translatable="false">unknown</string>
     <string name="not_found" translatable="false">not found</string>
+    <string name="library_is_empty">Ваша медиатека пуста</string>
+    <string name="no_playlists">Вы не создали\nни одного плейлиста</string>
+    <string name="new_playlist">Новый плейлист</string>
 </resources>
