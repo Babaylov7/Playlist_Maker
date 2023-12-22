@@ -8,7 +8,7 @@
 
 
     <ImageView
-        android:id="@+id/button_back"
+        android:id="@+id/iv_button_back"
         style="@style/SettingsActivityTitle"
         android:layout_width="@dimen/button_back_size"
         android:layout_height="@dimen/button_back_size"
@@ -33,27 +33,27 @@
         android:text="@string/button_library_text"
         android:textAppearance="@style/Title"
         android:textSize="@dimen/primary_text_size_26"
-        app:layout_constraintBottom_toBottomOf="@id/button_back"
-        app:layout_constraintStart_toEndOf="@id/button_back"
-        app:layout_constraintTop_toTopOf="@id/button_back" />
+        app:layout_constraintBottom_toBottomOf="@id/iv_button_back"
+        app:layout_constraintStart_toEndOf="@id/iv_button_back"
+        app:layout_constraintTop_toTopOf="@id/iv_button_back" />
 
 
     <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tl_library"
         style = "@style/tab_item_style_1"
-        android:id="@+id/tabLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/button_back"/>
+        app:layout_constraintTop_toBottomOf="@id/iv_button_back"/>
 
     <androidx.viewpager2.widget.ViewPager2
-        android:id="@+id/viewPager"
+        android:id="@+id/vp_library"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tabLayout" />
+        app:layout_constraintTop_toBottomOf="@id/tl_library" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

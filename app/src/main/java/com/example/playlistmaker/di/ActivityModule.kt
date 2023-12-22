@@ -1,5 +1,8 @@
 package com.example.playlistmaker.di
 
+import com.example.playlistmaker.presentation.ui.library.view_model.LibraryFavoriteFragmentViewModel
+import com.example.playlistmaker.presentation.ui.library.view_model.LibraryPlaylistsFragmentViewModel
+import com.example.playlistmaker.presentation.ui.library.view_model.LibraryViewModel
 import com.example.playlistmaker.presentation.ui.player.view_model.PlayerViewModel
 import com.example.playlistmaker.presentation.ui.search.view_model.SearchViewModel
 import com.example.playlistmaker.presentation.ui.settings.view_model.SettingsViewModel
@@ -17,5 +20,17 @@ val activityModule = module {
 
     viewModel {
         SettingsViewModel(get(), get())
+    }
+
+    viewModel {
+        LibraryViewModel()
+    }
+
+    viewModel {
+        LibraryFavoriteFragmentViewModel()
+    }
+
+    viewModel {
+        LibraryPlaylistsFragmentViewModel()
     }
 }

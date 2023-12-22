@@ -21,18 +21,18 @@ class LibraryActivity : AppCompatActivity() {
         binding = LibraryActivityBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        binding.viewPager.adapter = LibraryViewPageAdapter(supportFragmentManager, lifecycle)
+        binding.vpLibrary.adapter = LibraryViewPageAdapter(supportFragmentManager, lifecycle)
 
-        tabMediator = TabLayoutMediator(binding.tabLayout, binding.viewPager){
+        tabMediator = TabLayoutMediator(binding.tlLibrary, binding.vpLibrary){
             tab, position ->
                 when(position) {
-                    0 -> tab.text = "Избранные треки"
-                    1 -> tab.text = "Плейлисты"
+                    0 -> tab.text = getString(R.string.featured_tracks)
+                    1 -> tab.text = getString(R.string.playlists)
                 }
         }
         tabMediator.attach()
 
-        binding.buttonBack.setOnClickListener {
+        binding.ivButtonBack.setOnClickListener {
             finish()
         }
     }

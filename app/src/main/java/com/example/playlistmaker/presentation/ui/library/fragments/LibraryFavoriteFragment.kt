@@ -9,8 +9,13 @@ import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.LibraryFavoriteFragmentBinding
 import com.example.playlistmaker.presentation.isNightModeOn
 import com.example.playlistmaker.presentation.ui.BindingFragment
+import com.example.playlistmaker.presentation.ui.library.view_model.LibraryFavoriteFragmentViewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class LibraryFavoriteFragment: BindingFragment<LibraryFavoriteFragmentBinding>() {
+
+    private val viewModel by viewModel<LibraryFavoriteFragmentViewModel>()
+
     override fun createBinding(
         inflater: LayoutInflater,
         container: ViewGroup?
@@ -37,6 +42,8 @@ class LibraryFavoriteFragment: BindingFragment<LibraryFavoriteFragmentBinding>()
         }
     }
 
-
+    companion object {
+        fun newInstance() = LibraryFavoriteFragment()
+    }
 
 }

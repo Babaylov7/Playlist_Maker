@@ -14,8 +14,8 @@ class LibraryViewPageAdapter(fragmentManager: FragmentManager, lifecycle: Lifecy
     }
     override fun createFragment(position: Int): Fragment {
         return when(position) {
-            0 -> LibraryFavoriteFragment()
-            else -> LibraryPlaylistsFragment()
+            0 -> LibraryFavoriteFragment.newInstance()
+            else -> LibraryPlaylistsFragment.newInstance()
         }
     }
 

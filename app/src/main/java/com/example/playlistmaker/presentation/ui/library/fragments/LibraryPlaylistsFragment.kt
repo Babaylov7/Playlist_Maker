@@ -9,8 +9,12 @@ import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.LibraryPlaylistsFragmentBinding
 import com.example.playlistmaker.presentation.isNightModeOn
 import com.example.playlistmaker.presentation.ui.BindingFragment
+import com.example.playlistmaker.presentation.ui.library.view_model.LibraryPlaylistsFragmentViewModel
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class LibraryPlaylistsFragment: BindingFragment<LibraryPlaylistsFragmentBinding>() {
+
+    private val viewModel = viewModel<LibraryPlaylistsFragmentViewModel>()
     override fun createBinding(
         inflater: LayoutInflater,
         container: ViewGroup?
@@ -35,5 +39,9 @@ class LibraryPlaylistsFragment: BindingFragment<LibraryPlaylistsFragmentBinding>
                 .load(R.drawable.nothing_was_found_light)
                 .into(binding.ivMessageImage)
         }
+    }
+
+    companion object{
+        fun newInstance() = LibraryPlaylistsFragment()
     }
 }
