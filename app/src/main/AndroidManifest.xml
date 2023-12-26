@@ -18,7 +18,7 @@
         tools:targetApi="33"
         >
         <activity
-            android:name=".presentation.ui.library.LibraryActivity"
+            android:name=".presentation.ui.library.activity.LibraryActivity"
             android:exported="false"
             android:screenOrientation="portrait"/>
         <activity

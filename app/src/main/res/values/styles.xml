@@ -96,4 +96,12 @@
         <item name="android:backgroundTint">@color/gray_button_light_mode</item>
     </style>
 
+
+    <!-- Стили для экрана Медиатеки -->
+
+    <style name="tab_item_style_1">
+        <item name="tabTextColor">@color/black</item>
+        <item name="tabIndicatorColor">@color/black</item>
+    </style>
+
 </resources>

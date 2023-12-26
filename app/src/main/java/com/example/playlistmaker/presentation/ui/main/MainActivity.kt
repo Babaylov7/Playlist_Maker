@@ -4,7 +4,7 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
-import com.example.playlistmaker.presentation.ui.library.LibraryActivity
+import com.example.playlistmaker.presentation.ui.library.activity.LibraryActivity
 import com.example.playlistmaker.R
 import com.example.playlistmaker.presentation.ui.search.actyvity.SearchActivity
 import com.example.playlistmaker.presentation.ui.settings.activity.SettingsActivity
