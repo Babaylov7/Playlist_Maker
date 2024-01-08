@@ -51,7 +51,7 @@ class SearchActivity : AppCompatActivity() {
             processingSearchStatus(it)
         }
 
-        binding.buttonBack.setOnClickListener {
+        binding.ivButtonBack.setOnClickListener {
             finish()
         }
 

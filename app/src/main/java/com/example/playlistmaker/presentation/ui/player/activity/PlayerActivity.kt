@@ -43,7 +43,7 @@ class PlayerActivity : AppCompatActivity() {
             playbackControl(playerProgressStatus)
         }
 
-        binding.buttonBack.setOnClickListener {
+        binding.ivButtonBack.setOnClickListener {
             finish()
         }
 

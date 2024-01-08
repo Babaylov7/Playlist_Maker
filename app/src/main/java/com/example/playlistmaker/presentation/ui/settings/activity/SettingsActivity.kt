@@ -1,28 +1,33 @@
 package com.example.playlistmaker.presentation.ui.settings.activity
 
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
-import com.example.playlistmaker.databinding.SettingsActivityBinding
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import com.example.playlistmaker.databinding.SettingsFragmentBinding
+import com.example.playlistmaker.presentation.ui.BindingFragment
 import com.example.playlistmaker.presentation.ui.settings.view_model.SettingsViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class SettingsActivity : AppCompatActivity() {
-    private lateinit var binding: SettingsActivityBinding
+class SettingsActivity : BindingFragment<SettingsFragmentBinding>() {
+
     private val viewModel by viewModel<SettingsViewModel>()
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        binding = SettingsActivityBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+    override fun createBinding(
+        inflater: LayoutInflater,
+        container: ViewGroup?
+    ): SettingsFragmentBinding {
+        return SettingsFragmentBinding.inflate(inflater, container, false)
+    }
+
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
         val nightMode: Boolean? = viewModel.nightMode.value
 
         binding.darkThemeSwitch.setChecked(
             nightMode ?: false
         )
-
-        binding.buttonBack.setOnClickListener {
-            finish()
-        }
 
         binding.shareApplication.setOnClickListener {
             viewModel.shareApplication()
