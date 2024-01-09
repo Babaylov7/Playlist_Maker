@@ -1,4 +1,4 @@
-package com.example.playlistmaker.presentation.ui.settings.activity
+package com.example.playlistmaker.presentation.ui.settings.fragment
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -9,7 +9,7 @@ import com.example.playlistmaker.presentation.ui.BindingFragment
 import com.example.playlistmaker.presentation.ui.settings.view_model.SettingsViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class SettingsActivity : BindingFragment<SettingsFragmentBinding>() {
+class SettingsFragment : BindingFragment<SettingsFragmentBinding>() {
 
     private val viewModel by viewModel<SettingsViewModel>()
     override fun createBinding(

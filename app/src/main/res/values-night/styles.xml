@@ -12,6 +12,11 @@
         <item name="android:background">@color/yp_black</item>
     </style>
 
+    <style name="bottom_panel">
+        <item name="itemTextColor">@color/bottom_nav_color_dark</item>
+        <item name="itemIconTint">@color/bottom_nav_color_dark</item>
+    </style>
+
     <!-- Стили для экрана Настроек -->
 
     <style name="SettingsActivityBackground">

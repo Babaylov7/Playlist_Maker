@@ -28,6 +28,11 @@
     <style name="StartActivityBackground">
         <item name="android:background">@color/yp_blue</item>
     </style>
+    
+    <style name="bottom_panel">
+        <item name="itemTextColor">@color/bottom_nav_color_light</item>
+        <item name="itemIconTint">@color/bottom_nav_color_light</item>
+    </style>
 
     <!-- Стили для экрана Настроек -->
 
