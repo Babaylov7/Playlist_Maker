@@ -19,24 +19,5 @@ class MainActivity : AppCompatActivity() {
         val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bnv_bottom_panel)
         bottomNavigationView.setupWithNavController(navController)
 
-//        val buttonSearch = findViewById<Button>(R.id.button_search)
-//        val buttonLibrary = findViewById<Button>(R.id.button_library)
-//        val buttonSettings = findViewById<Button>(R.id.button_settings)
-//
-//        buttonSearch.setOnClickListener {
-//            val displayIntent = Intent(this, SearchFragment::class.java)
-//            startActivity(displayIntent)
-//        }
-//
-//        buttonLibrary.setOnClickListener {
-//            val displayIntent = Intent(this, LibraryFragment::class.java)
-//            startActivity(displayIntent)
-//        }
-//
-//        buttonSettings.setOnClickListener {
-//            val displayIntent = Intent(this, SettingsFragment::class.java)
-//            startActivity(displayIntent)
-//        }
-
     }
 }
