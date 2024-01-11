@@ -65,6 +65,7 @@ class SearchFragment : BindingFragment<SearchFragmentBinding>() {
 
         binding.clearButton.setOnClickListener {
             binding.editText.setText("")
+            viewModel.deleteFoundTracks()
             hideKeyboard()
             changeStateWhenSearchBarIsEmpty()
         }
@@ -204,7 +205,7 @@ class SearchFragment : BindingFragment<SearchFragmentBinding>() {
     }
 
     private fun showAndHideHistoryLayout(action: Boolean) {
-        if (action && viewModel.getTracksHistory().isNotEmpty()) {
+        if (action && viewModel.getTracksHistory().isNotEmpty() && binding.editText.hasFocus()) {
             binding.historyLayout.visibility = View.VISIBLE
         } else {
             binding.historyLayout.visibility = View.GONE
