@@ -39,6 +39,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:itemRippleColor="@color/yp_blue"
+        app:itemRippleColor="@color/yp_blue_light_alpha_27"
         app:menu="@menu/bottom_navigate_menu"/>
 </androidx.constraintlayout.widget.ConstraintLayout>
