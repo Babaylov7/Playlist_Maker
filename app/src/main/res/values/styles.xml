@@ -28,6 +28,12 @@
     <style name="StartActivityBackground">
         <item name="android:background">@color/yp_blue</item>
     </style>
+    
+    <style name="bottom_panel">
+        <item name="itemTextColor">@color/bottom_nav_color_light</item>
+        <item name="itemIconTint">@color/bottom_nav_color_light</item>
+        <item name="android:background">@color/white</item>
+    </style>
 
     <!-- Стили для экрана Настроек -->
 
@@ -71,6 +77,10 @@
         <item name="android:textColor">@color/yp_text_gray</item>
         <item name="tint">@color/yp_text_gray</item>
     </style>
+
+    <style name="title_you_were_looking_for">
+        <item name="android:textColor">@color/black</item>
+    </style>
     
     <style name="MessageError">
         <item name="android:fontFamily">@font/ys_display_medium</item>
@@ -99,9 +109,21 @@
 
     <!-- Стили для экрана Медиатеки -->
 
+    <style name="toolbar_style">
+        <item name="android:textSize">@dimen/primary_text_size_26</item>
+        <item name="android:fontFamily">@font/ys_display_medium</item>
+        <item name="android:textColor">@color/black</item>
+    </style>
+
     <style name="tab_item_style_1">
         <item name="tabTextColor">@color/black</item>
         <item name="tabIndicatorColor">@color/black</item>
+    </style>
+
+    <style name="text_appearance" parent="TextAppearance.Design.Tab">
+        <item name="textAllCaps">false</item>
+        <item name="android:fontFamily">@font/ys_display_medium</item>
+        <item name="android:textSize">@dimen/primary_text_size_16</item>
     </style>
 
 </resources>

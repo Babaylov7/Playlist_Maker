@@ -1,38 +1,23 @@
 package com.example.playlistmaker.presentation.ui.main
 
-import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.Button
-import com.example.playlistmaker.presentation.ui.library.activity.LibraryActivity
+import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.ui.setupWithNavController
 import com.example.playlistmaker.R
-import com.example.playlistmaker.presentation.ui.search.actyvity.SearchActivity
-import com.example.playlistmaker.presentation.ui.settings.activity.SettingsActivity
+import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.start_activity)
+        setContentView(R.layout.root_activity)
 
-        val buttonSearch = findViewById<Button>(R.id.button_search)
-        val buttonLibrary = findViewById<Button>(R.id.button_library)
-        val buttonSettings = findViewById<Button>(R.id.button_settings)
+        val navHostFragment = supportFragmentManager.findFragmentById(R.id.fcv_container_view) as NavHostFragment
+        val navController = navHostFragment.navController
 
-        buttonSearch.setOnClickListener {
-            val displayIntent = Intent(this, SearchActivity::class.java)
-            startActivity(displayIntent)
-        }
-
-        buttonLibrary.setOnClickListener {
-            val displayIntent = Intent(this, LibraryActivity::class.java)
-            startActivity(displayIntent)
-        }
-
-        buttonSettings.setOnClickListener {
-            val displayIntent = Intent(this, SettingsActivity::class.java)
-            startActivity(displayIntent)
-        }
+        val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bnv_bottom_panel)
+        bottomNavigationView.setupWithNavController(navController)
 
     }
 }
