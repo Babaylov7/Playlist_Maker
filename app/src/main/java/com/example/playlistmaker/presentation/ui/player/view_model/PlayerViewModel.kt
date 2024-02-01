@@ -52,8 +52,6 @@ class PlayerViewModel(val mediaPlayerInteractor: MediaPlayerInteractor) :
         } else {
             updateTimeOfPlayJob?.cancel()
         }
-
-
     }
 
     fun playbackControl() {

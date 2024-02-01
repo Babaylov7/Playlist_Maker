@@ -1,6 +1,5 @@
 package com.example.playlistmaker.presentation.ui.search.view_model
 
-
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -84,7 +83,13 @@ class SearchViewModel(
     }
 
     private fun sendRequest() {
-        trackInteractor.searchTracks(requestText, this)
+        viewModelScope.launch {
+            trackInteractor
+                .searchTracks(requestText)
+                .collect { result ->
+                    foundTracks.postValue(result)
+                }
+        }
     }
 
     private fun getLoadingStatus(): TrackSearchResult {
