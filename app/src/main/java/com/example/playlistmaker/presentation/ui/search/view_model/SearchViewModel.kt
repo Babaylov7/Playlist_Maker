@@ -1,15 +1,18 @@
 package com.example.playlistmaker.presentation.ui.search.view_model
 
-import android.os.Handler
-import android.os.Looper
+
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.playlistmaker.domain.search.SearchHistoryInteractor
 import com.example.playlistmaker.domain.search.TrackInteractor
 import com.example.playlistmaker.domain.search.models.SearchStatus
 import com.example.playlistmaker.domain.search.models.Track
 import com.example.playlistmaker.domain.search.models.TrackSearchResult
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import java.util.function.Consumer
 
 class SearchViewModel(
@@ -18,22 +21,23 @@ class SearchViewModel(
 ) : ViewModel(), Consumer<TrackSearchResult> {
     private var requestText = ""
     private var isClickAllowed = true
-    private val handler = Handler(Looper.getMainLooper())
+    private var clickJob: Job? = null
+    private var searchJob: Job? = null
 
     private var tracksHistory = searchHistoryInteractor.getTracksHistory()
 
     private val foundTracks: MutableLiveData<TrackSearchResult> =
         MutableLiveData(TrackSearchResult(results = emptyList(), SearchStatus.DEFAULT))
 
-    private val searchRunnable = Runnable {
+    fun getFoundTracks(): LiveData<TrackSearchResult> = foundTracks
+
+    private fun search() {
         foundTracks.postValue(getLoadingStatus())
         sendRequest()
     }
 
-    fun getFoundTracks(): LiveData<TrackSearchResult> = foundTracks
-
     fun removeCallbacks() {
-        handler.removeCallbacks(searchRunnable)
+        searchJob?.cancel()
     }
 
     fun changeRequestText(text: String) {
@@ -51,27 +55,30 @@ class SearchViewModel(
         searchHistoryInteractor.addTrack(track)
     }
 
-    fun searchDebounce() {                                          //В момент вызова функции searchDebounce() мы удаляем
-        handler.removeCallbacks(searchRunnable)                             //последнюю запланированную отправку запроса и тут же,
-        handler.postDelayed(
-            searchRunnable,
-            SEARCH_DEBOUNCE_DELAY
-        )                                                                   //используя метод postDelayed(), планируем запуск этого же
+    fun searchDebounce() {
+        searchJob?.cancel()
+        searchJob = viewModelScope.launch {
+            delay(SEARCH_DEBOUNCE_DELAY)
+            search()
+        }
     }
 
     fun cleanHistory() {
         searchHistoryInteractor.clean()
     }
 
-    fun deleteFoundTracks(){
+    fun deleteFoundTracks() {
         foundTracks.postValue(TrackSearchResult(results = emptyList(), SearchStatus.DEFAULT))
     }
 
     fun clickDebounce(): Boolean {
         val current = isClickAllowed
         if (isClickAllowed) {
-            isClickAllowed = false
-            handler.postDelayed({ isClickAllowed = true }, CLICK_DEBOUNCE_DELAY)
+            clickJob = viewModelScope.launch {
+                isClickAllowed = false
+                delay(CLICK_DEBOUNCE_DELAY)
+                isClickAllowed = true
+            }
         }
         return current
     }
@@ -98,7 +105,6 @@ class SearchViewModel(
             }
 
             SearchStatus.LOADING -> {
-
             }
         }
     }

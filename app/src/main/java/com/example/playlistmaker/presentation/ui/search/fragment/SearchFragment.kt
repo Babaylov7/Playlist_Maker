@@ -27,7 +27,7 @@ class SearchFragment : BindingFragment<SearchFragmentBinding>() {
     private var editTextValue = ""
     private lateinit var adapterSearch: TrackAdapter
     private lateinit var adapterHistory: TrackAdapter
-    private lateinit var tracks : ArrayList<Track>
+    private lateinit var tracks: ArrayList<Track>
 
     private val viewModel by viewModel<SearchViewModel>()
 
@@ -53,7 +53,7 @@ class SearchFragment : BindingFragment<SearchFragmentBinding>() {
         adapterSearch = TrackAdapter(tracks, onClick)
         adapterHistory = TrackAdapter(viewModel.getTracksHistory(), onClick)
 
-        viewModel.getFoundTracks().observe(viewLifecycleOwner){ it ->
+        viewModel.getFoundTracks().observe(viewLifecycleOwner) { it ->
             processingSearchStatus(it)
         }
 
@@ -212,27 +212,32 @@ class SearchFragment : BindingFragment<SearchFragmentBinding>() {
         }
     }
 
-    private fun processingSearchStatus(trackSearchResult: TrackSearchResult){
+    private fun processingSearchStatus(trackSearchResult: TrackSearchResult) {
         tracks.clear()
         hideRecyclerView()
-        when(trackSearchResult.status){
+        hideErrorElements()
+        when (trackSearchResult.status) {
             SearchStatus.RESPONSE_RECEIVED -> {
                 binding.progressBar.visibility = View.GONE
                 binding.recyclerView.visibility = View.VISIBLE
                 tracks.addAll(trackSearchResult.results)
                 adapterSearch.notifyDataSetChanged()
             }
+
             SearchStatus.LIST_IS_EMPTY -> {
                 binding.progressBar.visibility = View.GONE
                 showImageError(SearchStatus.LIST_IS_EMPTY)
             }
+
             SearchStatus.NETWORK_ERROR -> {
                 binding.progressBar.visibility = View.GONE
                 showImageError(SearchStatus.NETWORK_ERROR)
             }
+
             SearchStatus.DEFAULT -> {
                 binding.progressBar.visibility = View.GONE
             }
+
             SearchStatus.LOADING -> {
                 binding.progressBar.visibility = View.VISIBLE
             }
