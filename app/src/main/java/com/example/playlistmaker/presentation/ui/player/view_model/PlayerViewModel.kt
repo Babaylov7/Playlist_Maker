@@ -53,16 +53,6 @@ class PlayerViewModel(val mediaPlayerInteractor: MediaPlayerInteractor) :
                 updateTimeOfPlayJob?.cancel()
             }
         }
-//        if (playerProgressStatus.value!!.mediaPlayerStatus == MediaPlayerStatus.STATE_PLAYING) {
-//            updateTimeOfPlayJob = viewModelScope.launch {
-//                delay(UPDATE)
-//                updateTimeOfPlay()
-//            }
-//        } else if (playerProgressStatus.value!!.mediaPlayerStatus == MediaPlayerStatus.STATE_PAUSED) {
-//            updateTimeOfPlayJob?.cancel()
-//        } else {
-//            updateTimeOfPlayJob?.cancel()
-//        }
     }
 
     fun playbackControl() {
