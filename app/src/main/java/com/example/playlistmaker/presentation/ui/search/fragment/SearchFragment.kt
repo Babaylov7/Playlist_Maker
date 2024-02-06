@@ -137,7 +137,6 @@ class SearchFragment : BindingFragment<SearchFragmentBinding>() {
     private fun updateRecyclerViewSearchHistory() {                     //Обновление RecyclerView с историей поиска
         showAndHideHistoryLayout(true)
         viewModel.updateTrackHistory()
-        //adapterHistory.notifyDataSetChanged()
     }
 
     private fun clearButtonVisibility(s: CharSequence?): Int {          //видимость кнопки "Очистить" в строке поиска
@@ -224,7 +223,6 @@ class SearchFragment : BindingFragment<SearchFragmentBinding>() {
                 binding.progressBar.visibility = View.GONE
                 binding.recyclerView.visibility = View.VISIBLE
                 tracks.addAll(trackSearchResult.results)
-                //adapterSearch.notifyDataSetChanged()
             }
 
             SearchStatus.LIST_IS_EMPTY -> {

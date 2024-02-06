@@ -23,10 +23,6 @@ class SearchViewModel(
     private var clickJob: Job? = null
     private var searchJob: Job? = null
 
-    //private var tracksHistory = searchHistoryInteractor.getTracksHistory()
-    //    fun getTracksHistory(): ArrayList<Track> =
-    //        tracksHistory    //Получаем историю прослушанных треков
-
     private val tracksHistory: MutableLiveData<ArrayList<Track>> =
         MutableLiveData(searchHistoryInteractor.getTracksHistory())
 
@@ -52,7 +48,6 @@ class SearchViewModel(
     }
 
     fun updateTrackHistory() {
-        //tracksHistory = searchHistoryInteractor.getTracksHistory()
         tracksHistory.postValue(searchHistoryInteractor.getTracksHistory())
     }
 
