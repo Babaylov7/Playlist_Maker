@@ -42,16 +42,27 @@ class PlayerViewModel(val mediaPlayerInteractor: MediaPlayerInteractor) :
     private fun updateTimeOfPlay() {                   //Обновленеи времени проигрования трека
         playerProgressStatus.value = updatePlayerProgressStatus()
 
-        if (playerProgressStatus.value!!.mediaPlayerStatus == MediaPlayerStatus.STATE_PLAYING) {
-            updateTimeOfPlayJob = viewModelScope.launch {
-                delay(UPDATE)
-                updateTimeOfPlay()
+        when(playerProgressStatus.value!!.mediaPlayerStatus) {
+            MediaPlayerStatus.STATE_PLAYING -> {
+                updateTimeOfPlayJob = viewModelScope.launch {
+                    delay(UPDATE)
+                    updateTimeOfPlay()
+                }
             }
-        } else if (playerProgressStatus.value!!.mediaPlayerStatus == MediaPlayerStatus.STATE_PAUSED) {
-            updateTimeOfPlayJob?.cancel()
-        } else {
-            updateTimeOfPlayJob?.cancel()
+            else -> {
+                updateTimeOfPlayJob?.cancel()
+            }
         }
+//        if (playerProgressStatus.value!!.mediaPlayerStatus == MediaPlayerStatus.STATE_PLAYING) {
+//            updateTimeOfPlayJob = viewModelScope.launch {
+//                delay(UPDATE)
+//                updateTimeOfPlay()
+//            }
+//        } else if (playerProgressStatus.value!!.mediaPlayerStatus == MediaPlayerStatus.STATE_PAUSED) {
+//            updateTimeOfPlayJob?.cancel()
+//        } else {
+//            updateTimeOfPlayJob?.cancel()
+//        }
     }
 
     fun playbackControl() {

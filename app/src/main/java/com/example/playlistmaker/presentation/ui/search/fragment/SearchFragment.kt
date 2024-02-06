@@ -51,12 +51,15 @@ class SearchFragment : BindingFragment<SearchFragmentBinding>() {
 
         tracks = ArrayList<Track>()
         adapterSearch = TrackAdapter(tracks, onClick)
-        adapterHistory = TrackAdapter(viewModel.getTracksHistory(), onClick)
+        adapterHistory = TrackAdapter(viewModel.getTracksHistory().value!!, onClick)
 
         viewModel.getFoundTracks().observe(viewLifecycleOwner) { it ->
             processingSearchStatus(it)
         }
 
+        viewModel.getTracksHistory().observe(viewLifecycleOwner) { it ->
+            adapterHistory.notifyDataSetChanged()
+        }
 
         binding.buttonUpdate.setOnClickListener {
             viewModel.changeRequestText(binding.editText.text.toString())
@@ -84,7 +87,7 @@ class SearchFragment : BindingFragment<SearchFragmentBinding>() {
                 binding.historyLayout.visibility =
                     if (binding.editText.hasFocus()         //Есть фокус
                         && s?.isEmpty() == true             //Строка поиска пуста
-                        && viewModel.getTracksHistory().isNotEmpty()       //Список треков не пустой
+                        && viewModel.getTracksHistory().value!!.isNotEmpty()       //Список треков не пустой
                     ) View.VISIBLE else View.GONE           //отображение Layout при изменении текста в строке поиска
 
                 editTextValue = binding.editText.text.toString()
@@ -110,7 +113,7 @@ class SearchFragment : BindingFragment<SearchFragmentBinding>() {
         binding.editText.setOnFocusChangeListener { _, hasFocus ->      //отображение Layout при фокусе строки поиска
             if (hasFocus                            //Есть фокус
                 && binding.editText.text.isEmpty()     //Строка поиска пуста
-                && viewModel.getTracksHistory().isNotEmpty()       //Список треков не пустой
+                && viewModel.getTracksHistory().value!!.isNotEmpty()       //Список треков не пустой
             ) {
                 updateRecyclerViewSearchHistory()
             } else {
@@ -134,7 +137,7 @@ class SearchFragment : BindingFragment<SearchFragmentBinding>() {
     private fun updateRecyclerViewSearchHistory() {                     //Обновление RecyclerView с историей поиска
         showAndHideHistoryLayout(true)
         viewModel.updateTrackHistory()
-        adapterHistory.notifyDataSetChanged()
+        //adapterHistory.notifyDataSetChanged()
     }
 
     private fun clearButtonVisibility(s: CharSequence?): Int {          //видимость кнопки "Очистить" в строке поиска
@@ -205,7 +208,7 @@ class SearchFragment : BindingFragment<SearchFragmentBinding>() {
     }
 
     private fun showAndHideHistoryLayout(action: Boolean) {
-        if (action && viewModel.getTracksHistory().isNotEmpty() && binding.editText.hasFocus()) {
+        if (action && viewModel.getTracksHistory().value!!.isNotEmpty() && binding.editText.hasFocus()) {
             binding.historyLayout.visibility = View.VISIBLE
         } else {
             binding.historyLayout.visibility = View.GONE
@@ -221,7 +224,7 @@ class SearchFragment : BindingFragment<SearchFragmentBinding>() {
                 binding.progressBar.visibility = View.GONE
                 binding.recyclerView.visibility = View.VISIBLE
                 tracks.addAll(trackSearchResult.results)
-                adapterSearch.notifyDataSetChanged()
+                //adapterSearch.notifyDataSetChanged()
             }
 
             SearchStatus.LIST_IS_EMPTY -> {

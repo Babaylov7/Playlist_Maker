@@ -23,7 +23,15 @@ class SearchViewModel(
     private var clickJob: Job? = null
     private var searchJob: Job? = null
 
-    private var tracksHistory = searchHistoryInteractor.getTracksHistory()
+    //private var tracksHistory = searchHistoryInteractor.getTracksHistory()
+    //    fun getTracksHistory(): ArrayList<Track> =
+    //        tracksHistory    //Получаем историю прослушанных треков
+
+    private val tracksHistory: MutableLiveData<ArrayList<Track>> =
+        MutableLiveData(searchHistoryInteractor.getTracksHistory())
+
+    fun getTracksHistory(): LiveData<ArrayList<Track>> =
+        tracksHistory  //Получаем историю прослушанных треков
 
     private val foundTracks: MutableLiveData<TrackSearchResult> =
         MutableLiveData(TrackSearchResult(results = emptyList(), SearchStatus.DEFAULT))
@@ -43,11 +51,9 @@ class SearchViewModel(
         requestText = text
     }
 
-    fun getTracksHistory(): ArrayList<Track> =
-        tracksHistory    //Получаем историю прослушанных треков
-
     fun updateTrackHistory() {
-        tracksHistory = searchHistoryInteractor.getTracksHistory()
+        //tracksHistory = searchHistoryInteractor.getTracksHistory()
+        tracksHistory.postValue(searchHistoryInteractor.getTracksHistory())
     }
 
     fun addTrackInSearchHistory(track: Track) {          //Добавить трек в историю поиска
