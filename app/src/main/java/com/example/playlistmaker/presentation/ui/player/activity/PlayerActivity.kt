@@ -70,15 +70,15 @@ class PlayerActivity : AppCompatActivity() {
         viewModel.destroyMediaPlayer()
     }
 
-    private fun playbackControl(playerProgressStatus2: PlayerProgressStatus) {
-        when (playerProgressStatus2.mediaPlayerStatus) {
+    private fun playbackControl(playerProgressStatus: PlayerProgressStatus) {
+        when (playerProgressStatus.mediaPlayerStatus) {
             MediaPlayerStatus.STATE_PLAYING -> {
                 binding.buttonPlay.setImageResource(R.drawable.button_pause)
                 binding.timeOfPlay.text =
                     SimpleDateFormat(
                         "m:ss",
                         Locale.getDefault()
-                    ).format(playerProgressStatus2.currentPosition)
+                    ).format(playerProgressStatus.currentPosition)
             }
 
             MediaPlayerStatus.STATE_PAUSED -> {
@@ -93,7 +93,6 @@ class PlayerActivity : AppCompatActivity() {
                 showErrorMassage()
             }
             MediaPlayerStatus.STATE_DEFAULT -> {
-
             }
         }
     }

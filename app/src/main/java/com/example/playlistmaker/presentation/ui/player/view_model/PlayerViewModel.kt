@@ -1,18 +1,20 @@
 package com.example.playlistmaker.presentation.ui.player.view_model
 
-import android.os.Handler
-import android.os.Looper
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.playlistmaker.domain.player.MediaPlayerInteractor
 import com.example.playlistmaker.domain.player.models.MediaPlayerStatus
 import com.example.playlistmaker.domain.player.models.PlayerProgressStatus
 import com.example.playlistmaker.domain.search.models.Track
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class PlayerViewModel(val mediaPlayerInteractor: MediaPlayerInteractor) :
     ViewModel() {
-    private val mainThreadHandler = Handler(Looper.getMainLooper())
+    private var updateTimeOfPlayJob: Job? = null
 
     private val playerProgressStatus: MutableLiveData<PlayerProgressStatus> =
         MutableLiveData(updatePlayerProgressStatus())
@@ -33,24 +35,34 @@ class PlayerViewModel(val mediaPlayerInteractor: MediaPlayerInteractor) :
     }
 
     fun destroyMediaPlayer() {
-        mainThreadHandler.removeCallbacks(updateTimeOfPlay())
+        updateTimeOfPlayJob?.cancel()
         mediaPlayerInteractor.destroyPlayer()
     }
 
-    fun updateTimeOfPlay(): Runnable {                   //Обновленеи времени проигрования трека
-        return object : Runnable {
-            override fun run() {
-                playerProgressStatus.value = updatePlayerProgressStatus()
+    private fun updateTimeOfPlay() {                   //Обновленеи времени проигрования трека
+        playerProgressStatus.value = updatePlayerProgressStatus()
 
-                if (playerProgressStatus.value!!.mediaPlayerStatus == MediaPlayerStatus.STATE_PLAYING) {
-                    mainThreadHandler.postDelayed(this, UPDATE)
-                } else if (playerProgressStatus.value!!.mediaPlayerStatus == MediaPlayerStatus.STATE_PAUSED) {
-                    mainThreadHandler.removeCallbacks(updateTimeOfPlay())
-                } else {
-                    mainThreadHandler.removeCallbacks(updateTimeOfPlay())
+        when(playerProgressStatus.value!!.mediaPlayerStatus) {
+            MediaPlayerStatus.STATE_PLAYING -> {
+                updateTimeOfPlayJob = viewModelScope.launch {
+                    delay(UPDATE)
+                    updateTimeOfPlay()
                 }
             }
+            else -> {
+                updateTimeOfPlayJob?.cancel()
+            }
         }
+//        if (playerProgressStatus.value!!.mediaPlayerStatus == MediaPlayerStatus.STATE_PLAYING) {
+//            updateTimeOfPlayJob = viewModelScope.launch {
+//                delay(UPDATE)
+//                updateTimeOfPlay()
+//            }
+//        } else if (playerProgressStatus.value!!.mediaPlayerStatus == MediaPlayerStatus.STATE_PAUSED) {
+//            updateTimeOfPlayJob?.cancel()
+//        } else {
+//            updateTimeOfPlayJob?.cancel()
+//        }
     }
 
     fun playbackControl() {
@@ -71,7 +83,7 @@ class PlayerViewModel(val mediaPlayerInteractor: MediaPlayerInteractor) :
 
     private fun startPlayer() {
         mediaPlayerInteractor.startPlayer()
-        mainThreadHandler.post(updateTimeOfPlay())
+        updateTimeOfPlay()
         playerProgressStatus.value = updatePlayerProgressStatus()
     }
 
