@@ -1,5 +1,6 @@
 package com.example.playlistmaker.di
 
+import com.example.playlistmaker.data.converters.TrackDbConvertor
 import com.example.playlistmaker.data.player.network.impl.MediaPlayerRepositoryImpl
 import com.example.playlistmaker.data.search.local.impl.SearchHistoryRepositoryImpl
 import com.example.playlistmaker.data.search.network.impl.TrackRepositoryImpl
@@ -35,5 +36,7 @@ val repositoryModule = module {
     factory<SharingRepository> {
         SharingRepositoryImpl(androidContext())
     }
+
+    factory { TrackDbConvertor() }
 
 }
