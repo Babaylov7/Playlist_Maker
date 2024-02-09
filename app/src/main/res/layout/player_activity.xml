@@ -310,7 +310,7 @@
         android:layout_height="0dp"
         android:background="@drawable/round_button"
         android:scaleType="centerCrop"
-        android:src="@drawable/button_favorite"
+        android:src="@drawable/button_favorite1"
         android:clickable="true"
         app:layout_constraintBottom_toBottomOf="@id/button_play"
         app:layout_constraintDimensionRatio="h, 1:1"

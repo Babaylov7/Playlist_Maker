@@ -124,10 +124,10 @@ class PlayerActivity : AppCompatActivity() {
     private fun changeButtonFavoriteImage() {
         if (trackAddInFavorite) {
             trackAddInFavorite = false
-            binding.buttonFavorite.setImageResource(R.drawable.button_favorite)
+            binding.buttonFavorite.setImageResource(R.drawable.button_favorite2)
         } else {
             trackAddInFavorite = true
-            binding.buttonFavorite.setImageResource(R.drawable.button_add_in_favorite)
+            binding.buttonFavorite.setImageResource(R.drawable.button_favorite1)
         }
     }
 
