@@ -4,6 +4,7 @@ import android.content.Context
 import android.media.MediaPlayer
 import androidx.room.Room
 import com.example.playlistmaker.data.NetworkClient
+import com.example.playlistmaker.data.converters.TrackDbConvertor
 import com.example.playlistmaker.data.db.AppDatabase
 import com.example.playlistmaker.data.search.network.ItunesApi
 import com.example.playlistmaker.data.search.network.RetrofitNetworkClient
@@ -50,6 +51,8 @@ val dataModule = module {
         Room.databaseBuilder(androidContext(), AppDatabase::class.java, "database.db")
             .build()
     }
+
+    factory { TrackDbConvertor() }
 
 }
 
