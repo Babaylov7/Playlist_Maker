@@ -11,14 +11,15 @@ import kotlinx.coroutines.flow.flow
 class FavoriteTracksRepositoryImpl(
     private val appDatabase: AppDatabase,
     private val trackDbConvertor: TrackDbConvertor
-): FavoriteTracksRepository {
-    override fun insertTrackToFavorite(track: Track) {
+) : FavoriteTracksRepository {
+    override suspend fun insertTrackToFavorite(track: Track) {
         val trackEntity = trackDbConvertor.map(track)
         appDatabase.trackDao().insertTrackToFavorite(trackEntity)
     }
 
-    override fun deleteTrackFromFavorite(track: Track) {
-        TODO("Not yet implemented")
+    override suspend fun deleteTrackFromFavorite(track: Track) {
+        val trackEntity = trackDbConvertor.map(track)
+        appDatabase.trackDao().deleteTrackFromFavorite(trackEntity)
     }
 
     override fun getAllFavoriteTracks(): Flow<List<Track>> = flow {
