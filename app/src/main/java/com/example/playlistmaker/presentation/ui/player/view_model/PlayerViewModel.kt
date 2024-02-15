@@ -15,6 +15,7 @@ import kotlinx.coroutines.launch
 class PlayerViewModel(val mediaPlayerInteractor: MediaPlayerInteractor) :
     ViewModel() {
     private var updateTimeOfPlayJob: Job? = null
+    private var favoriteButtonJob: Job? = null
 
     private val playerProgressStatus: MutableLiveData<PlayerProgressStatus> =
         MutableLiveData(updatePlayerProgressStatus())

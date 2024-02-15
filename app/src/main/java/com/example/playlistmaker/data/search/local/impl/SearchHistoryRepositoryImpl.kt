@@ -6,27 +6,22 @@ import com.example.playlistmaker.domain.search.SearchHistoryRepository
 import com.example.playlistmaker.domain.search.models.Track
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.flow
 
 class SearchHistoryRepositoryImpl(
-    private val sharedPrefs: SharedPreferences,
-    private val appDatabase: AppDatabase
+    private val sharedPrefs: SharedPreferences
 ) : SearchHistoryRepository {
 
     private val tracks: ArrayList<Track> =
         readSearchHistory()       //Список треков в SP или пустой массив
-    private var favoriteTracksId: List<String> = emptyList()
+
+
+    private var job: Job? = null
 
     private fun readSearchHistory(): ArrayList<Track> {
         val json = sharedPrefs.getString(SEARCH_HISTORY, null) ?: return ArrayList<Track>()
-        val result = createTracksFromJson(json)
-
-        return
-    }
-
-    private fun getFavoriteTracksId() = flow {
-        favoriteTracksId = appDatabase.trackDao().getIdFavoriteTracksId()
-
+        return createTracksFromJson(json)
     }
 
     override fun addTrack(track: Track) {
