@@ -20,7 +20,6 @@ import java.util.Locale
 class PlayerActivity : AppCompatActivity() {
     private lateinit var binding: PlayerActivityBinding
     private var trackAddInQueue = false
-    private var trackAddInFavorite = false
 
     private val viewModel by viewModel<PlayerViewModel>()
 
@@ -29,7 +28,6 @@ class PlayerActivity : AppCompatActivity() {
         binding = PlayerActivityBinding.inflate(layoutInflater)
         setContentView(binding.root)
         binding.timeOfPlay.text = getString(R.string.player_default_time)
-        changeButtonFavoriteImage()
 
         val track =
             if (SDK_INT >= 33) {                        //Проверяем версию SDK и в зависимости от верстии применяем тот или иной метод для работы с intent
@@ -44,6 +42,10 @@ class PlayerActivity : AppCompatActivity() {
         viewModel.getPlayerProgressStatus().observe(this) { playerProgressStatus ->
             playbackControl(playerProgressStatus)
         }
+        viewModel.favoriteStatus().observe(this){favoriteStatus ->
+            changeButtonFavoriteImage(favoriteStatus)
+
+        }
 
         binding.ivButtonBack.setOnClickListener {
             finish()
@@ -54,7 +56,7 @@ class PlayerActivity : AppCompatActivity() {
         }
 
         binding.ivButtonFavorite.setOnClickListener {
-            changeButtonFavoriteImage()
+            viewModel.clickButtonFavorite(track)
         }
 
         binding.buttonPlay.setOnClickListener {
@@ -125,13 +127,11 @@ class PlayerActivity : AppCompatActivity() {
             .into(binding.albumImage)
     }
 
-    private fun changeButtonFavoriteImage() {
+    private fun changeButtonFavoriteImage(trackAddInFavorite: Boolean) {
         if (trackAddInFavorite) {
-            trackAddInFavorite = false
             if (this.isNightModeOn()) binding.ivButtonFavorite.setImageResource(R.drawable.button_favorite_nm_2)
             else binding.ivButtonFavorite.setImageResource(R.drawable.button_favorite_lm_2)
         } else {
-            trackAddInFavorite = true
             if (this.isNightModeOn()) binding.ivButtonFavorite.setImageResource(R.drawable.button_favorite_nm_1)
             else binding.ivButtonFavorite.setImageResource(R.drawable.button_favorite_lm_1)
         }

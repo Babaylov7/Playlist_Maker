@@ -7,12 +7,13 @@ import com.example.playlistmaker.presentation.ui.player.view_model.PlayerViewMod
 import com.example.playlistmaker.presentation.ui.search.view_model.SearchViewModel
 import com.example.playlistmaker.presentation.ui.settings.view_model.SettingsViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
+import org.koin.core.qualifier.named
 import org.koin.dsl.module
 
 val activityModule = module {
 
     viewModel {
-        PlayerViewModel(get())
+        PlayerViewModel(get(), get(), get())
     }
     viewModel {
         SearchViewModel(get(), get())
@@ -27,7 +28,7 @@ val activityModule = module {
     }
 
     viewModel {
-        LibraryFavoriteFragmentViewModel()
+        LibraryFavoriteFragmentViewModel(get())
     }
 
     viewModel {

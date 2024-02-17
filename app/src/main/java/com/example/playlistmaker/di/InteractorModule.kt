@@ -20,7 +20,7 @@ val interactorModule = module {
         TrackInteractorImpl(get())
     }
 
-    factory<SearchHistoryInteractor> {
+    single<SearchHistoryInteractor> {
         SearchHistoryInteractorImpl(get())
     }
 

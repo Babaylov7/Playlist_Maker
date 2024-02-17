@@ -1,13 +1,10 @@
 package com.example.playlistmaker.data.search.local.impl
 
 import android.content.SharedPreferences
-import com.example.playlistmaker.data.db.AppDatabase
 import com.example.playlistmaker.domain.search.SearchHistoryRepository
 import com.example.playlistmaker.domain.search.models.Track
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.flow.flow
 
 class SearchHistoryRepositoryImpl(
     private val sharedPrefs: SharedPreferences
@@ -16,8 +13,6 @@ class SearchHistoryRepositoryImpl(
     private val tracks: ArrayList<Track> =
         readSearchHistory()       //Список треков в SP или пустой массив
 
-
-    private var job: Job? = null
 
     private fun readSearchHistory(): ArrayList<Track> {
         val json = sharedPrefs.getString(SEARCH_HISTORY, null) ?: return ArrayList<Track>()
