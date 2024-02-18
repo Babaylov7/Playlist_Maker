@@ -16,7 +16,7 @@ import com.example.playlistmaker.presentation.ui.player.activity.PlayerActivity
 import com.example.playlistmaker.presentation.ui.search.track.TrackAdapter
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class LibraryFavoriteFragment: BindingFragment<LibraryFavoriteFragmentBinding>() {
+class LibraryFavoriteFragment : BindingFragment<LibraryFavoriteFragmentBinding>() {
 
     private lateinit var adapter: TrackAdapter
     private lateinit var tracks: ArrayList<Track>
@@ -37,15 +37,42 @@ class LibraryFavoriteFragment: BindingFragment<LibraryFavoriteFragmentBinding>()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        tracks = ArrayList<Track>()
         adapter = TrackAdapter(tracks, onClick)
-        showErrorImage()
+        viewModel.onCreate()
         binding.rvFavoriteTracks.adapter = adapter
+
+        viewModel.getFavoriteTracks().observe(viewLifecycleOwner) {
+            showFavoriteTracksList(it)
+        }
+
+    }
+
+    override fun onResume() {
+        super.onResume()
+        viewModel.onCreate()
     }
 
     override fun onDestroy() {
         viewModel.onDestroy()
         super.onDestroy()
+    }
+
+    private fun showFavoriteTracksList(tracksFromDb: List<Track>) {
+        if (tracksFromDb.isEmpty()) {
+            binding.ivImageError.visibility = View.VISIBLE
+            binding.tvMessageError.visibility = View.VISIBLE
+            binding.rvFavoriteTracks.visibility = View.GONE
+            showErrorImage()
+            tracks.clear()
+        } else {
+            binding.ivImageError.visibility = View.GONE
+            binding.tvMessageError.visibility = View.GONE
+            binding.rvFavoriteTracks.visibility = View.VISIBLE
+            tracks.clear()
+            tracks.addAll(tracksFromDb)
+            adapter.notifyDataSetChanged()
+        }
     }
 
     private fun showErrorImage() {

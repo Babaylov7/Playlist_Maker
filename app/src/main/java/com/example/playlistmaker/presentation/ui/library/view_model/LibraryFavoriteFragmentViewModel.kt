@@ -6,7 +6,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.playlistmaker.domain.db.FavoriteTracksInteractor
 import com.example.playlistmaker.domain.search.models.Track
-import com.example.playlistmaker.presentation.ui.search.view_model.SearchViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -14,22 +13,27 @@ import kotlinx.coroutines.launch
 
 class LibraryFavoriteFragmentViewModel(
     private val favoriteTracksInteractor: FavoriteTracksInteractor
-): ViewModel() {
+) : ViewModel() {
 
     private var isClickAllowed = true
     private var clickJob: Job? = null
-    private var dbJob:Job? = null
+    private var dbJob: Job? = null
 
-    private val favoriteTracks: MutableLiveData<ArrayList<Track>> =
+    private val favoriteTracks: MutableLiveData<List<Track>> =
         MutableLiveData(ArrayList<Track>())
 
-    fun getFavoriteTracks(): LiveData<ArrayList<Track>> =
-        favoriteTracks  //Получаем историю прослушанных треков
+    fun getFavoriteTracks(): LiveData<List<Track>> =
+        favoriteTracks  //Получаем историю залайканых треков
 
-    fun getTracksFromDb(){
-        dbJob = viewModelScope.launch(Dispatchers.IO) {  }
+
+    fun onCreate() {
+        dbJob = viewModelScope.launch(Dispatchers.IO) {
+            favoriteTracksInteractor.getAllFavoriteTracks().collect { it ->
+                it.reversed()
+                favoriteTracks.postValue(it)
+            }
+        }
     }
-
 
     fun clickDebounce(): Boolean {
         val current = isClickAllowed
@@ -43,7 +47,7 @@ class LibraryFavoriteFragmentViewModel(
         return current
     }
 
-    fun onDestroy(){
+    fun onDestroy() {
         clickJob?.cancel()
         dbJob?.cancel()
     }

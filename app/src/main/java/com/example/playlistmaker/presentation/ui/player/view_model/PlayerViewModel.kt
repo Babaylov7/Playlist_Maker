@@ -10,7 +10,6 @@ import com.example.playlistmaker.domain.player.models.MediaPlayerStatus
 import com.example.playlistmaker.domain.player.models.PlayerProgressStatus
 import com.example.playlistmaker.domain.search.SearchHistoryInteractor
 import com.example.playlistmaker.domain.search.models.Track
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -61,7 +60,7 @@ class PlayerViewModel(
 
         when (playerProgressStatus.value!!.mediaPlayerStatus) {
             MediaPlayerStatus.STATE_PLAYING -> {
-                updateTimeOfPlayJob = viewModelScope.launch(Dispatchers.IO) {
+                updateTimeOfPlayJob = viewModelScope.launch {
                     delay(UPDATE)
                     updateTimeOfPlay()
                 }
@@ -93,7 +92,7 @@ class PlayerViewModel(
         if(trackAddInFavorite.value!!){
             track.isFavorite = false
             //удалить и изм значение лайф даты
-            deleteTrackFromDb = viewModelScope.launch(Dispatchers.IO) {
+            deleteTrackFromDb = viewModelScope.launch {
                 favoriteTracksInteractor.deleteTrackFromFavorite(track)
             }
             trackAddInFavorite.postValue(false)
@@ -101,7 +100,7 @@ class PlayerViewModel(
         }
         else {
             track.isFavorite = true
-            addTrackInDb = viewModelScope.launch(Dispatchers.IO) {
+            addTrackInDb = viewModelScope.launch {
                 favoriteTracksInteractor.insertTrackToFavorite(track)
             }
             trackAddInFavorite.postValue(true)
