@@ -27,5 +27,7 @@ data class TrackEntity(
     @ColumnInfo(name = "country")
     val country: String,
     @ColumnInfo(name = "is_favorite")
-    var isFavorite: Boolean
+    val isFavorite: Boolean,
+    @ColumnInfo(name = "date_add_in_db")
+    val dateAddInDb: String
 )

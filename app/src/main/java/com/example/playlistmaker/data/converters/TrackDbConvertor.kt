@@ -2,6 +2,7 @@ package com.example.playlistmaker.data.converters
 
 import com.example.playlistmaker.data.db.entity.TrackEntity
 import com.example.playlistmaker.domain.search.models.Track
+import java.util.Calendar
 
 class TrackDbConvertor {
 
@@ -33,7 +34,8 @@ class TrackDbConvertor {
             track.primaryGenreName,
             track.previewUrl,
             track.country,
-            track.isFavorite
+            track.isFavorite,
+            Calendar.getInstance().time.toString()
         )
     }
 

@@ -29,7 +29,6 @@ class LibraryFavoriteFragmentViewModel(
     fun onCreate() {
         dbJob = viewModelScope.launch(Dispatchers.IO) {
             favoriteTracksInteractor.getAllFavoriteTracks().collect { it ->
-                it.reversed()
                 favoriteTracks.postValue(it)
             }
         }
