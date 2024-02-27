@@ -126,4 +126,12 @@
         <item name="android:textSize">@dimen/primary_text_size_16</item>
     </style>
 
+
+    <!-- Стили для экрана создания нового альбома -->
+    <style name="NewPlaylistEditTextStyle">
+        <item name="android:background">@drawable/frame_1</item>
+        <item name="android:backgroundTint">@color/yp_black</item>
+        <item name="android:textColorHint">@color/yp_black</item>
+    </style>
+
 </resources>

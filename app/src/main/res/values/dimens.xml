@@ -9,6 +9,7 @@
     <dimen name="padding16">16dp</dimen>
     <dimen name="primary_corner_radius_for_button">16dp</dimen>
     <dimen name="margin_on_the_edges">16dp</dimen>
+    <dimen name="padding20">20dp</dimen>
     <dimen name="padding24">24dp</dimen>
     <dimen name="margin_top_24">24dp</dimen>
     <dimen name="padding28">28dp</dimen>
