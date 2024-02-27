@@ -11,6 +11,7 @@ import com.example.playlistmaker.domain.search.models.Track
 import com.example.playlistmaker.databinding.PlayerActivityBinding
 import com.example.playlistmaker.domain.player.models.MediaPlayerStatus
 import com.example.playlistmaker.domain.player.models.PlayerProgressStatus
+import com.example.playlistmaker.presentation.isNightModeOn
 import com.example.playlistmaker.presentation.ui.player.view_model.PlayerViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.text.SimpleDateFormat
@@ -19,7 +20,6 @@ import java.util.Locale
 class PlayerActivity : AppCompatActivity() {
     private lateinit var binding: PlayerActivityBinding
     private var trackAddInQueue = false
-    private var trackAddInFavorite = false
 
     private val viewModel by viewModel<PlayerViewModel>()
 
@@ -42,6 +42,10 @@ class PlayerActivity : AppCompatActivity() {
         viewModel.getPlayerProgressStatus().observe(this) { playerProgressStatus ->
             playbackControl(playerProgressStatus)
         }
+        viewModel.favoriteStatus().observe(this){favoriteStatus ->
+            changeButtonFavoriteImage(favoriteStatus)
+
+        }
 
         binding.ivButtonBack.setOnClickListener {
             finish()
@@ -51,8 +55,8 @@ class PlayerActivity : AppCompatActivity() {
             changeButtonQueueImage()
         }
 
-        binding.buttonFavorite.setOnClickListener {
-            changeButtonFavoriteImage()
+        binding.ivButtonFavorite.setOnClickListener {
+            viewModel.clickButtonFavorite(track)
         }
 
         binding.buttonPlay.setOnClickListener {
@@ -84,6 +88,7 @@ class PlayerActivity : AppCompatActivity() {
             MediaPlayerStatus.STATE_PAUSED -> {
                 binding.buttonPlay.setImageResource(R.drawable.button_play)
             }
+
             MediaPlayerStatus.STATE_PREPARED -> {
                 binding.timeOfPlay.text = "0:00"
                 binding.buttonPlay.setImageResource(R.drawable.button_play)
@@ -92,6 +97,7 @@ class PlayerActivity : AppCompatActivity() {
             MediaPlayerStatus.STATE_ERROR -> {
                 showErrorMassage()
             }
+
             MediaPlayerStatus.STATE_DEFAULT -> {
             }
         }
@@ -121,13 +127,13 @@ class PlayerActivity : AppCompatActivity() {
             .into(binding.albumImage)
     }
 
-    private fun changeButtonFavoriteImage() {
+    private fun changeButtonFavoriteImage(trackAddInFavorite: Boolean) {
         if (trackAddInFavorite) {
-            trackAddInFavorite = false
-            binding.buttonFavorite.setImageResource(R.drawable.button_favorite)
+            if (this.isNightModeOn()) binding.ivButtonFavorite.setImageResource(R.drawable.button_favorite_nm_2)
+            else binding.ivButtonFavorite.setImageResource(R.drawable.button_favorite_lm_2)
         } else {
-            trackAddInFavorite = true
-            binding.buttonFavorite.setImageResource(R.drawable.button_add_in_favorite)
+            if (this.isNightModeOn()) binding.ivButtonFavorite.setImageResource(R.drawable.button_favorite_nm_1)
+            else binding.ivButtonFavorite.setImageResource(R.drawable.button_favorite_lm_1)
         }
     }
 
@@ -140,13 +146,15 @@ class PlayerActivity : AppCompatActivity() {
             binding.buttonQueue.setImageResource(R.drawable.button_add_in_queue)
         }
     }
-    fun showErrorMassage() {
+
+    private fun showErrorMassage() {
         Toast.makeText(
             this,
             getString(R.string.audio_file_not_available),
             Toast.LENGTH_LONG
         ).show()
     }
+
     companion object {
         private const val TRACK_KEY = "track"
     }

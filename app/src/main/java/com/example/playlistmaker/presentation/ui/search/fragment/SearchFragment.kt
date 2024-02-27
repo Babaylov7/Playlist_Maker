@@ -122,6 +122,11 @@ class SearchFragment : BindingFragment<SearchFragmentBinding>() {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        viewModel.updateTrackHistory()
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
         viewModel.removeCallbacks()

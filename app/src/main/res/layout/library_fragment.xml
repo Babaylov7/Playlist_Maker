@@ -25,7 +25,8 @@
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tv_title"
-        app:tabTextAppearance="@style/text_appearance"/>
+        app:tabTextAppearance="@style/text_appearance"
+        app:tabRippleColor="@color/yp_blue_light_alpha_27"/>
 
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/vp_library"
