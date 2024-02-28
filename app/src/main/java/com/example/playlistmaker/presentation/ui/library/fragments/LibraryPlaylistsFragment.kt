@@ -5,13 +5,16 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.LibraryPlaylistsFragmentBinding
 import com.example.playlistmaker.presentation.isNightModeOn
 import com.example.playlistmaker.presentation.ui.BindingFragment
 import com.example.playlistmaker.presentation.ui.library.view_model.LibraryPlaylistsFragmentViewModel
+import com.example.playlistmaker.presentation.ui.main.MainActivity
 import com.example.playlistmaker.presentation.ui.new_playlist.NewPlaylistFragment
+import com.example.playlistmaker.presentation.ui.search.fragment.SearchFragment
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class LibraryPlaylistsFragment: BindingFragment<LibraryPlaylistsFragmentBinding>() {
@@ -30,11 +33,9 @@ class LibraryPlaylistsFragment: BindingFragment<LibraryPlaylistsFragmentBinding>
         showErrorImage()
 
         binding.bNewPlaylist.setOnClickListener {
+            (activity as? MainActivity)?.hideNavBar()
 
-                Intent(requireContext(), NewPlaylistFragment::class.java).apply {
-
-                    startActivity(this)
-                }
+            findNavController().navigate( R.id.action_libraryFragment_to_newPlaylistFragment)
 
         }
     }

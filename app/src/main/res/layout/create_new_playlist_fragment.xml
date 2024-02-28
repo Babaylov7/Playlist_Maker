@@ -52,35 +52,34 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tv_title"/>
 
-    <EditText
-        android:id="@+id/et_name"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="@dimen/padding16"
-        android:layout_marginTop="@dimen/padding48"
-        android:paddingStart="@dimen/padding16"
-        android:paddingVertical="@dimen/padding16"
+
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/playListNameTextInputLayout"
+        style="@style/PlayListCreateTextInputLayout"
         android:hint="@string/name"
-        android:background="@drawable/frame_1"
+        app:boxStrokeColor="@color/yp_text_gray"
+        app:hintTextColor="@color/yp_text_gray"
+        android:layout_marginTop="32dp"
+        android:layout_marginHorizontal="@dimen/padding16"
         app:layout_constraintTop_toBottomOf="@id/iv_album"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        tools:ignore="RtlSymmetry" />
+        app:layout_constraintEnd_toEndOf="parent">
 
-    <EditText
-        android:id="@+id/et_description"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="16dp"
-        android:layout_marginVertical="8dp"
-        android:paddingStart="16dp"
-        android:paddingVertical="15dp"
-        android:hint="@string/description"
-        android:background="@drawable/frame_1"
-        app:layout_constraintTop_toBottomOf="@id/et_name"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        tools:ignore="RtlSymmetry"/>
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/playListNameEditText"
+            android:inputType="textCapSentences"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:fontWeight="400"
+            android:textSize="@dimen/primary_text_size_16"
+            android:maxLength="225"
+            android:lines="1"
+            android:singleLine="true"
+            />
+
+    </com.google.android.material.textfield.TextInputLayout>
+
 
 
     <Button
@@ -94,7 +93,6 @@
         android:fontFamily="@font/ys_display_medium"
         android:textSize="@dimen/primary_text_size_16"
         android:textColor="@color/white"
-        app:backgroundTint="@drawable/frame_2"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"/>
