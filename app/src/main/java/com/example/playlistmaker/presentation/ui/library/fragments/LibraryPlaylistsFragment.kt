@@ -1,5 +1,6 @@
 package com.example.playlistmaker.presentation.ui.library.fragments
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -10,6 +11,7 @@ import com.example.playlistmaker.databinding.LibraryPlaylistsFragmentBinding
 import com.example.playlistmaker.presentation.isNightModeOn
 import com.example.playlistmaker.presentation.ui.BindingFragment
 import com.example.playlistmaker.presentation.ui.library.view_model.LibraryPlaylistsFragmentViewModel
+import com.example.playlistmaker.presentation.ui.new_playlist.NewPlaylistFragment
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class LibraryPlaylistsFragment: BindingFragment<LibraryPlaylistsFragmentBinding>() {
@@ -26,6 +28,15 @@ class LibraryPlaylistsFragment: BindingFragment<LibraryPlaylistsFragmentBinding>
         super.onViewCreated(view, savedInstanceState)
 
         showErrorImage()
+
+        binding.bNewPlaylist.setOnClickListener {
+
+                Intent(requireContext(), NewPlaylistFragment::class.java).apply {
+
+                    startActivity(this)
+                }
+
+        }
     }
 
     private fun showErrorImage() {

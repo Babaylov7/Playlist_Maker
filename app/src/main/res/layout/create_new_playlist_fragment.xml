@@ -6,7 +6,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".presentation.ui.new_playlist.NewPlaylistActivity">
+    tools:context=".presentation.ui.new_playlist.NewPlaylistFragment">
+
 
 
     <ImageView
@@ -43,6 +44,9 @@
         android:layout_height="0dp"
         android:layout_marginHorizontal="@dimen/padding24"
         android:layout_marginTop="@dimen/padding24"
+        android:src="@drawable/baseline_add_photo"
+        android:scaleType="center"
+        android:background="@drawable/dotted_frame"
         app:layout_constraintDimensionRatio="w, 1:1"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -50,49 +54,50 @@
 
     <EditText
         android:id="@+id/et_name"
-        style="@style/EditTextStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/padding16"
         android:layout_marginTop="@dimen/padding48"
-        android:cursorVisible="true"
-        android:fontFamily="@font/yandex_sans_display_regular"
+        android:paddingStart="@dimen/padding16"
+        android:paddingVertical="@dimen/padding16"
         android:hint="@string/name"
-        android:imeOptions="actionDone"
-        android:inputType="text"
-        android:maxLines="1"
-        android:minHeight="@dimen/height_panel_header"
-        android:paddingStart="@dimen/padding12"
-        android:paddingEnd="@dimen/padding12"
-        android:singleLine="true"
-        android:textColor="@color/yp_black"
-        android:textCursorDrawable="@drawable/my_cursor_light"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:background="@drawable/frame_1"
+        app:layout_constraintTop_toBottomOf="@id/iv_album"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/iv_album" />
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:ignore="RtlSymmetry" />
 
     <EditText
         android:id="@+id/et_description"
-        style="@style/EditTextStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="@dimen/padding16"
-        android:layout_marginTop="@dimen/padding16"
-        android:cursorVisible="true"
-        android:fontFamily="@font/yandex_sans_display_regular"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginVertical="8dp"
+        android:paddingStart="16dp"
+        android:paddingVertical="15dp"
         android:hint="@string/description"
-        android:imeOptions="actionDone"
-        android:inputType="text"
-        android:maxLines="1"
-        android:minHeight="@dimen/height_panel_header"
-        android:paddingStart="@dimen/padding12"
-        android:paddingEnd="@dimen/padding12"
-        android:singleLine="true"
-        android:textColor="@color/yp_black"
-        android:textCursorDrawable="@drawable/my_cursor_light"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:background="@drawable/frame_1"
+        app:layout_constraintTop_toBottomOf="@id/et_name"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/et_name" />
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:ignore="RtlSymmetry"/>
+
+
+    <Button
+        android:id="@+id/b_create_playlist"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/padding24"
+        android:layout_marginHorizontal="@dimen/padding16"
+        android:text="@string/create"
+        android:textAllCaps="false"
+        android:fontFamily="@font/ys_display_medium"
+        android:textSize="@dimen/primary_text_size_16"
+        android:textColor="@color/white"
+        app:backgroundTint="@drawable/frame_2"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

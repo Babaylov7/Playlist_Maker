@@ -128,10 +128,7 @@
 
 
     <!-- Стили для экрана создания нового альбома -->
-    <style name="NewPlaylistEditTextStyle">
-        <item name="android:background">@drawable/frame_1</item>
-        <item name="android:backgroundTint">@color/yp_black</item>
-        <item name="android:textColorHint">@color/yp_black</item>
+    <style name="new_playlist_edit_text_style" parent="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
     </style>
 
 </resources>
