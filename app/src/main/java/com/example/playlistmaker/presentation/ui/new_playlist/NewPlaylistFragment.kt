@@ -3,9 +3,10 @@ package com.example.playlistmaker.presentation.ui.new_playlist
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import com.example.playlistmaker.databinding.CreateNewPlaylistFragmentBinding
 
-class NewPlaylistFragment: : BindingFragment<CreateNewPlaylistFragmentBinding>() {
+class NewPlaylistFragment: Fragment() {
 
 
 

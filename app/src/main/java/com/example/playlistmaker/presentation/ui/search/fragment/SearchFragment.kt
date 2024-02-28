@@ -1,7 +1,6 @@
 package com.example.playlistmaker.presentation.ui.search.fragment
 
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -9,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
+import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.example.playlistmaker.R
 import com.example.playlistmaker.domain.search.models.SearchStatus
@@ -18,7 +18,7 @@ import com.example.playlistmaker.databinding.SearchFragmentBinding
 import com.example.playlistmaker.presentation.ui.search.track.TrackAdapter
 import com.example.playlistmaker.presentation.isNightModeOn
 import com.example.playlistmaker.presentation.ui.BindingFragment
-import com.example.playlistmaker.presentation.ui.player.activity.PlayerActivity
+import com.example.playlistmaker.presentation.ui.main.MainActivity
 import com.example.playlistmaker.presentation.ui.search.view_model.SearchViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -133,10 +133,17 @@ class SearchFragment : BindingFragment<SearchFragmentBinding>() {
     }
 
     private fun startPlayerActivity(track: Track) {              //Запустили активити с плеером
-        Intent(requireContext(), PlayerActivity::class.java).apply {
-            putExtra(TRACK_KEY, track)
-            startActivity(this)
-        }
+
+        (activity as? MainActivity)?.hideNavBar()
+
+        val bundle = Bundle()
+        bundle.putParcelable(TRACK_KEY, track)
+        findNavController().navigate( R.id.action_searchFragment_to_playerFragment, bundle)
+
+//        Intent(requireContext(), PlayerFragment::class.java).apply {
+//            putExtra(TRACK_KEY, track)
+//            startActivity(this)
+//        }
     }
 
     private fun updateRecyclerViewSearchHistory() {                     //Обновление RecyclerView с историей поиска

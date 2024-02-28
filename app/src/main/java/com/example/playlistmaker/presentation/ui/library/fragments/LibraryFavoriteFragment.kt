@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.LibraryFavoriteFragmentBinding
@@ -12,7 +13,9 @@ import com.example.playlistmaker.domain.search.models.Track
 import com.example.playlistmaker.presentation.isNightModeOn
 import com.example.playlistmaker.presentation.ui.BindingFragment
 import com.example.playlistmaker.presentation.ui.library.view_model.LibraryFavoriteFragmentViewModel
-import com.example.playlistmaker.presentation.ui.player.activity.PlayerActivity
+import com.example.playlistmaker.presentation.ui.main.MainActivity
+import com.example.playlistmaker.presentation.ui.player.fragment.PlayerFragment
+import com.example.playlistmaker.presentation.ui.search.fragment.SearchFragment
 import com.example.playlistmaker.presentation.ui.search.track.TrackAdapter
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -89,10 +92,17 @@ class LibraryFavoriteFragment : BindingFragment<LibraryFavoriteFragmentBinding>(
     }
 
     private fun startPlayerActivity(track: Track) {              //Запустили активити с плеером
-        Intent(requireContext(), PlayerActivity::class.java).apply {
-            putExtra(LibraryFavoriteFragment.TRACK_KEY, track)
-            startActivity(this)
-        }
+
+        (activity as? MainActivity)?.hideNavBar()
+
+        val bundle = Bundle()
+        bundle.putParcelable(LibraryFavoriteFragment.TRACK_KEY, track)
+        findNavController().navigate( R.id.action_libraryFragment_to_playerFragment, bundle)
+
+//        Intent(requireContext(), PlayerFragment::class.java).apply {
+//            putExtra(LibraryFavoriteFragment.TRACK_KEY, track)
+//            startActivity(this)
+//        }
     }
 
     companion object {
