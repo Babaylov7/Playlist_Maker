@@ -53,6 +53,7 @@ class LibraryFavoriteFragment : BindingFragment<LibraryFavoriteFragmentBinding>(
 
     override fun onResume() {
         super.onResume()
+        (activity as? MainActivity)?.showNawBar()
         viewModel.onCreate()
     }
 
@@ -98,11 +99,6 @@ class LibraryFavoriteFragment : BindingFragment<LibraryFavoriteFragmentBinding>(
         val bundle = Bundle()
         bundle.putParcelable(LibraryFavoriteFragment.TRACK_KEY, track)
         findNavController().navigate( R.id.action_libraryFragment_to_playerFragment, bundle)
-
-//        Intent(requireContext(), PlayerFragment::class.java).apply {
-//            putExtra(LibraryFavoriteFragment.TRACK_KEY, track)
-//            startActivity(this)
-//        }
     }
 
     companion object {

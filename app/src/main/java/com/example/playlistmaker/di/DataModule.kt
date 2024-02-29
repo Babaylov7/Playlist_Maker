@@ -4,6 +4,7 @@ import android.content.Context
 import android.media.MediaPlayer
 import androidx.room.Room
 import com.example.playlistmaker.data.NetworkClient
+import com.example.playlistmaker.data.converters.PlayListDbConvertor
 import com.example.playlistmaker.data.converters.TrackDbConvertor
 import com.example.playlistmaker.data.db.AppDatabase
 import com.example.playlistmaker.data.search.network.ItunesApi
@@ -53,6 +54,8 @@ val dataModule = module {
     }
 
     factory { TrackDbConvertor() }
+
+    factory { PlayListDbConvertor() }
 
 }
 

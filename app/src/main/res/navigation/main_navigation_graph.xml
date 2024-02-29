@@ -38,7 +38,7 @@
         tools:layout="@layout/player_fragment" />
     <fragment
         android:id="@+id/newPlaylistFragment"
-        android:name="com.example.playlistmaker.presentation.ui.new_playlist.NewPlaylistFragment"
+        android:name="com.example.playlistmaker.presentation.ui.new_playlist.fragment.NewPlaylistFragment"
         android:label="create_new_playlist_fragment"
         tools:layout="@layout/create_new_playlist_fragment" />
 </navigation>

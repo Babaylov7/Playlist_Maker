@@ -43,13 +43,6 @@ class PlayerFragment : Fragment() {
 
         val track = arguments?.getParcelable<Track>(TRACK_KEY) as Track
 
-//        val track =
-//            if (SDK_INT >= 33) {                        //Проверяем версию SDK и в зависимости от верстии применяем тот или иной метод для работы с intent
-//                intent.getParcelableExtra(TRACK_KEY, Track::class.java)!!
-//            } else {
-//                intent.getParcelableExtra<Track>(TRACK_KEY)!!
-//            }
-
         writeDataInActivity(track)
         viewModel.onCreate(track)
 
@@ -64,7 +57,6 @@ class PlayerFragment : Fragment() {
         binding!!.ivButtonBack.setOnClickListener {
 
             findNavController().navigateUp()
-            (activity as? MainActivity)?.showNawBar()
         }
 
         binding!!.buttonQueue.setOnClickListener {

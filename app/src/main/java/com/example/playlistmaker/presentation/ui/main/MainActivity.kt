@@ -31,13 +31,4 @@ class MainActivity : AppCompatActivity() {
     fun hideNavBar() {
         bottomNavigationView.visibility = View.GONE
     }
-
-//    override fun onBackPressed() {
-//
-//        val fm = supportFragmentManager
-//        val backPressedForFragments: BackPre
-//
-//
-//        super.onBackPressed()
-//    }
 }

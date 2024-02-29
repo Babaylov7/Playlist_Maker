@@ -124,6 +124,7 @@ class SearchFragment : BindingFragment<SearchFragmentBinding>() {
 
     override fun onResume() {
         super.onResume()
+        (activity as? MainActivity)?.showNawBar()
         viewModel.updateTrackHistory()
     }
 
@@ -140,10 +141,6 @@ class SearchFragment : BindingFragment<SearchFragmentBinding>() {
         bundle.putParcelable(TRACK_KEY, track)
         findNavController().navigate( R.id.action_searchFragment_to_playerFragment, bundle)
 
-//        Intent(requireContext(), PlayerFragment::class.java).apply {
-//            putExtra(TRACK_KEY, track)
-//            startActivity(this)
-//        }
     }
 
     private fun updateRecyclerViewSearchHistory() {                     //Обновление RecyclerView с историей поиска

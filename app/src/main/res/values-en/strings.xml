@@ -32,4 +32,7 @@
     <string name="name">Name</string>
     <string name="description">Description</string>
     <string name="create">Create</string>
+    <string name="one_track">track</string>
+    <string name="more_that_one_track_1">tracks</string>
+    <string name="more_that_one_track_2">tracks</string>
 </resources>

@@ -1,6 +1,5 @@
 package com.example.playlistmaker.presentation.ui.library.fragments
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -13,8 +12,6 @@ import com.example.playlistmaker.presentation.isNightModeOn
 import com.example.playlistmaker.presentation.ui.BindingFragment
 import com.example.playlistmaker.presentation.ui.library.view_model.LibraryPlaylistsFragmentViewModel
 import com.example.playlistmaker.presentation.ui.main.MainActivity
-import com.example.playlistmaker.presentation.ui.new_playlist.NewPlaylistFragment
-import com.example.playlistmaker.presentation.ui.search.fragment.SearchFragment
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class LibraryPlaylistsFragment: BindingFragment<LibraryPlaylistsFragmentBinding>() {
@@ -38,6 +35,11 @@ class LibraryPlaylistsFragment: BindingFragment<LibraryPlaylistsFragmentBinding>
             findNavController().navigate( R.id.action_libraryFragment_to_newPlaylistFragment)
 
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        (activity as? MainActivity)?.showNawBar()
     }
 
     private fun showErrorImage() {

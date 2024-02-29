@@ -43,4 +43,7 @@
     <string name="name">Название*</string>
     <string name="description">Описание</string>
     <string name="create">Создать</string>
+    <string name="one_track">трек</string>
+    <string name="more_that_one_track_1">трека</string>
+    <string name="more_that_one_track_2">треков</string>
 </resources>
