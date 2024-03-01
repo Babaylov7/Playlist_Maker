@@ -14,9 +14,12 @@ import android.widget.Toast
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.navigation.fragment.findNavController
+import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.CreateNewPlaylistFragmentBinding
 import com.example.playlistmaker.presentation.ui.BindingFragment
 import com.example.playlistmaker.presentation.ui.new_playlist.view_model.NewPlaylistViewModel
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import io.github.muddz.styleabletoast.StyleableToast
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.io.File
 import java.io.FileOutputStream
@@ -25,6 +28,7 @@ import java.util.Calendar
 class NewPlaylistFragment : BindingFragment<CreateNewPlaylistFragmentBinding>() {
 
     private val viewModel by viewModel<NewPlaylistViewModel>()
+    private lateinit var dialog: MaterialAlertDialogBuilder
     private var albumImageUri: Uri? = null
 
     override fun createBinding(
@@ -37,6 +41,17 @@ class NewPlaylistFragment : BindingFragment<CreateNewPlaylistFragmentBinding>() 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        //Диалог
+        dialog = MaterialAlertDialogBuilder(requireContext()).apply {
+            setTitle(getString(R.string.complete_playlist))
+            setMessage(getString(R.string.lose_data))
+            setPositiveButton(getString(R.string.complete)) { _, _ ->
+                findNavController().navigateUp()
+            }
+            setNegativeButton(getString(R.string.cancel)) { _, _ ->
+            }
+        }
 
         val simpleTextWatcher = object : TextWatcher {
             override fun beforeTextChanged(p0: CharSequence?, start: Int, before: Int, count: Int) {
@@ -52,7 +67,12 @@ class NewPlaylistFragment : BindingFragment<CreateNewPlaylistFragmentBinding>() 
         binding.tietName.addTextChangedListener(simpleTextWatcher)
 
         binding.ivButtonBack.setOnClickListener {
-            findNavController().navigateUp()
+            if (albumImageUri != null || !binding.tietName.text.isNullOrEmpty() || !binding.tietDescription.text.isNullOrEmpty()) {
+                dialog.show()
+            } else {
+                findNavController().navigateUp()
+            }
+
         }
 
         //регистрируем событие, которое вызывает photo picker
@@ -62,7 +82,8 @@ class NewPlaylistFragment : BindingFragment<CreateNewPlaylistFragmentBinding>() 
                 if (uri != null) {
                     binding.ivAlbum.setImageURI(uri)
                     albumImageUri = uri
-                } else {}
+                } else {
+                }
             }
 
         binding.ivAlbum.setOnClickListener {
@@ -72,25 +93,25 @@ class NewPlaylistFragment : BindingFragment<CreateNewPlaylistFragmentBinding>() 
         binding.bCreatePlaylist.setOnClickListener {
             val albumName = binding.tietName.text.toString()
             val albumDescription = binding.tietDescription.text.toString()
-            var albumImageName = ""
+            var albumImageName: String? = null
             if (albumImageUri != null) {
                 albumImageName = albumName + Calendar.getInstance().time.toString() + ".jpg"
                 saveAlbumImageToPrivateStorage(albumImageName)
             }
             viewModel.createNewPlayList(albumName, albumDescription, albumImageName)
 
-            Toast.makeText(
+            StyleableToast.makeText(
                 requireContext(),
                 String.format("Плейлист $albumName создан"),
-                Toast.LENGTH_SHORT
+                R.style.myToast
             ).show()
+
             findNavController().navigateUp()
         }
-
     }
 
 
-    private fun saveAlbumImageToPrivateStorage(albumImageName: String){
+    private fun saveAlbumImageToPrivateStorage(albumImageName: String) {
 
         val filePath =      //создаём экземпляр класса File, который указывает на нужный каталог
             File(
@@ -101,9 +122,14 @@ class NewPlaylistFragment : BindingFragment<CreateNewPlaylistFragmentBinding>() 
             filePath.mkdirs()
         }
 
-        val file = File(filePath, albumImageName)           //создаём экземпляр класса File, который указывает на файл внутри каталога
-        val inputStream = requireActivity().contentResolver.openInputStream(albumImageUri!!)        // создаём входящий поток байтов из выбранной картинки
-        val outputStream = FileOutputStream(file)       // создаём исходящий поток байтов в созданный выше файл
+        val file = File(
+            filePath,
+            albumImageName
+        )           //создаём экземпляр класса File, который указывает на файл внутри каталога
+        val inputStream =
+            requireActivity().contentResolver.openInputStream(albumImageUri!!)        // создаём входящий поток байтов из выбранной картинки
+        val outputStream =
+            FileOutputStream(file)       // создаём исходящий поток байтов в созданный выше файл
         BitmapFactory           // записываем картинку с помощью BitmapFactory
             .decodeStream(inputStream)
             .compress(Bitmap.CompressFormat.JPEG, QUALITY, outputStream)
@@ -111,7 +137,7 @@ class NewPlaylistFragment : BindingFragment<CreateNewPlaylistFragmentBinding>() 
         outputStream.close()
     }
 
-    companion object{
+    companion object {
         private const val DIRECTORY = "album_images"
         private const val QUALITY = 100
     }

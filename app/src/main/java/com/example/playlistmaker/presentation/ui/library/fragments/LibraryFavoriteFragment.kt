@@ -1,6 +1,5 @@
 package com.example.playlistmaker.presentation.ui.library.fragments
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -12,10 +11,8 @@ import com.example.playlistmaker.databinding.LibraryFavoriteFragmentBinding
 import com.example.playlistmaker.domain.search.models.Track
 import com.example.playlistmaker.presentation.isNightModeOn
 import com.example.playlistmaker.presentation.ui.BindingFragment
-import com.example.playlistmaker.presentation.ui.library.view_model.LibraryFavoriteFragmentViewModel
+import com.example.playlistmaker.presentation.ui.library.view_model.LibraryFavoriteViewModel
 import com.example.playlistmaker.presentation.ui.main.MainActivity
-import com.example.playlistmaker.presentation.ui.player.fragment.PlayerFragment
-import com.example.playlistmaker.presentation.ui.search.fragment.SearchFragment
 import com.example.playlistmaker.presentation.ui.search.track.TrackAdapter
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -23,7 +20,7 @@ class LibraryFavoriteFragment : BindingFragment<LibraryFavoriteFragmentBinding>(
 
     private lateinit var adapter: TrackAdapter
     private lateinit var tracks: ArrayList<Track>
-    private val viewModel by viewModel<LibraryFavoriteFragmentViewModel>()
+    private val viewModel by viewModel<LibraryFavoriteViewModel>()
 
     private val onClick: (track: Track) -> Unit = {
         if (viewModel.clickDebounce()) {

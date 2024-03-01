@@ -11,12 +11,12 @@ class PlayListInteractorImpl(val playListRepository: PlayListRepository) : PlayL
         playListRepository.insertPlaylist(playList)
     }
 
-    override suspend fun deletePlayList(id: Int) {
-        playListRepository.deletePlayList(id)
-    }
+//    override suspend fun deletePlayList(id: Int) {
+//        playListRepository.deletePlayList(id)
+//    }
 
-    override fun getTracksId(): Flow<List<PlayList>> {
-        return playListRepository.getTracksId()
+    override fun getPlayLists(): Flow<List<PlayList>> {
+        return playListRepository.getPlayLists()
     }
 
     override suspend fun updateTracksId(idPlayList: Int, tracksId: String, tracksCount: Int) {

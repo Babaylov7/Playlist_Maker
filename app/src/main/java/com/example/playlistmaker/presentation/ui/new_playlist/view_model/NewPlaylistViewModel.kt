@@ -11,7 +11,7 @@ class NewPlaylistViewModel(
 ): ViewModel() {
 
 
-    fun createNewPlayList(albumName: String, description: String, albumImage: String) {
+    fun createNewPlayList(albumName: String, description: String, albumImage: String?) {
         val playList = PlayList(
             id = 0,
             playlistName = albumName,

@@ -8,9 +8,9 @@ class PlayListDbConvertor {
     fun map(playList: PlayListEntity): PlayList {
         return PlayList(
             playList.id,
-            playList.albumName,
-            playList.albumDescription,
-            playList.albumImage,
+            playList.playListName,
+            playList.playListDescription,
+            playList.playListImage,
             playList.tracksId,
             playList.tracksCount
         )

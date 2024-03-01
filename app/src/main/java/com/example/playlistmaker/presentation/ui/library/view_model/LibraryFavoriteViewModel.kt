@@ -11,7 +11,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-class LibraryFavoriteFragmentViewModel(
+class LibraryFavoriteViewModel(
     private val favoriteTracksInteractor: FavoriteTracksInteractor
 ) : ViewModel() {
 
@@ -39,7 +39,7 @@ class LibraryFavoriteFragmentViewModel(
         if (isClickAllowed) {
             clickJob = viewModelScope.launch(Dispatchers.IO) {
                 isClickAllowed = false
-                delay(LibraryFavoriteFragmentViewModel.CLICK_DEBOUNCE_DELAY)
+                delay(LibraryFavoriteViewModel.CLICK_DEBOUNCE_DELAY)
                 isClickAllowed = true
             }
         }

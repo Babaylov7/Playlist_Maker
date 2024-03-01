@@ -9,12 +9,12 @@ data class PlayListEntity (
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "id")
     val id: Int,
-    @ColumnInfo(name = "album_name")
-    val albumName: String,
-    @ColumnInfo(name = "album_description")
-    val albumDescription: String,
-    @ColumnInfo(name = "album_image")
-    val albumImage: String,
+    @ColumnInfo(name = "playList_name")
+    val playListName: String,
+    @ColumnInfo(name = "playList_description")
+    val playListDescription: String,
+    @ColumnInfo(name = "playList_image")
+    val playListImage: String?,
     @ColumnInfo(name = "tracks_id")
     val tracksId: String,
     @ColumnInfo(name = "tracks_count")
