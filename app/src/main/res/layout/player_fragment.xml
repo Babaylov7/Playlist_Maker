@@ -338,6 +338,7 @@
         android:layout_height="match_parent"
         android:background="@drawable/bottom_sheet_bg"
         android:orientation="vertical"
+        android:foreground="?android:attr/selectableItemBackground"
         app:behavior_hideable="true"
         app:behavior_peekHeight="360dp"
         app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">

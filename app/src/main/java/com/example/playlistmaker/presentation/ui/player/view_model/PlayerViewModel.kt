@@ -39,6 +39,10 @@ class PlayerViewModel(
         MutableLiveData<List<PlayList>>()
     fun getPlayLists(): LiveData<List<PlayList>> = playListsLiveData
 
+    private val toastMessage: MutableLiveData<String> = MutableLiveData<String>()   //Лайф Дата с сообщением для тоста
+    fun getToastMessage(): LiveData<String> = toastMessage
+
+
     fun onCreate(track: Track) {
         mediaPlayerInteractor.preparePlayer(track)
         playerProgressStatus.value = updatePlayerProgressStatus()
@@ -132,6 +136,19 @@ class PlayerViewModel(
                 .collect { result ->
                     playListsLiveData.postValue(result)
                 }
+        }
+    }
+
+    fun addTrackInPlayList(playList: PlayList, track: Track){
+        if(playList.tracks.contains(track)){
+            toastMessage.value = "Трек уже добавлен в плейлист ${playList.playlistName}"
+        } else {
+            val tracks = playList.tracks
+            tracks.add(track)
+            viewModelScope.launch {
+                playListInteractor.updateTracks(playList.id, tracks, playList.tracksCount + 1)
+            }
+            toastMessage.value = "Добавлено в плейлист ${playList.playlistName}"
         }
     }
 

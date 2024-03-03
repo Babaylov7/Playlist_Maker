@@ -22,5 +22,8 @@ class PlayListAdapterForBottomSheet(
 
     override fun onBindViewHolder(holder: PlayListViewHolderForBottomSheet, position: Int) {
         holder.bind(playLists[position])
+        holder.itemView.setOnClickListener {
+            listener.invoke(playLists[position])
+        }
     }
 }

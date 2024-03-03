@@ -1,5 +1,6 @@
 package com.example.playlistmaker.domain.playlist
 
+import com.example.playlistmaker.domain.search.models.Track
 
 
 data class PlayList(
@@ -7,7 +8,7 @@ data class PlayList(
     val playlistName: String,
     val playlistDescription: String,
     val playlistImage: String?,
-    val tracksId: String,
+    val tracks: ArrayList<Track>,
     val tracksCount: Int
 )
 

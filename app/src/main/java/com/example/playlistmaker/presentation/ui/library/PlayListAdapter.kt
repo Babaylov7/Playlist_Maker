@@ -21,5 +21,8 @@ class PlayListAdapter(
 
     override fun onBindViewHolder(holder: PlayListViewHolder, position: Int) {
         holder.bind(playLists[position])
+        holder.itemView.setOnClickListener {
+            listener.invoke(playLists[position])
+        }
     }
 }

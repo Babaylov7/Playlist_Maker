@@ -14,7 +14,9 @@ import com.example.playlistmaker.domain.search.models.Track
 import com.example.playlistmaker.databinding.PlayerFragmentBinding
 import com.example.playlistmaker.domain.player.models.MediaPlayerStatus
 import com.example.playlistmaker.domain.player.models.PlayerProgressStatus
+import com.example.playlistmaker.domain.playlist.PlayList
 import com.example.playlistmaker.presentation.isNightModeOn
+import com.example.playlistmaker.presentation.ui.player.PlayListAdapterForBottomSheet
 import com.example.playlistmaker.presentation.ui.player.view_model.PlayerViewModel
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -25,6 +27,14 @@ class PlayerFragment : Fragment() {
     private var binding: PlayerFragmentBinding? = null
     private var trackAddInQueue = false
     private val viewModel by viewModel<PlayerViewModel>()
+    private lateinit var adapter: PlayListAdapterForBottomSheet
+    private lateinit var playLists: ArrayList<PlayList>         //все плейлисты в БД
+    private lateinit var track: Track                           //Трек что передали во фрагмент плеера
+
+    private val onClick: (playList: PlayList) -> Unit = {
+        viewModel.addTrackInPlayList(it, track)
+        //adapter.notifyDataSetChanged()
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -38,20 +48,30 @@ class PlayerFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        playLists = ArrayList()
+        adapter = PlayListAdapterForBottomSheet(playLists, onClick)
+        binding!!.recyclerViewPlayList.adapter = adapter
         binding!!.timeOfPlay.text = getString(R.string.player_default_time)
         val bottomSheetBehavior = BottomSheetBehavior.from(binding!!.playlistsBottomSheet)
         bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
 
-        val track = arguments?.getParcelable<Track>(TRACK_KEY) as Track
+        track = arguments?.getParcelable<Track>(TRACK_KEY) as Track
 
         writeDataInActivity(track)
         viewModel.onCreate(track)
+        viewModel.checkPlayListsInDb()
 
         viewModel.getPlayerProgressStatus().observe(viewLifecycleOwner) { playerProgressStatus ->
             playbackControl(playerProgressStatus)
         }
         viewModel.favoriteStatus().observe(viewLifecycleOwner) { favoriteStatus ->
             changeButtonFavoriteImage(favoriteStatus)
+        }
+        viewModel.getPlayLists().observe(viewLifecycleOwner) {playListsInDb ->
+            showPlayListsInBottomSheet(playListsInDb)
+        }
+        viewModel.getToastMessage().observe(viewLifecycleOwner) {message ->
+            showToast(message)
         }
 
         binding!!.ivButtonBack.setOnClickListener {
@@ -74,10 +94,27 @@ class PlayerFragment : Fragment() {
         binding!!.bNewPlaylist.setOnClickListener {
             findNavController().navigate(R.id.action_playerFragment_to_newPlaylistFragment)
         }
-    }
 
-    override fun onResume() {
-        super.onResume()
+        bottomSheetBehavior.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
+            override fun onStateChanged(bottomSheet: View, newState: Int) {
+                when (newState) {
+                    BottomSheetBehavior.STATE_HIDDEN -> {
+                        binding!!.overlay.visibility = View.GONE
+                        binding!!.buttonPlay.isEnabled = true
+                        binding!!.ivButtonFavorite.isEnabled = true
+                        binding!!.ibButtonQueue.isEnabled = true
+                    }
+                    else -> {
+                        binding!!.overlay.visibility = View.VISIBLE
+                        binding!!.buttonPlay.isEnabled = false
+                        binding!!.ivButtonFavorite.isEnabled = false
+                        binding!!.ibButtonQueue.isEnabled = false
+                    }
+                }
+            }
+
+            override fun onSlide(bottomSheet: View, slideOffset: Float) {}
+        })
     }
 
     override fun onPause() {
@@ -176,6 +213,24 @@ class PlayerFragment : Fragment() {
             Toast.LENGTH_LONG
         ).show()
     }
+
+    private fun showPlayListsInBottomSheet(playListsInDb: List<PlayList>){
+        playLists.clear()
+        playLists.addAll(playListsInDb)
+        adapter.notifyDataSetChanged()
+    }
+
+    private fun showToast(message: String) {
+        Toast.makeText(
+            requireContext(),
+            message,
+            Toast.LENGTH_LONG
+        ).show()
+        adapter.notifyDataSetChanged()
+    }
+
+
+
 
     companion object {
         private const val TRACK_KEY = "track"
