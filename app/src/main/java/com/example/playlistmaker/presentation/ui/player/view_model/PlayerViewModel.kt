@@ -5,9 +5,11 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.playlistmaker.domain.db.FavoriteTracksInteractor
+import com.example.playlistmaker.domain.db.PlayListInteractor
 import com.example.playlistmaker.domain.player.MediaPlayerInteractor
 import com.example.playlistmaker.domain.player.models.MediaPlayerStatus
 import com.example.playlistmaker.domain.player.models.PlayerProgressStatus
+import com.example.playlistmaker.domain.playlist.PlayList
 import com.example.playlistmaker.domain.search.SearchHistoryInteractor
 import com.example.playlistmaker.domain.search.models.Track
 import kotlinx.coroutines.Job
@@ -17,7 +19,8 @@ import kotlinx.coroutines.launch
 class PlayerViewModel(
     private val mediaPlayerInteractor: MediaPlayerInteractor,
     private val favoriteTracksInteractor: FavoriteTracksInteractor,
-    private val searchHistoryInteractor: SearchHistoryInteractor
+    private val searchHistoryInteractor: SearchHistoryInteractor,
+    private val playListInteractor: PlayListInteractor
 ) :
     ViewModel() {
     private var updateTimeOfPlayJob: Job? = null
@@ -25,13 +28,16 @@ class PlayerViewModel(
     private var addTrackInDb: Job? = null
     private var deleteTrackFromDb: Job? = null
 
-    private val playerProgressStatus: MutableLiveData<PlayerProgressStatus> =
+    private val playerProgressStatus: MutableLiveData<PlayerProgressStatus> =       //Лайф дата со статусом плеера
         MutableLiveData(updatePlayerProgressStatus())
-
     fun getPlayerProgressStatus(): LiveData<PlayerProgressStatus> = playerProgressStatus
 
-    private var trackAddInFavorite: MutableLiveData<Boolean> = MutableLiveData(false)
+    private var trackAddInFavorite: MutableLiveData<Boolean> = MutableLiveData(false)       //Лайф дата с лайками
     fun favoriteStatus(): LiveData<Boolean> = trackAddInFavorite
+
+    private val playListsLiveData: MutableLiveData<List<PlayList>> =            //Лайф дата с плейлистами
+        MutableLiveData<List<PlayList>>()
+    fun getPlayLists(): LiveData<List<PlayList>> = playListsLiveData
 
     fun onCreate(track: Track) {
         mediaPlayerInteractor.preparePlayer(track)
@@ -106,7 +112,6 @@ class PlayerViewModel(
             trackAddInFavorite.postValue(true)
             searchHistoryInteractor.addTrack(track)
         }
-
     }
 
     private fun startPlayer() {
@@ -118,6 +123,16 @@ class PlayerViewModel(
     private fun pausePlayer() {
         mediaPlayerInteractor.pausePlayer()
         playerProgressStatus.value = updatePlayerProgressStatus()
+    }
+
+    fun checkPlayListsInDb() {
+        viewModelScope.launch {
+            playListInteractor
+                .getPlayLists()
+                .collect { result ->
+                    playListsLiveData.postValue(result)
+                }
+        }
     }
 
 

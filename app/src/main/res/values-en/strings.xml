@@ -39,4 +39,5 @@
     <string name="lose_data">All unsaved data will be lost</string>
     <string name="complete">Complete</string>
     <string name="cancel">Cancel</string>
+    <string name="add_to_playlist">Add to playlist</string>
 </resources>

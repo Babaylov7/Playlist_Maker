@@ -6,29 +6,27 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.playlistmaker.domain.db.PlayListInteractor
 import com.example.playlistmaker.domain.playlist.PlayList
-import com.example.playlistmaker.presentation.ui.search.view_model.SearchViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-class LibraryPlaylistsViewModel(private val playListInteractor: PlayListInteractor): ViewModel() {
+class LibraryPlaylistsViewModel(private val playListInteractor: PlayListInteractor) : ViewModel() {
 
     private var isClickAllowed = true
     private var clickJob: Job? = null
 
-    private val playListsLiveData: MutableLiveData<List<PlayList>> = MutableLiveData<List<PlayList>>()
+    private val playListsLiveData: MutableLiveData<List<PlayList>> =
+        MutableLiveData<List<PlayList>>()
+
     fun getPlayLists(): LiveData<List<PlayList>> = playListsLiveData
 
-    fun checkPlayListsInDb(){
+    fun checkPlayListsInDb() {
         viewModelScope.launch {
-//            val playLists = playListInteractor.getPlayLists()
-//            playListsLiveData.postValue(playLists)
             playListInteractor
                 .getPlayLists()
-                .collect{
-                    result -> playListsLiveData.postValue(result)
+                .collect { result ->
+                    playListsLiveData.postValue(result)
                 }
-
         }
     }
 

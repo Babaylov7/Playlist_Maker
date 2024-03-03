@@ -15,8 +15,8 @@ import com.example.playlistmaker.databinding.PlayerFragmentBinding
 import com.example.playlistmaker.domain.player.models.MediaPlayerStatus
 import com.example.playlistmaker.domain.player.models.PlayerProgressStatus
 import com.example.playlistmaker.presentation.isNightModeOn
-import com.example.playlistmaker.presentation.ui.main.MainActivity
 import com.example.playlistmaker.presentation.ui.player.view_model.PlayerViewModel
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.text.SimpleDateFormat
 import java.util.Locale
@@ -24,14 +24,13 @@ import java.util.Locale
 class PlayerFragment : Fragment() {
     private var binding: PlayerFragmentBinding? = null
     private var trackAddInQueue = false
-
     private val viewModel by viewModel<PlayerViewModel>()
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = PlayerFragmentBinding.inflate(inflater, container, false)
         return binding!!.root
     }
@@ -40,6 +39,8 @@ class PlayerFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         binding!!.timeOfPlay.text = getString(R.string.player_default_time)
+        val bottomSheetBehavior = BottomSheetBehavior.from(binding!!.playlistsBottomSheet)
+        bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
 
         val track = arguments?.getParcelable<Track>(TRACK_KEY) as Track
 
@@ -49,18 +50,17 @@ class PlayerFragment : Fragment() {
         viewModel.getPlayerProgressStatus().observe(viewLifecycleOwner) { playerProgressStatus ->
             playbackControl(playerProgressStatus)
         }
-        viewModel.favoriteStatus().observe(viewLifecycleOwner){favoriteStatus ->
+        viewModel.favoriteStatus().observe(viewLifecycleOwner) { favoriteStatus ->
             changeButtonFavoriteImage(favoriteStatus)
-
         }
 
         binding!!.ivButtonBack.setOnClickListener {
-
             findNavController().navigateUp()
         }
 
-        binding!!.buttonQueue.setOnClickListener {
-            changeButtonQueueImage()
+        binding!!.ibButtonQueue.setOnClickListener {
+            showBottomSheet()
+            //changeButtonQueueImage()
         }
 
         binding!!.ivButtonFavorite.setOnClickListener {
@@ -70,8 +70,15 @@ class PlayerFragment : Fragment() {
         binding!!.buttonPlay.setOnClickListener {
             viewModel.playbackControl()
         }
+
+        binding!!.bNewPlaylist.setOnClickListener {
+            findNavController().navigate(R.id.action_playerFragment_to_newPlaylistFragment)
+        }
     }
 
+    override fun onResume() {
+        super.onResume()
+    }
 
     override fun onPause() {
         super.onPause()
@@ -79,9 +86,9 @@ class PlayerFragment : Fragment() {
     }
 
     override fun onDestroyView() {
-        super.onDestroyView()
-        binding = null
         viewModel.destroyMediaPlayer()
+        binding = null
+        super.onDestroyView()
     }
 
     private fun playbackControl(playerProgressStatus: PlayerProgressStatus) {
@@ -147,13 +154,18 @@ class PlayerFragment : Fragment() {
         }
     }
 
+    private fun showBottomSheet() {
+        BottomSheetBehavior.from(binding!!.playlistsBottomSheet).state = BottomSheetBehavior.STATE_COLLAPSED
+
+    }
+
     private fun changeButtonQueueImage() {
         if (trackAddInQueue) {
             trackAddInQueue = false
-            binding!!.buttonQueue.setImageResource(R.drawable.button_queue)
+            binding!!.ibButtonQueue.setImageResource(R.drawable.button_queue)
         } else {
             trackAddInQueue = true
-            binding!!.buttonQueue.setImageResource(R.drawable.button_add_in_queue)
+            binding!!.ibButtonQueue.setImageResource(R.drawable.button_add_in_queue)
         }
     }
 

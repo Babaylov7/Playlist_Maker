@@ -8,7 +8,7 @@ import com.example.playlistmaker.domain.search.models.Track
 
 class MediaPlayerRepositoryImpl(
     private var mediaPlayer: MediaPlayer,
-    private var playerState: MediaPlayerStatus = MediaPlayerStatus.STATE_DEFAULT
+    private var playerState: MediaPlayerStatus
 ) : MediaPlayerRepository {
 
     override fun preparePlayer(track: Track) {

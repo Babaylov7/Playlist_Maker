@@ -54,7 +54,7 @@
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/til_name"
-        style="@style/PlayListCreateTextInputLayout"
+        style="@style/play_list_create_text_input_layout"
         android:layout_marginHorizontal="@dimen/padding16"
         android:layout_marginTop="@dimen/height40"
         android:hint="@string/name"
@@ -79,7 +79,7 @@
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/til_description"
-        style="@style/PlayListCreateTextInputLayout"
+        style="@style/play_list_create_text_input_layout"
         android:layout_marginHorizontal="@dimen/padding16"
         android:layout_marginTop="@dimen/padding16"
         android:hint="@string/description"
