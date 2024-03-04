@@ -18,24 +18,19 @@ import retrofit2.converter.gson.GsonConverterFactory
 val dataModule = module {
 
     single<ItunesApi> {
-        Retrofit.Builder()
-            .baseUrl(ITUNES_URL)
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-            .create(ItunesApi::class.java)
+        Retrofit.Builder().baseUrl(ITUNES_URL).addConverterFactory(GsonConverterFactory.create())
+            .build().create(ItunesApi::class.java)
     }
 
     single(named(SEARCH_HISTORY)) {
         androidContext().getSharedPreferences(
-            SEARCH_HISTORY,
-            Context.MODE_PRIVATE
+            SEARCH_HISTORY, Context.MODE_PRIVATE
         )
     }
 
     single(named(SETTINGS_PREFERENCES)) {
         androidContext().getSharedPreferences(
-            SETTINGS_PREFERENCES,
-            Context.MODE_PRIVATE
+            SETTINGS_PREFERENCES, Context.MODE_PRIVATE
         )
     }
 
@@ -49,8 +44,7 @@ val dataModule = module {
 
     //Database
     single {
-        Room.databaseBuilder(androidContext(), AppDatabase::class.java, "database.db")
-            .build()
+        Room.databaseBuilder(androidContext(), AppDatabase::class.java, "database.db").build()
     }
 
     factory { TrackDbConvertor() }

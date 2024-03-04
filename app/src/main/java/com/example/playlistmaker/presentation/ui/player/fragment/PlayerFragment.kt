@@ -19,6 +19,7 @@ import com.example.playlistmaker.presentation.isNightModeOn
 import com.example.playlistmaker.presentation.ui.player.PlayListAdapterForBottomSheet
 import com.example.playlistmaker.presentation.ui.player.view_model.PlayerViewModel
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import io.github.muddz.styleabletoast.StyleableToast
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.text.SimpleDateFormat
 import java.util.Locale
@@ -33,7 +34,6 @@ class PlayerFragment : Fragment() {
 
     private val onClick: (playList: PlayList) -> Unit = {
         viewModel.addTrackInPlayList(it, track)
-        //adapter.notifyDataSetChanged()
     }
 
     override fun onCreateView(
@@ -123,9 +123,13 @@ class PlayerFragment : Fragment() {
     }
 
     override fun onDestroyView() {
-        viewModel.destroyMediaPlayer()
         binding = null
         super.onDestroyView()
+    }
+
+    override fun onDestroy() {
+        viewModel.destroyMediaPlayer()
+        super.onDestroy()
     }
 
     private fun playbackControl(playerProgressStatus: PlayerProgressStatus) {
@@ -207,10 +211,10 @@ class PlayerFragment : Fragment() {
     }
 
     private fun showErrorMassage() {
-        Toast.makeText(
+        StyleableToast.makeText(
             requireContext(),
             getString(R.string.audio_file_not_available),
-            Toast.LENGTH_LONG
+            R.style.myToast
         ).show()
     }
 
@@ -221,16 +225,12 @@ class PlayerFragment : Fragment() {
     }
 
     private fun showToast(message: String) {
-        Toast.makeText(
+        StyleableToast.makeText(
             requireContext(),
             message,
-            Toast.LENGTH_LONG
+            R.style.myToast
         ).show()
-        adapter.notifyDataSetChanged()
     }
-
-
-
 
     companion object {
         private const val TRACK_KEY = "track"

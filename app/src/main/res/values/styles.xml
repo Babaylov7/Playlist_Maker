@@ -153,9 +153,13 @@
         <item name="boxCornerRadiusTopStart">8dp</item>
     </style>
 
+    <style name="play_list_create_album_image">
+        <item name="android:backgroundTint">@color/white</item>
+    </style>
+
     <!-- Стиль для BottomSheet на экране аудиоплеера  -->
 
-    <style name="bottom_sheet_audoi_player"
+    <style name="bottom_sheet_audio_player"
         parent="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">wrap_content</item>
@@ -165,6 +169,14 @@
 
     <style name="bottom_sheet_title_style">
         <item name="android:textColor">@color/black</item>
+    </style>
+
+    <style name="bottom_sheet_style">
+        <item name="android:backgroundTint">@color/white</item>
+    </style>
+
+    <style name="bottom_sheet_view_style">
+        <item name="android:backgroundTint">@color/yp_text_gray</item>
     </style>
 
 

@@ -336,6 +336,7 @@
         android:id="@+id/playlists_bottom_sheet"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        style="@style/bottom_sheet_style"
         android:background="@drawable/bottom_sheet_bg"
         android:orientation="vertical"
         android:foreground="?android:attr/selectableItemBackground"
@@ -348,7 +349,7 @@
             android:layout_height="4dp"
             android:layout_gravity="center"
             android:layout_marginTop="10dp"
-            android:background="@drawable/rounder" />
+            android:background="@drawable/rounder"/>
 
         <TextView
             style="@style/bottom_sheet_title_style"

@@ -43,7 +43,7 @@
         android:layout_height="0dp"
         android:layout_marginHorizontal="@dimen/padding24"
         android:layout_marginTop="@dimen/padding24"
-        android:background="@drawable/dotted_frame"
+        android:background="@drawable/default_album_add_image"
         android:scaleType="center"
         android:src="@drawable/baseline_add_photo"
         app:layout_constraintDimensionRatio="w, 1:1"

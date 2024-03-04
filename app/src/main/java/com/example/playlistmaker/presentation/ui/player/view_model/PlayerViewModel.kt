@@ -149,6 +149,7 @@ class PlayerViewModel(
                 playListInteractor.updateTracks(playList.id, tracks, playList.tracksCount + 1)
             }
             toastMessage.value = "Добавлено в плейлист ${playList.playlistName}"
+            checkPlayListsInDb()
         }
     }
 
