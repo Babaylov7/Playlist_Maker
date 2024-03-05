@@ -4,7 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
@@ -61,16 +61,16 @@ class PlayerFragment : Fragment() {
         viewModel.onCreate(track)
         viewModel.checkPlayListsInDb()
 
-        viewModel.getPlayerProgressStatus().observe(viewLifecycleOwner) { playerProgressStatus ->
+        viewModel.playerProgressStatus().observe(viewLifecycleOwner) { playerProgressStatus ->
             playbackControl(playerProgressStatus)
         }
-        viewModel.favoriteStatus().observe(viewLifecycleOwner) { favoriteStatus ->
+        viewModel.trackAddInFavorite().observe(viewLifecycleOwner) { favoriteStatus ->
             changeButtonFavoriteImage(favoriteStatus)
         }
-        viewModel.getPlayLists().observe(viewLifecycleOwner) {playListsInDb ->
+        viewModel.playListsLiveData().observe(viewLifecycleOwner) { playListsInDb ->
             showPlayListsInBottomSheet(playListsInDb)
         }
-        viewModel.getToastMessage().observe(viewLifecycleOwner) {message ->
+        viewModel.toastMessage().observe(viewLifecycleOwner) { message ->
             showToast(message)
         }
 
@@ -99,13 +99,13 @@ class PlayerFragment : Fragment() {
             override fun onStateChanged(bottomSheet: View, newState: Int) {
                 when (newState) {
                     BottomSheetBehavior.STATE_HIDDEN -> {
-                        binding!!.overlay.visibility = View.GONE
+                        binding!!.overlay.isVisible = false
                         binding!!.buttonPlay.isEnabled = true
                         binding!!.ivButtonFavorite.isEnabled = true
                         binding!!.ibButtonQueue.isEnabled = true
                     }
                     else -> {
-                        binding!!.overlay.visibility = View.VISIBLE
+                        binding!!.overlay.isVisible = true
                         binding!!.buttonPlay.isEnabled = false
                         binding!!.ivButtonFavorite.isEnabled = false
                         binding!!.ibButtonQueue.isEnabled = false

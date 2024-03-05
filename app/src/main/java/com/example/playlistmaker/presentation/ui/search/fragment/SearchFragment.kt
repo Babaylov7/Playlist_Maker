@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
+import androidx.core.view.isVisible
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.example.playlistmaker.R
@@ -51,13 +52,13 @@ class SearchFragment : BindingFragment<SearchFragmentBinding>() {
 
         tracks = ArrayList<Track>()
         adapterSearch = TrackAdapter(tracks, onClick)
-        adapterHistory = TrackAdapter(viewModel.getTracksHistory().value!!, onClick)
+        adapterHistory = TrackAdapter(viewModel.tracksHistory().value!!, onClick)
 
-        viewModel.getFoundTracks().observe(viewLifecycleOwner) { it ->
+        viewModel.foundTracks().observe(viewLifecycleOwner) { it ->
             processingSearchStatus(it)
         }
 
-        viewModel.getTracksHistory().observe(viewLifecycleOwner) { it ->
+        viewModel.tracksHistory().observe(viewLifecycleOwner) { it ->
             adapterHistory.notifyDataSetChanged()
         }
 
@@ -83,12 +84,12 @@ class SearchFragment : BindingFragment<SearchFragmentBinding>() {
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                binding.clearButton.visibility = clearButtonVisibility(s)
-                binding.historyLayout.visibility =
-                    if (binding.editText.hasFocus()         //Есть фокус
+                binding.clearButton.isVisible = !s.isNullOrEmpty()
+                binding.historyLayout.isVisible =
+                    (binding.editText.hasFocus()         //Есть фокус
                         && s?.isEmpty() == true             //Строка поиска пуста
-                        && viewModel.getTracksHistory().value!!.isNotEmpty()       //Список треков не пустой
-                    ) View.VISIBLE else View.GONE           //отображение Layout при изменении текста в строке поиска
+                        && viewModel.tracksHistory().value!!.isNotEmpty()       //Список треков не пустой
+                    )            //отображение Layout при изменении текста в строке поиска
 
                 editTextValue = binding.editText.text.toString()
                 if (editTextValue.isEmpty()) {
@@ -113,7 +114,7 @@ class SearchFragment : BindingFragment<SearchFragmentBinding>() {
         binding.editText.setOnFocusChangeListener { _, hasFocus ->      //отображение Layout при фокусе строки поиска
             if (hasFocus                            //Есть фокус
                 && binding.editText.text.isEmpty()     //Строка поиска пуста
-                && viewModel.getTracksHistory().value!!.isNotEmpty()       //Список треков не пустой
+                && viewModel.tracksHistory().value!!.isNotEmpty()       //Список треков не пустой
             ) {
                 updateRecyclerViewSearchHistory()
             } else {
@@ -148,23 +149,15 @@ class SearchFragment : BindingFragment<SearchFragmentBinding>() {
         viewModel.updateTrackHistory()
     }
 
-    private fun clearButtonVisibility(s: CharSequence?): Int {          //видимость кнопки "Очистить" в строке поиска
-        return if (s.isNullOrEmpty()) {
-            View.GONE
-        } else {
-            View.VISIBLE
-        }
-    }
-
     private fun showImageError(typeError: SearchStatus) {
         if (typeError == SearchStatus.LIST_IS_EMPTY) {                      //Ничего не нашлось
             showErrorNothingFound()
         } else {                                                    //Проблемы с сетью
             showErrorNetworkError()
-            binding.buttonUpdate.visibility = View.VISIBLE
+            binding.buttonUpdate.isVisible = true
         }
-        binding.messageImage.visibility = View.VISIBLE
-        binding.textViewMessageError.visibility = View.VISIBLE
+        binding.messageImage.isVisible = true
+        binding.textViewMessageError.isVisible = true
     }
 
     private fun showErrorNothingFound() {
@@ -194,13 +187,13 @@ class SearchFragment : BindingFragment<SearchFragmentBinding>() {
     }
 
     private fun hideErrorElements() {
-        binding.messageImage.visibility = View.GONE
-        binding.textViewMessageError.visibility = View.GONE
-        binding.buttonUpdate.visibility = View.GONE
+        binding.messageImage.isVisible = false
+        binding.textViewMessageError.isVisible = false
+        binding.buttonUpdate.isVisible = false
     }
 
     private fun hideRecyclerView() {
-        binding.recyclerView.visibility = View.GONE
+        binding.recyclerView.isVisible = false
     }
 
     private fun changeStateWhenSearchBarIsEmpty() {                                            //при пустой строке поиска выполняем следующие действия
@@ -216,10 +209,10 @@ class SearchFragment : BindingFragment<SearchFragmentBinding>() {
     }
 
     private fun showAndHideHistoryLayout(action: Boolean) {
-        if (action && viewModel.getTracksHistory().value!!.isNotEmpty() && binding.editText.hasFocus()) {
-            binding.historyLayout.visibility = View.VISIBLE
+        if (action && viewModel.tracksHistory().value!!.isNotEmpty() && binding.editText.hasFocus()) {
+            binding.historyLayout.isVisible = true
         } else {
-            binding.historyLayout.visibility = View.GONE
+            binding.historyLayout.isVisible = false
         }
     }
 
@@ -229,27 +222,27 @@ class SearchFragment : BindingFragment<SearchFragmentBinding>() {
         hideErrorElements()
         when (trackSearchResult.status) {
             SearchStatus.RESPONSE_RECEIVED -> {
-                binding.progressBar.visibility = View.GONE
-                binding.recyclerView.visibility = View.VISIBLE
+                binding.progressBar.isVisible = false
+                binding.recyclerView.isVisible = true
                 tracks.addAll(trackSearchResult.results)
             }
 
             SearchStatus.LIST_IS_EMPTY -> {
-                binding.progressBar.visibility = View.GONE
+                binding.progressBar.isVisible = false
                 showImageError(SearchStatus.LIST_IS_EMPTY)
             }
 
             SearchStatus.NETWORK_ERROR -> {
-                binding.progressBar.visibility = View.GONE
+                binding.progressBar.isVisible = false
                 showImageError(SearchStatus.NETWORK_ERROR)
             }
 
             SearchStatus.DEFAULT -> {
-                binding.progressBar.visibility = View.GONE
+                binding.progressBar.isVisible = false
             }
 
             SearchStatus.LOADING -> {
-                binding.progressBar.visibility = View.VISIBLE
+                binding.progressBar.isVisible = true
             }
         }
     }

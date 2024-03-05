@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.example.playlistmaker.R
@@ -42,7 +43,7 @@ class LibraryFavoriteFragment : BindingFragment<LibraryFavoriteFragmentBinding>(
         viewModel.onCreate()
         binding.rvFavoriteTracks.adapter = adapter
 
-        viewModel.getFavoriteTracks().observe(viewLifecycleOwner) {
+        viewModel.favoriteTracks().observe(viewLifecycleOwner) {
             showFavoriteTracksList(it)
         }
 
@@ -61,15 +62,15 @@ class LibraryFavoriteFragment : BindingFragment<LibraryFavoriteFragmentBinding>(
 
     private fun showFavoriteTracksList(tracksFromDb: List<Track>) {
         if (tracksFromDb.isEmpty()) {
-            binding.ivImageError.visibility = View.VISIBLE
-            binding.tvMessageError.visibility = View.VISIBLE
-            binding.rvFavoriteTracks.visibility = View.GONE
+            binding.ivImageError.isVisible = true
+            binding.tvMessageError.isVisible = true
+            binding.rvFavoriteTracks.isVisible = false
             showErrorImage()
             tracks.clear()
         } else {
-            binding.ivImageError.visibility = View.GONE
-            binding.tvMessageError.visibility = View.GONE
-            binding.rvFavoriteTracks.visibility = View.VISIBLE
+            binding.ivImageError.isVisible = false
+            binding.tvMessageError.isVisible = false
+            binding.rvFavoriteTracks.isVisible = true
             tracks.clear()
             tracks.addAll(tracksFromDb)
             adapter.notifyDataSetChanged()

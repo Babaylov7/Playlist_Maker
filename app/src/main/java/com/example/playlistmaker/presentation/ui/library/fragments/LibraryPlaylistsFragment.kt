@@ -4,13 +4,13 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.bumptech.glide.Glide
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.LibraryPlaylistsFragmentBinding
 import com.example.playlistmaker.domain.playlist.PlayList
-import com.example.playlistmaker.domain.search.models.Track
 import com.example.playlistmaker.presentation.isNightModeOn
 import com.example.playlistmaker.presentation.ui.BindingFragment
 import com.example.playlistmaker.presentation.ui.library.PlayListAdapter
@@ -47,7 +47,7 @@ class LibraryPlaylistsFragment: BindingFragment<LibraryPlaylistsFragmentBinding>
         binding.recyclerView.adapter = adapter
 
         viewModel.checkPlayListsInDb()
-        viewModel.getPlayLists().observe(viewLifecycleOwner){
+        viewModel.playLists().observe(viewLifecycleOwner){
             showPlayLists(it)
         }
 
@@ -76,9 +76,9 @@ class LibraryPlaylistsFragment: BindingFragment<LibraryPlaylistsFragmentBinding>
     }
 
     private fun showErrorImage() {
-        binding.recyclerView.visibility = View.GONE
-        binding.ivMessageImage.visibility = View.VISIBLE
-        binding.tvMessageError.visibility = View.VISIBLE
+        binding.recyclerView.isVisible = false
+        binding.ivMessageImage.isVisible = true
+        binding.tvMessageError.isVisible = true
         if (requireContext().isNightModeOn()) {
             Glide.with(this)
                 .load(R.drawable.nothing_was_found_dark)
@@ -90,9 +90,9 @@ class LibraryPlaylistsFragment: BindingFragment<LibraryPlaylistsFragmentBinding>
         }
     }
     private fun hideErrorImage(){
-        binding.recyclerView.visibility = View.VISIBLE
-        binding.ivMessageImage.visibility = View.GONE
-        binding.tvMessageError.visibility = View.GONE
+        binding.recyclerView.isVisible = true
+        binding.ivMessageImage.isVisible = false
+        binding.tvMessageError.isVisible = false
     }
 
     companion object{

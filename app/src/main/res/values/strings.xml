@@ -51,4 +51,17 @@
     <string name="complete">Завершить</string>
     <string name="cancel">Отмена</string>
     <string name="add_to_playlist">Добавить в плейлист</string>
+
+
+    <!-- Склонения слова "Трек" -->
+    <plurals name="plurals" translatable="false">
+        <item quantity="zero">треков</item>
+        <item quantity="one">трек</item>
+        <item quantity="two">трека</item>
+        <item quantity="few">трека</item>
+        <item quantity="many">треков</item>
+        <item quantity="other">треков</item>
+    </plurals>
 </resources>
+
+

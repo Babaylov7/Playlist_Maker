@@ -28,25 +28,25 @@ class PlayerViewModel(
     private var addTrackInDb: Job? = null
     private var deleteTrackFromDb: Job? = null
 
-    private val playerProgressStatus: MutableLiveData<PlayerProgressStatus> =       //Лайф дата со статусом плеера
+    private val _playerProgressStatus: MutableLiveData<PlayerProgressStatus> =       //Лайф дата со статусом плеера
         MutableLiveData(updatePlayerProgressStatus())
-    fun getPlayerProgressStatus(): LiveData<PlayerProgressStatus> = playerProgressStatus
+    fun playerProgressStatus(): LiveData<PlayerProgressStatus> = _playerProgressStatus
 
-    private var trackAddInFavorite: MutableLiveData<Boolean> = MutableLiveData(false)       //Лайф дата с лайками
-    fun favoriteStatus(): LiveData<Boolean> = trackAddInFavorite
+    private var _trackAddInFavorite: MutableLiveData<Boolean> = MutableLiveData(false)       //Лайф дата с лайками
+    fun trackAddInFavorite(): LiveData<Boolean> = _trackAddInFavorite
 
-    private val playListsLiveData: MutableLiveData<List<PlayList>> =            //Лайф дата с плейлистами
+    private val _playListsLiveData: MutableLiveData<List<PlayList>> =            //Лайф дата с плейлистами
         MutableLiveData<List<PlayList>>()
-    fun getPlayLists(): LiveData<List<PlayList>> = playListsLiveData
+    fun playListsLiveData(): LiveData<List<PlayList>> = _playListsLiveData
 
-    private val toastMessage: MutableLiveData<String> = MutableLiveData<String>()   //Лайф Дата с сообщением для тоста
-    fun getToastMessage(): LiveData<String> = toastMessage
+    private val _toastMessage: MutableLiveData<String> = MutableLiveData<String>()   //Лайф Дата с сообщением для тоста
+    fun toastMessage(): LiveData<String> = _toastMessage
 
 
     fun onCreate(track: Track) {
         mediaPlayerInteractor.preparePlayer(track)
-        playerProgressStatus.value = updatePlayerProgressStatus()
-        trackAddInFavorite.postValue(track.isFavorite)
+        _playerProgressStatus.value = updatePlayerProgressStatus()
+        _trackAddInFavorite.postValue(track.isFavorite)
     }
 
     private fun updatePlayerProgressStatus(): PlayerProgressStatus {
@@ -66,12 +66,12 @@ class PlayerViewModel(
     }
 
     private fun updateTimeOfPlay() {                   //Обновленеи времени проигрования трека
-        playerProgressStatus.value = updatePlayerProgressStatus()
+        _playerProgressStatus.value = updatePlayerProgressStatus()
 
-        when (playerProgressStatus.value!!.mediaPlayerStatus) {
+        when (_playerProgressStatus.value!!.mediaPlayerStatus) {
             MediaPlayerStatus.STATE_PLAYING -> {
                 updateTimeOfPlayJob = viewModelScope.launch {
-                    delay(UPDATE)
+                    delay(UPDATE_MILLIS)
                     updateTimeOfPlay()
                 }
             }
@@ -83,8 +83,8 @@ class PlayerViewModel(
     }
 
     fun playbackControl() {
-        playerProgressStatus.value = updatePlayerProgressStatus()
-        when (playerProgressStatus.value!!.mediaPlayerStatus) {
+        _playerProgressStatus.value = updatePlayerProgressStatus()
+        when (_playerProgressStatus.value!!.mediaPlayerStatus) {
             MediaPlayerStatus.STATE_PLAYING -> {
                 pausePlayer()
             }
@@ -99,13 +99,13 @@ class PlayerViewModel(
     }
 
     fun clickButtonFavorite(track: Track){
-        if(trackAddInFavorite.value!!){
+        if(_trackAddInFavorite.value!!){
             track.isFavorite = false
             //удалить и изм значение лайф даты
             deleteTrackFromDb = viewModelScope.launch {
                 favoriteTracksInteractor.deleteTrackFromFavorite(track)
             }
-            trackAddInFavorite.postValue(false)
+            _trackAddInFavorite.postValue(false)
             searchHistoryInteractor.addTrack(track)
         }
         else {
@@ -113,7 +113,7 @@ class PlayerViewModel(
             addTrackInDb = viewModelScope.launch {
                 favoriteTracksInteractor.insertTrackToFavorite(track)
             }
-            trackAddInFavorite.postValue(true)
+            _trackAddInFavorite.postValue(true)
             searchHistoryInteractor.addTrack(track)
         }
     }
@@ -121,12 +121,12 @@ class PlayerViewModel(
     private fun startPlayer() {
         mediaPlayerInteractor.startPlayer()
         updateTimeOfPlay()
-        playerProgressStatus.value = updatePlayerProgressStatus()
+        _playerProgressStatus.value = updatePlayerProgressStatus()
     }
 
     private fun pausePlayer() {
         mediaPlayerInteractor.pausePlayer()
-        playerProgressStatus.value = updatePlayerProgressStatus()
+        _playerProgressStatus.value = updatePlayerProgressStatus()
     }
 
     fun checkPlayListsInDb() {
@@ -134,27 +134,27 @@ class PlayerViewModel(
             playListInteractor
                 .getPlayLists()
                 .collect { result ->
-                    playListsLiveData.postValue(result)
+                    _playListsLiveData.postValue(result)
                 }
         }
     }
 
     fun addTrackInPlayList(playList: PlayList, track: Track){
         if(playList.tracks.contains(track)){
-            toastMessage.value = "Трек уже добавлен в плейлист ${playList.playlistName}"
+            _toastMessage.value = "Трек уже добавлен в плейлист ${playList.playlistName}"
         } else {
             val tracks = playList.tracks
             tracks.add(track)
             viewModelScope.launch {
                 playListInteractor.updateTracks(playList.id, tracks, playList.tracksCount + 1)
             }
-            toastMessage.value = "Добавлено в плейлист ${playList.playlistName}"
+            _toastMessage.value = "Добавлено в плейлист ${playList.playlistName}"
             checkPlayListsInDb()
         }
     }
 
 
     companion object {
-        private const val UPDATE = 250L
+        private const val UPDATE_MILLIS = 250L
     }
 }

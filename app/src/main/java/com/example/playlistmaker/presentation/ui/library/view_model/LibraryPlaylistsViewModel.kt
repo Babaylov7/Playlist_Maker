@@ -15,17 +15,17 @@ class LibraryPlaylistsViewModel(private val playListInteractor: PlayListInteract
     private var isClickAllowed = true
     private var clickJob: Job? = null
 
-    private val playListsLiveData: MutableLiveData<List<PlayList>> =
+    private val _playLists: MutableLiveData<List<PlayList>> =
         MutableLiveData<List<PlayList>>()
 
-    fun getPlayLists(): LiveData<List<PlayList>> = playListsLiveData
+    fun playLists(): LiveData<List<PlayList>> = _playLists
 
     fun checkPlayListsInDb() {
         viewModelScope.launch {
             playListInteractor
                 .getPlayLists()
                 .collect { result ->
-                    playListsLiveData.postValue(result)
+                    _playLists.postValue(result)
                 }
         }
     }
@@ -35,7 +35,7 @@ class LibraryPlaylistsViewModel(private val playListInteractor: PlayListInteract
         if (isClickAllowed) {
             clickJob = viewModelScope.launch {
                 isClickAllowed = false
-                delay(LibraryPlaylistsViewModel.CLICK_DEBOUNCE_DELAY)
+                delay(LibraryPlaylistsViewModel.CLICK_DEBOUNCE_DELAY_MILLIS)
                 isClickAllowed = true
             }
         }
@@ -43,7 +43,7 @@ class LibraryPlaylistsViewModel(private val playListInteractor: PlayListInteract
     }
 
     private companion object {
-        private const val CLICK_DEBOUNCE_DELAY = 1000L
+        private const val CLICK_DEBOUNCE_DELAY_MILLIS = 1000L
     }
 }
 

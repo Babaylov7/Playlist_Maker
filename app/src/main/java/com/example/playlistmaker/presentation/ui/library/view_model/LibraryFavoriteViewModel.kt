@@ -19,17 +19,17 @@ class LibraryFavoriteViewModel(
     private var clickJob: Job? = null
     private var dbJob: Job? = null
 
-    private val favoriteTracks: MutableLiveData<List<Track>> =
+    private val _favoriteTracks: MutableLiveData<List<Track>> =
         MutableLiveData(ArrayList<Track>())
 
-    fun getFavoriteTracks(): LiveData<List<Track>> =
-        favoriteTracks  //Получаем историю залайканых треков
+    fun favoriteTracks(): LiveData<List<Track>> =
+        _favoriteTracks  //Получаем историю залайканых треков
 
 
     fun onCreate() {
         dbJob = viewModelScope.launch(Dispatchers.IO) {
             favoriteTracksInteractor.getAllFavoriteTracks().collect { it ->
-                favoriteTracks.postValue(it)
+                _favoriteTracks.postValue(it)
             }
         }
     }
@@ -39,7 +39,7 @@ class LibraryFavoriteViewModel(
         if (isClickAllowed) {
             clickJob = viewModelScope.launch(Dispatchers.IO) {
                 isClickAllowed = false
-                delay(LibraryFavoriteViewModel.CLICK_DEBOUNCE_DELAY)
+                delay(LibraryFavoriteViewModel.CLICK_DEBOUNCE_DELAY_MILLIS)
                 isClickAllowed = true
             }
         }
@@ -52,6 +52,6 @@ class LibraryFavoriteViewModel(
     }
 
     private companion object {
-        private const val CLICK_DEBOUNCE_DELAY = 1000L
+        private const val CLICK_DEBOUNCE_DELAY_MILLIS = 1000L
     }
 }
