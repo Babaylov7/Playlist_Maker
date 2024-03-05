@@ -1,6 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <!-- Стили TOAST -->
+    <style name="myToast">
+        <item name="stTextBold">true</item>
+        <item name="stTextColor">@color/white</item>
+        <item name="stTextSize">14sp</item>
+        <item name="stColorBackground">@color/yp_black</item>
+        <item name="stSolidBackground">true</item>
+        <item name="stStrokeWidth">3dp</item>
+        <item name="stStrokeColor">#fff</item>
+        <item name="stLength">LONG</item> LONG or SHORT
+        <item name="stRadius">5dp</item>
+    </style>
+
     <!-- Стили для Стартового экрана -->
 
     <style name="Title">
@@ -125,5 +138,46 @@
         <item name="android:fontFamily">@font/ys_display_medium</item>
         <item name="android:textSize">@dimen/primary_text_size_16</item>
     </style>
+
+
+    <!-- Стили для экрана создания нового альбома -->
+    <style name="play_list_create_text_input_layout"
+        parent="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="fontWeight">400</item>
+        <item name="android:textSize">16sp</item>
+        <item name="boxCornerRadiusBottomEnd">8dp</item>
+        <item name="boxCornerRadiusBottomStart">8dp</item>
+        <item name="boxCornerRadiusTopEnd">8dp</item>
+        <item name="boxCornerRadiusTopStart">8dp</item>
+    </style>
+
+    <style name="play_list_create_album_image">
+        <item name="android:backgroundTint">@color/white</item>
+    </style>
+
+    <!-- Стиль для BottomSheet на экране аудиоплеера  -->
+
+    <style name="bottom_sheet_audio_player"
+        parent="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="boxCornerRadiusTopEnd">8dp</item>
+        <item name="boxCornerRadiusTopStart">8dp</item>
+    </style>
+
+    <style name="bottom_sheet_title_style">
+        <item name="android:textColor">@color/black</item>
+    </style>
+
+    <style name="bottom_sheet_style">
+        <item name="android:backgroundTint">@color/white</item>
+    </style>
+
+    <style name="bottom_sheet_view_style">
+        <item name="android:backgroundTint">@color/yp_text_gray</item>
+    </style>
+
 
 </resources>

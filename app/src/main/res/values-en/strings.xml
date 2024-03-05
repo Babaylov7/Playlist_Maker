@@ -29,4 +29,15 @@
     <string name="new_playlist">New playlist</string>
     <string name="featured_tracks">Featured tracks</string>
     <string name="playlists">Playlists</string>
+    <string name="name">Name</string>
+    <string name="description">Description</string>
+    <string name="create">Create</string>
+    <string name="one_track">track</string>
+    <string name="more_that_one_track_1">tracks</string>
+    <string name="more_that_one_track_2">tracks</string>
+    <string name="complete_playlist">Finish creating a playlist?</string>
+    <string name="lose_data">All unsaved data will be lost</string>
+    <string name="complete">Complete</string>
+    <string name="cancel">Cancel</string>
+    <string name="add_to_playlist">Add to playlist</string>
 </resources>

@@ -8,10 +8,11 @@ import com.example.playlistmaker.domain.search.models.Track
 
 class MediaPlayerRepositoryImpl(
     private var mediaPlayer: MediaPlayer,
-    private var playerState: MediaPlayerStatus = MediaPlayerStatus.STATE_DEFAULT
+    private var playerState: MediaPlayerStatus
 ) : MediaPlayerRepository {
 
     override fun preparePlayer(track: Track) {
+        mediaPlayer.reset()
         try {
             mediaPlayer.setDataSource(track.previewUrl)
             mediaPlayer.prepareAsync()
@@ -38,33 +39,32 @@ class MediaPlayerRepositoryImpl(
     }
 
     override fun getPlayerProgressStatus(): PlayerProgressStatus {
-        val currentPosition = mediaPlayer.currentPosition
         return when (playerState) {
             MediaPlayerStatus.STATE_PLAYING -> {
                 PlayerProgressStatus(
                     mediaPlayerStatus = MediaPlayerStatus.STATE_PLAYING,
-                    currentPosition = currentPosition
+                    currentPosition = mediaPlayer.currentPosition
                 )
             }
 
             MediaPlayerStatus.STATE_PAUSED -> {
                 PlayerProgressStatus(
                     mediaPlayerStatus = MediaPlayerStatus.STATE_PAUSED,
-                    currentPosition = currentPosition
+                    currentPosition =  mediaPlayer.currentPosition
                 )
             }
 
             MediaPlayerStatus.STATE_PREPARED -> {
                 PlayerProgressStatus(
                     mediaPlayerStatus = MediaPlayerStatus.STATE_PREPARED,
-                    currentPosition = currentPosition
+                    currentPosition = mediaPlayer.currentPosition
                 )
             }
 
             MediaPlayerStatus.STATE_DEFAULT -> {
                 PlayerProgressStatus(
                     mediaPlayerStatus = MediaPlayerStatus.STATE_DEFAULT,
-                    currentPosition = currentPosition
+                    currentPosition = 0
                 )
             }
 

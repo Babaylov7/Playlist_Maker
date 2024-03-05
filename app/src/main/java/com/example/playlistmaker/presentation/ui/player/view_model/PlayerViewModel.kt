@@ -5,9 +5,11 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.playlistmaker.domain.db.FavoriteTracksInteractor
+import com.example.playlistmaker.domain.db.PlayListInteractor
 import com.example.playlistmaker.domain.player.MediaPlayerInteractor
 import com.example.playlistmaker.domain.player.models.MediaPlayerStatus
 import com.example.playlistmaker.domain.player.models.PlayerProgressStatus
+import com.example.playlistmaker.domain.playlist.PlayList
 import com.example.playlistmaker.domain.search.SearchHistoryInteractor
 import com.example.playlistmaker.domain.search.models.Track
 import kotlinx.coroutines.Job
@@ -17,7 +19,8 @@ import kotlinx.coroutines.launch
 class PlayerViewModel(
     private val mediaPlayerInteractor: MediaPlayerInteractor,
     private val favoriteTracksInteractor: FavoriteTracksInteractor,
-    private val searchHistoryInteractor: SearchHistoryInteractor
+    private val searchHistoryInteractor: SearchHistoryInteractor,
+    private val playListInteractor: PlayListInteractor
 ) :
     ViewModel() {
     private var updateTimeOfPlayJob: Job? = null
@@ -25,18 +28,25 @@ class PlayerViewModel(
     private var addTrackInDb: Job? = null
     private var deleteTrackFromDb: Job? = null
 
-    private val playerProgressStatus: MutableLiveData<PlayerProgressStatus> =
+    private val _playerProgressStatus: MutableLiveData<PlayerProgressStatus> =       //Лайф дата со статусом плеера
         MutableLiveData(updatePlayerProgressStatus())
+    fun playerProgressStatus(): LiveData<PlayerProgressStatus> = _playerProgressStatus
 
-    fun getPlayerProgressStatus(): LiveData<PlayerProgressStatus> = playerProgressStatus
+    private var _trackAddInFavorite: MutableLiveData<Boolean> = MutableLiveData(false)       //Лайф дата с лайками
+    fun trackAddInFavorite(): LiveData<Boolean> = _trackAddInFavorite
 
-    private var trackAddInFavorite: MutableLiveData<Boolean> = MutableLiveData(false)
-    fun favoriteStatus(): LiveData<Boolean> = trackAddInFavorite
+    private val _playListsLiveData: MutableLiveData<List<PlayList>> =            //Лайф дата с плейлистами
+        MutableLiveData<List<PlayList>>()
+    fun playListsLiveData(): LiveData<List<PlayList>> = _playListsLiveData
+
+    private val _toastMessage: MutableLiveData<String> = MutableLiveData<String>()   //Лайф Дата с сообщением для тоста
+    fun toastMessage(): LiveData<String> = _toastMessage
+
 
     fun onCreate(track: Track) {
         mediaPlayerInteractor.preparePlayer(track)
-        playerProgressStatus.value = updatePlayerProgressStatus()
-        trackAddInFavorite.postValue(track.isFavorite)
+        _playerProgressStatus.value = updatePlayerProgressStatus()
+        _trackAddInFavorite.postValue(track.isFavorite)
     }
 
     private fun updatePlayerProgressStatus(): PlayerProgressStatus {
@@ -56,12 +66,12 @@ class PlayerViewModel(
     }
 
     private fun updateTimeOfPlay() {                   //Обновленеи времени проигрования трека
-        playerProgressStatus.value = updatePlayerProgressStatus()
+        _playerProgressStatus.value = updatePlayerProgressStatus()
 
-        when (playerProgressStatus.value!!.mediaPlayerStatus) {
+        when (_playerProgressStatus.value!!.mediaPlayerStatus) {
             MediaPlayerStatus.STATE_PLAYING -> {
                 updateTimeOfPlayJob = viewModelScope.launch {
-                    delay(UPDATE)
+                    delay(UPDATE_MILLIS)
                     updateTimeOfPlay()
                 }
             }
@@ -73,8 +83,8 @@ class PlayerViewModel(
     }
 
     fun playbackControl() {
-        playerProgressStatus.value = updatePlayerProgressStatus()
-        when (playerProgressStatus.value!!.mediaPlayerStatus) {
+        _playerProgressStatus.value = updatePlayerProgressStatus()
+        when (_playerProgressStatus.value!!.mediaPlayerStatus) {
             MediaPlayerStatus.STATE_PLAYING -> {
                 pausePlayer()
             }
@@ -89,13 +99,13 @@ class PlayerViewModel(
     }
 
     fun clickButtonFavorite(track: Track){
-        if(trackAddInFavorite.value!!){
+        if(_trackAddInFavorite.value!!){
             track.isFavorite = false
             //удалить и изм значение лайф даты
             deleteTrackFromDb = viewModelScope.launch {
                 favoriteTracksInteractor.deleteTrackFromFavorite(track)
             }
-            trackAddInFavorite.postValue(false)
+            _trackAddInFavorite.postValue(false)
             searchHistoryInteractor.addTrack(track)
         }
         else {
@@ -103,25 +113,48 @@ class PlayerViewModel(
             addTrackInDb = viewModelScope.launch {
                 favoriteTracksInteractor.insertTrackToFavorite(track)
             }
-            trackAddInFavorite.postValue(true)
+            _trackAddInFavorite.postValue(true)
             searchHistoryInteractor.addTrack(track)
         }
-
     }
 
     private fun startPlayer() {
         mediaPlayerInteractor.startPlayer()
         updateTimeOfPlay()
-        playerProgressStatus.value = updatePlayerProgressStatus()
+        _playerProgressStatus.value = updatePlayerProgressStatus()
     }
 
     private fun pausePlayer() {
         mediaPlayerInteractor.pausePlayer()
-        playerProgressStatus.value = updatePlayerProgressStatus()
+        _playerProgressStatus.value = updatePlayerProgressStatus()
+    }
+
+    fun checkPlayListsInDb() {
+        viewModelScope.launch {
+            playListInteractor
+                .getPlayLists()
+                .collect { result ->
+                    _playListsLiveData.postValue(result)
+                }
+        }
+    }
+
+    fun addTrackInPlayList(playList: PlayList, track: Track){
+        if(playList.tracks.contains(track)){
+            _toastMessage.value = "Трек уже добавлен в плейлист ${playList.playlistName}"
+        } else {
+            val tracks = playList.tracks
+            tracks.add(track)
+            viewModelScope.launch {
+                playListInteractor.updateTracks(playList.id, tracks, playList.tracksCount + 1)
+            }
+            _toastMessage.value = "Добавлено в плейлист ${playList.playlistName}"
+            checkPlayListsInDb()
+        }
     }
 
 
     companion object {
-        private const val UPDATE = 250L
+        private const val UPDATE_MILLIS = 250L
     }
 }

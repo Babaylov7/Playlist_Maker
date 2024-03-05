@@ -1,18 +1,19 @@
 package com.example.playlistmaker.presentation.ui.library.fragments
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
+import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.LibraryFavoriteFragmentBinding
 import com.example.playlistmaker.domain.search.models.Track
 import com.example.playlistmaker.presentation.isNightModeOn
 import com.example.playlistmaker.presentation.ui.BindingFragment
-import com.example.playlistmaker.presentation.ui.library.view_model.LibraryFavoriteFragmentViewModel
-import com.example.playlistmaker.presentation.ui.player.activity.PlayerActivity
+import com.example.playlistmaker.presentation.ui.library.view_model.LibraryFavoriteViewModel
+import com.example.playlistmaker.presentation.ui.main.MainActivity
 import com.example.playlistmaker.presentation.ui.search.track.TrackAdapter
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -20,7 +21,7 @@ class LibraryFavoriteFragment : BindingFragment<LibraryFavoriteFragmentBinding>(
 
     private lateinit var adapter: TrackAdapter
     private lateinit var tracks: ArrayList<Track>
-    private val viewModel by viewModel<LibraryFavoriteFragmentViewModel>()
+    private val viewModel by viewModel<LibraryFavoriteViewModel>()
 
     private val onClick: (track: Track) -> Unit = {
         if (viewModel.clickDebounce()) {
@@ -42,7 +43,7 @@ class LibraryFavoriteFragment : BindingFragment<LibraryFavoriteFragmentBinding>(
         viewModel.onCreate()
         binding.rvFavoriteTracks.adapter = adapter
 
-        viewModel.getFavoriteTracks().observe(viewLifecycleOwner) {
+        viewModel.favoriteTracks().observe(viewLifecycleOwner) {
             showFavoriteTracksList(it)
         }
 
@@ -50,6 +51,7 @@ class LibraryFavoriteFragment : BindingFragment<LibraryFavoriteFragmentBinding>(
 
     override fun onResume() {
         super.onResume()
+        (activity as? MainActivity)?.showNawBar()
         viewModel.onCreate()
     }
 
@@ -60,15 +62,15 @@ class LibraryFavoriteFragment : BindingFragment<LibraryFavoriteFragmentBinding>(
 
     private fun showFavoriteTracksList(tracksFromDb: List<Track>) {
         if (tracksFromDb.isEmpty()) {
-            binding.ivImageError.visibility = View.VISIBLE
-            binding.tvMessageError.visibility = View.VISIBLE
-            binding.rvFavoriteTracks.visibility = View.GONE
+            binding.ivImageError.isVisible = true
+            binding.tvMessageError.isVisible = true
+            binding.rvFavoriteTracks.isVisible = false
             showErrorImage()
             tracks.clear()
         } else {
-            binding.ivImageError.visibility = View.GONE
-            binding.tvMessageError.visibility = View.GONE
-            binding.rvFavoriteTracks.visibility = View.VISIBLE
+            binding.ivImageError.isVisible = false
+            binding.tvMessageError.isVisible = false
+            binding.rvFavoriteTracks.isVisible = true
             tracks.clear()
             tracks.addAll(tracksFromDb)
             adapter.notifyDataSetChanged()
@@ -89,10 +91,12 @@ class LibraryFavoriteFragment : BindingFragment<LibraryFavoriteFragmentBinding>(
     }
 
     private fun startPlayerActivity(track: Track) {              //Запустили активити с плеером
-        Intent(requireContext(), PlayerActivity::class.java).apply {
-            putExtra(LibraryFavoriteFragment.TRACK_KEY, track)
-            startActivity(this)
-        }
+
+        (activity as? MainActivity)?.hideNavBar()
+
+        val bundle = Bundle()
+        bundle.putParcelable(LibraryFavoriteFragment.TRACK_KEY, track)
+        findNavController().navigate( R.id.action_libraryFragment_to_playerFragment, bundle)
     }
 
     companion object {
