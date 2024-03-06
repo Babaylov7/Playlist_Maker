@@ -342,7 +342,8 @@
         android:foreground="?android:attr/selectableItemBackground"
         app:behavior_hideable="true"
         app:behavior_peekHeight="360dp"
-        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
+        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
+        tools:visibility="gone">
 
         <View
             android:layout_width="40dp"

@@ -32,6 +32,7 @@
     <dimen name="primary_text_size_16">16sp</dimen>
     <dimen name="primary_text_size_19">19sp</dimen>
     <dimen name="primary_text_size_22">22sp</dimen>
+    <dimen name="primary_text_size_24">24sp</dimen>
     <dimen name="primary_text_size_26">26sp</dimen>
 
 </resources>

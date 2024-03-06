@@ -16,6 +16,7 @@ import com.example.playlistmaker.presentation.ui.BindingFragment
 import com.example.playlistmaker.presentation.ui.library.PlayListAdapter
 import com.example.playlistmaker.presentation.ui.library.view_model.LibraryPlaylistsViewModel
 import com.example.playlistmaker.presentation.ui.main.MainActivity
+import com.example.playlistmaker.presentation.ui.search.fragment.SearchFragment
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class LibraryPlaylistsFragment: BindingFragment<LibraryPlaylistsFragmentBinding>() {
@@ -27,7 +28,7 @@ class LibraryPlaylistsFragment: BindingFragment<LibraryPlaylistsFragmentBinding>
 
     private val onClick: (playList: PlayList) -> Unit = {
         if (viewModel.clickDebounce()) {
-           // startPlayerActivity(it)   думаю пригодится на следующем ДЗ
+           startPlaylistFragment(it)
         }
     }
 
@@ -95,7 +96,17 @@ class LibraryPlaylistsFragment: BindingFragment<LibraryPlaylistsFragmentBinding>
         binding.tvMessageError.isVisible = false
     }
 
+    private fun startPlaylistFragment(playlist: PlayList){
+        (activity as? MainActivity)?.hideNavBar()
+
+        val bundle = Bundle()
+        bundle.putParcelable(PLAYLIST_KEY, playlist)
+        findNavController().navigate( R.id.action_libraryFragment_to_playlistFragment, bundle)
+    }
+
     companion object{
         fun newInstance() = LibraryPlaylistsFragment()
+        private const val PLAYLIST_KEY = "playlist"
     }
+
 }

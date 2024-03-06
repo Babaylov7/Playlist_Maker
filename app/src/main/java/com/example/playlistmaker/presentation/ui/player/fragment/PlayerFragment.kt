@@ -57,7 +57,7 @@ class PlayerFragment : Fragment() {
 
         track = arguments?.getParcelable<Track>(TRACK_KEY) as Track
 
-        writeDataInActivity(track)
+        writeDataInFragment(track)
         viewModel.onCreate(track)
         viewModel.checkPlayListsInDb()
 
@@ -161,7 +161,7 @@ class PlayerFragment : Fragment() {
         }
     }
 
-    private fun writeDataInActivity(track: Track) {
+    private fun writeDataInFragment(track: Track) {
         binding!!.trackName.text = track.trackName
         binding!!.artistName.text = track.artistName
         binding!!.songDuration.text =
