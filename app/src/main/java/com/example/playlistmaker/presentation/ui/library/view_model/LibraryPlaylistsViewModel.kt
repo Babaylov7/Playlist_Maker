@@ -37,7 +37,7 @@ class LibraryPlaylistsViewModel(
         if (isClickAllowed) {
             clickJob = viewModelScope.launch {
                 isClickAllowed = false
-                delay(LibraryPlaylistsViewModel.CLICK_DEBOUNCE_DELAY_MILLIS)
+                delay(CLICK_DEBOUNCE_DELAY_MILLIS)
                 isClickAllowed = true
             }
         }

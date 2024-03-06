@@ -25,11 +25,6 @@ class LibraryPlaylistsFragment: BindingFragment<LibraryPlaylistsFragmentBinding>
 
     private val viewModel by viewModel<LibraryPlaylistsViewModel>()
 
-    private val onClick: (playList: PlayList) -> Unit = {
-        if (viewModel.clickDebounce()) {
-           startPlaylistFragment(it)
-        }
-    }
 
     override fun createBinding(
         inflater: LayoutInflater,
@@ -42,9 +37,15 @@ class LibraryPlaylistsFragment: BindingFragment<LibraryPlaylistsFragmentBinding>
         super.onViewCreated(view, savedInstanceState)
 
         playLists = ArrayList<PlayList>()
-        adapter = PlayListAdapter(playLists, onClick)
+        adapter = PlayListAdapter(playLists)
         binding.recyclerView.layoutManager = GridLayoutManager(requireContext(), 2)
         binding.recyclerView.adapter = adapter
+
+        adapter.itemClickListener = { _, playlist ->
+            if (viewModel.clickDebounce()) {
+                startPlaylistFragment(playlist)
+            }
+        }
 
         viewModel.checkPlayListsInDb()
         viewModel.playLists().observe(viewLifecycleOwner){

@@ -15,10 +15,9 @@ import com.example.playlistmaker.databinding.PlaylistFragmentBinding
 import com.example.playlistmaker.domain.playlist.models.PlayList
 import com.example.playlistmaker.domain.search.models.Track
 import com.example.playlistmaker.presentation.ui.BindingFragment
-import com.example.playlistmaker.presentation.ui.library.fragments.LibraryFavoriteFragment
-import com.example.playlistmaker.presentation.ui.main.MainActivity
 import com.example.playlistmaker.presentation.ui.playlist.TrackAdapterForPlaylist
 import com.example.playlistmaker.presentation.ui.playlist.view_model.PlaylistViewModel
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.io.File
 import java.text.SimpleDateFormat
@@ -30,15 +29,6 @@ class PlaylistFragment : BindingFragment<PlaylistFragmentBinding>() {
 
     private lateinit var playlist: PlayList
     private lateinit var adapter: TrackAdapterForPlaylist
-
-    //плэйлист надо завязать на лайфдате
-
-
-    private val onClick: (track: Track) -> Unit = {
-        if (viewModel.clickDebounce()) {
-            startPlayerActivity(it)
-        }
-    }
 
     override fun createBinding(
         inflater: LayoutInflater,
@@ -55,10 +45,33 @@ class PlaylistFragment : BindingFragment<PlaylistFragmentBinding>() {
 
         showRecyclerViewOrMessageError()
 
-        adapter = TrackAdapterForPlaylist(playlist.tracks, onClick)
+        adapter = TrackAdapterForPlaylist(playlist.tracks)
         binding.rvTracksList.adapter = adapter
 
+        viewModel.updatePlaylist(playlist.id)
 
+        viewModel.playlist().observe(viewLifecycleOwner){
+            writeDataInFragment(it)
+        }
+
+        adapter.itemClickListener = { _, track ->
+            if (viewModel.clickDebounce()) {
+                startPlayerActivity(track)
+            }
+        }
+
+        adapter.itemLongClickListener = { _, track ->
+            val dialog = MaterialAlertDialogBuilder(requireContext()).apply {
+                setTitle("Удалить трек?")
+                setMessage("Вы уверены, что хотите удалить трек из плейлиста?")
+                setPositiveButton("Удалить") { _, _ ->
+                    viewModel.deleteTrackFromPlaylist(track)
+                }
+                setNegativeButton(getString(R.string.cancel)) { _, _ ->
+                }
+            }
+            dialog.show()
+        }
 
         binding.ivButtonBack.setOnClickListener {
             findNavController().navigateUp()
