@@ -1,6 +1,6 @@
 package com.example.playlistmaker.domain.db
 
-import com.example.playlistmaker.domain.playlist.PlayList
+import com.example.playlistmaker.domain.playlist.models.PlayList
 import com.example.playlistmaker.domain.search.models.Track
 import kotlinx.coroutines.flow.Flow
 

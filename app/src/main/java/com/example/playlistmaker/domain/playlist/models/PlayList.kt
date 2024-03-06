@@ -1,4 +1,4 @@
-package com.example.playlistmaker.domain.playlist
+package com.example.playlistmaker.domain.playlist.models
 
 import android.os.Parcelable
 import com.example.playlistmaker.domain.search.models.Track

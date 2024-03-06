@@ -96,7 +96,7 @@ class LibraryFavoriteFragment : BindingFragment<LibraryFavoriteFragmentBinding>(
 
         val bundle = Bundle()
         bundle.putParcelable(LibraryFavoriteFragment.TRACK_KEY, track)
-        findNavController().navigate( R.id.action_libraryFragment_to_playerFragment, bundle)
+        findNavController().navigate(R.id.action_libraryFragment_to_playerFragment, bundle)
     }
 
     companion object {

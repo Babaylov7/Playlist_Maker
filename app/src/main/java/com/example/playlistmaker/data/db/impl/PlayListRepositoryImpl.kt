@@ -4,7 +4,7 @@ import com.example.playlistmaker.data.converters.PlayListDbConvertor
 import com.example.playlistmaker.data.db.AppDatabase
 import com.example.playlistmaker.data.db.entity.PlayListEntity
 import com.example.playlistmaker.domain.db.PlayListRepository
-import com.example.playlistmaker.domain.playlist.PlayList
+import com.example.playlistmaker.domain.playlist.models.PlayList
 import com.example.playlistmaker.domain.search.models.Track
 import com.google.gson.Gson
 import kotlinx.coroutines.flow.Flow

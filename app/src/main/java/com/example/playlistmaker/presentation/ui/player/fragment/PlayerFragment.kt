@@ -14,7 +14,7 @@ import com.example.playlistmaker.domain.search.models.Track
 import com.example.playlistmaker.databinding.PlayerFragmentBinding
 import com.example.playlistmaker.domain.player.models.MediaPlayerStatus
 import com.example.playlistmaker.domain.player.models.PlayerProgressStatus
-import com.example.playlistmaker.domain.playlist.PlayList
+import com.example.playlistmaker.domain.playlist.models.PlayList
 import com.example.playlistmaker.presentation.isNightModeOn
 import com.example.playlistmaker.presentation.ui.player.PlayListAdapterForBottomSheet
 import com.example.playlistmaker.presentation.ui.player.view_model.PlayerViewModel

@@ -14,36 +14,37 @@ import com.example.playlistmaker.domain.settings.SavedSettingsInteractor
 import com.example.playlistmaker.domain.settings.impl.SavedSettingsInteractorImpl
 import com.example.playlistmaker.domain.sharing.SharingInteractor
 import com.example.playlistmaker.domain.sharing.impl.SharingInteractorImpl
+import org.koin.core.qualifier.named
 import org.koin.dsl.module
 
 val interactorModule = module {
 
-    factory<TrackInteractor> {
+    factory<TrackInteractor>(named(TRACK_INTERACTOR)) {
         TrackInteractorImpl(get())
     }
 
-    single<SearchHistoryInteractor> {
+    single<SearchHistoryInteractor>(named(SEARCH_HISTORY_INTERACTOR)) {
         SearchHistoryInteractorImpl(get())
     }
 
-    factory<MediaPlayerInteractor> {
+    factory<MediaPlayerInteractor>(named(MEDIA_PLAYER_INTERACTOR)) {
         MediaPlayerInteractorImpl(get())
     }
 
-    factory<SavedSettingsInteractor> {
+    factory<SavedSettingsInteractor>(named(SAVED_SETTINGS_INTERACTOR)) {
         SavedSettingsInteractorImpl(get())
     }
 
-    factory<SharingInteractor> {
+    factory<SharingInteractor>(named(SHARING_INTERACTOR)) {
         SharingInteractorImpl(get())
     }
 
     //Database
-    single<FavoriteTracksInteractor>{
+    single<FavoriteTracksInteractor>(named(FAVORITE_TRACKS_INTERACTOR)){
         FavoriteTracksInteractorImpl(get())
     }
 
-    single<PlayListInteractor>{
+    single<PlayListInteractor>(named(PLAY_LIST_INTERACTOR)){
         PlayListInteractorImpl(get())
     }
 }

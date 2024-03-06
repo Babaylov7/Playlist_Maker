@@ -5,22 +5,21 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.playlistmaker.R
 import com.example.playlistmaker.domain.search.models.Track
-import com.example.playlistmaker.presentation.ui.search.track.TrackViewHolder
 
 class TrackAdapterForPlaylist(
     private val tracks: List<Track>,
     private val listener: (Track) -> Unit
-): RecyclerView.Adapter<TrackViewHolder>()  {
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TrackViewHolder {
+): RecyclerView.Adapter<TrackViewHolderForPlaylist>()  {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TrackViewHolderForPlaylist {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.track_item, parent, false)
-        return TrackViewHolder(view)
+        return TrackViewHolderForPlaylist(view)
     }
 
     override fun getItemCount(): Int {
         return tracks.size
     }
 
-    override fun onBindViewHolder(holder: TrackViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: TrackViewHolderForPlaylist, position: Int) {
         holder.bind(tracks[position])
         holder.itemView.setOnClickListener {
             listener.invoke(tracks[position])

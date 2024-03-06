@@ -10,13 +10,12 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.bumptech.glide.Glide
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.LibraryPlaylistsFragmentBinding
-import com.example.playlistmaker.domain.playlist.PlayList
+import com.example.playlistmaker.domain.playlist.models.PlayList
 import com.example.playlistmaker.presentation.isNightModeOn
 import com.example.playlistmaker.presentation.ui.BindingFragment
 import com.example.playlistmaker.presentation.ui.library.PlayListAdapter
 import com.example.playlistmaker.presentation.ui.library.view_model.LibraryPlaylistsViewModel
 import com.example.playlistmaker.presentation.ui.main.MainActivity
-import com.example.playlistmaker.presentation.ui.search.fragment.SearchFragment
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class LibraryPlaylistsFragment: BindingFragment<LibraryPlaylistsFragmentBinding>() {

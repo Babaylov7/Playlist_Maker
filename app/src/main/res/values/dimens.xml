@@ -13,6 +13,7 @@
     <dimen name="padding24">24dp</dimen>
     <dimen name="margin_top_24">24dp</dimen>
     <dimen name="padding28">28dp</dimen>
+    <dimen name="padding32">32dp</dimen>
     <dimen name="edit_text_height">36dp</dimen>
     <dimen name="height40">40dp</dimen>
     <dimen name="album_image_size">45dp</dimen>
