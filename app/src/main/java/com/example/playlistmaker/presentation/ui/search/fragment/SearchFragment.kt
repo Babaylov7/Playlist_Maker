@@ -46,18 +46,18 @@ class SearchFragment : BindingFragment<SearchFragmentBinding>() {
         adapterSearch = TrackAdapter(tracks)
         adapterHistory = TrackAdapter(viewModel.tracksHistory().value!!)
 
-        adapterSearch.itemClickListener = { _, track ->
+        adapterSearch.itemClickListener = { track ->
             if (viewModel.clickDebounce()) {
                 viewModel.addTrackInSearchHistory(track)
                 adapterHistory.notifyDataSetChanged()
                 startPlayerFragment(track)
             }
         }
-        adapterHistory.itemClickListener = { _, track ->
+        adapterHistory.itemClickListener = { track ->
             if (viewModel.clickDebounce()) {
                 viewModel.addTrackInSearchHistory(track)
                 adapterHistory.notifyDataSetChanged()
-                startPlayerFragment(track)
+                44
             }
         }
 

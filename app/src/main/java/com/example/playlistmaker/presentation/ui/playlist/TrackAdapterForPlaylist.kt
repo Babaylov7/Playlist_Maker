@@ -11,8 +11,8 @@ class TrackAdapterForPlaylist(
     private val tracks: List<Track>
 ): RecyclerView.Adapter<TrackViewHolderForPlaylist>()  {
 
-    var itemClickListener: ((Int, Track) -> Unit)? = null
-    var itemLongClickListener: ((Int, Track) -> Unit)? = null
+    var itemClickListener: ((Track) -> Unit)? = null
+    var itemLongClickListener: ((Track) -> Unit)? = null
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TrackViewHolderForPlaylist {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.track_item, parent, false)
         return TrackViewHolderForPlaylist(view)
@@ -26,11 +26,11 @@ class TrackAdapterForPlaylist(
         holder.bind(tracks[position])
 
         holder.itemView.setOnClickListener {
-            itemClickListener?.invoke(position, tracks[position])
+            itemClickListener?.invoke(tracks[position])
         }
 
         holder.itemView.setOnLongClickListener(View.OnLongClickListener {
-            itemLongClickListener?.invoke(position, tracks[position])
+            itemLongClickListener?.invoke(tracks[position])
             return@OnLongClickListener true
         })
     }

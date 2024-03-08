@@ -26,8 +26,8 @@ import java.util.Locale
 class PlaylistFragment : BindingFragment<PlaylistFragmentBinding>() {
 
     private val viewModel by viewModel<PlaylistViewModel>()
+    private val tracks: ArrayList<Track> = ArrayList<Track>()
 
-    private lateinit var playlist: PlayList
     private lateinit var adapter: TrackAdapterForPlaylist
 
     override fun createBinding(
@@ -39,28 +39,27 @@ class PlaylistFragment : BindingFragment<PlaylistFragmentBinding>() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        playlist = arguments?.getParcelable<PlayList>(PLAYLIST_KEY) as PlayList
-        writeDataInFragment(playlist)
-
-        showRecyclerViewOrMessageError()
-
-        adapter = TrackAdapterForPlaylist(playlist.tracks)
+        adapter = TrackAdapterForPlaylist(tracks)
         binding.rvTracksList.adapter = adapter
 
-        viewModel.updatePlaylist(playlist.id)
+        val playlistId = arguments?.getInt(PLAYLIST_KEY_ID)
+        viewModel.updatePlaylist(playlistId!!)
 
         viewModel.playlist().observe(viewLifecycleOwner){
+            tracks.clear()
+            tracks.addAll(it.tracks)
             writeDataInFragment(it)
+            showRecyclerViewOrMessageError(tracks)
+            adapter.notifyDataSetChanged()
         }
 
-        adapter.itemClickListener = { _, track ->
+        adapter.itemClickListener = { track ->
             if (viewModel.clickDebounce()) {
-                startPlayerActivity(track)
+                startPlayerFragment(track)
             }
         }
 
-        adapter.itemLongClickListener = { _, track ->
+        adapter.itemLongClickListener = { track ->
             val dialog = MaterialAlertDialogBuilder(requireContext()).apply {
                 setTitle("Удалить трек?")
                 setMessage("Вы уверены, что хотите удалить трек из плейлиста?")
@@ -82,7 +81,6 @@ class PlaylistFragment : BindingFragment<PlaylistFragmentBinding>() {
         viewModel.onDestroy()
         super.onDestroyView()
     }
-
 
     private fun writeDataInFragment(playlist: PlayList) {
         binding.tvPlaylistName.text = playlist.playlistName
@@ -113,12 +111,12 @@ class PlaylistFragment : BindingFragment<PlaylistFragmentBinding>() {
         )
     }
 
-    private fun showRecyclerViewOrMessageError() {
-        binding.tvEmptyList.isVisible = playlist.tracks.isEmpty()
-        binding.rvTracksList.isVisible = playlist.tracks.isNotEmpty()
+    private fun showRecyclerViewOrMessageError(tracks: ArrayList<Track>) {
+        binding.tvEmptyList.isVisible = tracks.isEmpty()
+        binding.rvTracksList.isVisible = tracks.isNotEmpty()
     }
 
-    private fun startPlayerActivity(track: Track) {              //Запустили активити с плеером
+    private fun startPlayerFragment(track: Track) {              //Запустили активити с плеером
         val bundle = Bundle()
         bundle.putParcelable(TRACK_KEY, track)
         findNavController().navigate(R.id.action_playlistFragment_to_playerFragment2, bundle)
@@ -126,7 +124,7 @@ class PlaylistFragment : BindingFragment<PlaylistFragmentBinding>() {
 
 
     companion object {
-        private const val PLAYLIST_KEY = "playlist"
+        private const val PLAYLIST_KEY_ID = "playlistId"
         private const val DIRECTORY = "album_images"
         private const val TRACK_KEY = "track"
     }

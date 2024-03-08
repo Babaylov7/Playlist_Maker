@@ -37,7 +37,7 @@ class LibraryFavoriteFragment : BindingFragment<LibraryFavoriteFragmentBinding>(
         viewModel.onCreate()
         binding.rvFavoriteTracks.adapter = adapter
 
-        adapter.itemClickListener = { _, track ->
+        adapter.itemClickListener = { track ->
             if (viewModel.clickDebounce()) {
                 startPlayerActivity(track)
             }

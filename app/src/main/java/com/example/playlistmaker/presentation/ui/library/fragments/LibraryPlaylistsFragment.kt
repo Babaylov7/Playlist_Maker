@@ -100,13 +100,13 @@ class LibraryPlaylistsFragment: BindingFragment<LibraryPlaylistsFragmentBinding>
         (activity as? MainActivity)?.hideNavBar()
 
         val bundle = Bundle()
-        bundle.putParcelable(PLAYLIST_KEY, playlist)
+        bundle.putInt(PLAYLIST_KEY_ID, playlist.id)
         findNavController().navigate( R.id.action_libraryFragment_to_playlistFragment, bundle)
     }
 
     companion object{
         fun newInstance() = LibraryPlaylistsFragment()
-        private const val PLAYLIST_KEY = "playlist"
+        private const val PLAYLIST_KEY_ID = "playlistId"
     }
 
 }
