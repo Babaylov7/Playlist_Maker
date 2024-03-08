@@ -44,6 +44,11 @@ class LibraryPlaylistsViewModel(
         return current
     }
 
+    fun onDestroy() {
+        clickJob?.cancel()
+        isClickAllowed = true
+    }
+
     private companion object {
         private const val CLICK_DEBOUNCE_DELAY_MILLIS = 1000L
     }

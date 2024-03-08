@@ -23,7 +23,17 @@ class PlaylistViewModel(
     private val _playlist: MutableLiveData<PlayList> = MutableLiveData<PlayList>()
     fun playlist(): LiveData<PlayList> = _playlist
 
-    fun deleteTrackFromPlaylist(track: Track){
+    fun deleteTrackFromPlaylist(track: Track) {
+        val arrayOfTracks = _playlist.value?.tracks
+        arrayOfTracks!!.remove(track)
+        viewModelScope.launch {
+            playListInteractor.updateTracks(
+                _playlist.value?.id!!,
+                arrayOfTracks,
+                _playlist.value?.tracksCount?.minus(1) ?: 0
+            )
+            updatePlaylist(_playlist.value?.id!!)
+        }
 
     }
 
@@ -37,14 +47,16 @@ class PlaylistViewModel(
             }
         }
         return current
+        //return true
     }
 
     fun onDestroy() {
         clickJob?.cancel()
         dbJob?.cancel()
+        isClickAllowed = true
     }
 
-    fun updatePlaylist(id: Int){
+    fun updatePlaylist(id: Int) {
         viewModelScope.launch {
             playListInteractor
                 .getPlaylist(id)

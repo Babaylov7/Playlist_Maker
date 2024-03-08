@@ -49,6 +49,7 @@ class LibraryFavoriteViewModel(
     fun onDestroy() {
         clickJob?.cancel()
         dbJob?.cancel()
+        isClickAllowed = true
     }
 
     private companion object {

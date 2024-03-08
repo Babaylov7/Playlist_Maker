@@ -122,11 +122,9 @@ class PlaylistFragment : BindingFragment<PlaylistFragmentBinding>() {
         findNavController().navigate(R.id.action_playlistFragment_to_playerFragment2, bundle)
     }
 
-
     companion object {
         private const val PLAYLIST_KEY_ID = "playlistId"
         private const val DIRECTORY = "album_images"
         private const val TRACK_KEY = "track"
     }
-
 }

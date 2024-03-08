@@ -24,7 +24,6 @@ class PlayerViewModel(
 ) :
     ViewModel() {
     private var updateTimeOfPlayJob: Job? = null
-    private var favoriteButtonJob: Job? = null
     private var addTrackInDb: Job? = null
     private var deleteTrackFromDb: Job? = null
 
@@ -59,7 +58,6 @@ class PlayerViewModel(
 
     fun destroyMediaPlayer() {
         updateTimeOfPlayJob?.cancel()
-        favoriteButtonJob?.cancel()
         addTrackInDb?.cancel()
         deleteTrackFromDb?.cancel()
         mediaPlayerInteractor.destroyPlayer()

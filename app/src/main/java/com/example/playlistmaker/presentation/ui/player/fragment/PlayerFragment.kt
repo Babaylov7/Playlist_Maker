@@ -80,7 +80,6 @@ class PlayerFragment : Fragment() {
 
         binding!!.ibButtonQueue.setOnClickListener {
             showBottomSheet()
-            //changeButtonQueueImage()
         }
 
         binding!!.ivButtonFavorite.setOnClickListener {
@@ -200,15 +199,15 @@ class PlayerFragment : Fragment() {
 
     }
 
-    private fun changeButtonQueueImage() {
-        if (trackAddInQueue) {
-            trackAddInQueue = false
-            binding!!.ibButtonQueue.setImageResource(R.drawable.button_queue)
-        } else {
-            trackAddInQueue = true
-            binding!!.ibButtonQueue.setImageResource(R.drawable.button_add_in_queue)
-        }
-    }
+//    private fun changeButtonQueueImage() {            //Большой вопрос о необходимости из-за макетов предыдущих спринтов
+//        if (trackAddInQueue) {
+//            trackAddInQueue = false
+//            binding!!.ibButtonQueue.setImageResource(R.drawable.button_queue)
+//        } else {
+//            trackAddInQueue = true
+//            binding!!.ibButtonQueue.setImageResource(R.drawable.button_add_in_queue)
+//        }
+//    }
 
     private fun showErrorMassage() {
         StyleableToast.makeText(

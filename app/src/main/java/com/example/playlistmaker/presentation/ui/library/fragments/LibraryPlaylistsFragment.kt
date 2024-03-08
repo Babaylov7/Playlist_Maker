@@ -64,6 +64,10 @@ class LibraryPlaylistsFragment: BindingFragment<LibraryPlaylistsFragmentBinding>
         (activity as? MainActivity)?.showNawBar()
     }
 
+    override fun onDestroyView() {
+        viewModel.onDestroy()
+        super.onDestroyView()
+    }
 
     private fun showPlayLists(findPlayLists: List<PlayList>){
         if (findPlayLists.isEmpty()){

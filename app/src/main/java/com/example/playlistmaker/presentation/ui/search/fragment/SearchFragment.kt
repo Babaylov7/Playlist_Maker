@@ -101,7 +101,7 @@ class SearchFragment : BindingFragment<SearchFragmentBinding>() {
                 editTextValue = binding.editText.text.toString()
                 if (editTextValue.isEmpty()) {
                     changeStateWhenSearchBarIsEmpty()
-                    viewModel.removeCallbacks()
+                    viewModel.onDestroy()
 
                 } else {
                     viewModel.changeRequestText(binding.editText.text.toString())
@@ -138,7 +138,7 @@ class SearchFragment : BindingFragment<SearchFragmentBinding>() {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        viewModel.removeCallbacks()
+        viewModel.onDestroy()
     }
 
     private fun startPlayerFragment(track: Track) {              //Запустили активити с плеером
