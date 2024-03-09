@@ -8,7 +8,7 @@ interface PlayListInteractor {
 
     suspend fun insertPlaylist(playList: PlayList)
 
-//    suspend fun deletePlayList(id: Int)
+    suspend fun deletePlayList(id: Int)
 
     fun getPlayLists(): Flow<List<PlayList>>
 

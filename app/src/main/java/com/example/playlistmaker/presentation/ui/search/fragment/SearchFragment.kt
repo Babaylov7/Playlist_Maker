@@ -57,7 +57,7 @@ class SearchFragment : BindingFragment<SearchFragmentBinding>() {
             if (viewModel.clickDebounce()) {
                 viewModel.addTrackInSearchHistory(track)
                 adapterHistory.notifyDataSetChanged()
-                44
+                startPlayerFragment(track)
             }
         }
 

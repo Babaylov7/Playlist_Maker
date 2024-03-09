@@ -1,4 +1,4 @@
-package com.example.playlistmaker.presentation.ui.player
+package com.example.playlistmaker.presentation.ui.playlist
 
 import android.os.Environment
 import android.view.View
@@ -11,7 +11,7 @@ import com.example.playlistmaker.R
 import com.example.playlistmaker.domain.playlist.models.PlayList
 import java.io.File
 
-class PlayListViewHolderForBottomSheet (itemView: View) : RecyclerView.ViewHolder(itemView) {
+class PlaylistViewHolderForPlaylist (itemView: View) : RecyclerView.ViewHolder(itemView) {
 
     private val playlistImage: ImageView = itemView.findViewById(R.id.iv_playlist_image)
     private val playlistName: TextView = itemView.findViewById(R.id.tv_playlist_name)

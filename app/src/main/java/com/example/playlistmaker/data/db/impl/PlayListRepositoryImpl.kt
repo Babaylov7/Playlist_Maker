@@ -19,9 +19,9 @@ class PlayListRepositoryImpl(
         appDatabase.playListDao().insertPlaylist(playListEntity)
     }
 
-//    override suspend fun deletePlayList(id: Int) {
-//        appDatabase.playListDao().deletePlayList(id)
-//    }
+    override suspend fun deletePlayList(id: Int) {
+        appDatabase.playListDao().deletePlayList(id)
+    }
 
     override fun getPlayLists(): Flow<List<PlayList>> = flow {
         val playLists = appDatabase.playListDao().getPlayLists()

@@ -5,16 +5,19 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.playlistmaker.domain.db.PlayListInteractor
+import com.example.playlistmaker.domain.playlist.PlaylistSharingInteractor
 import com.example.playlistmaker.domain.playlist.models.PlayList
 import com.example.playlistmaker.domain.search.models.Track
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 class PlaylistViewModel(
-    private val playListInteractor: PlayListInteractor
-
+    private val playListInteractor: PlayListInteractor,
+    private val playlistSharingInteractor: PlaylistSharingInteractor
 ) : ViewModel() {
     private var isClickAllowed = true
     private var clickJob: Job? = null
@@ -34,7 +37,6 @@ class PlaylistViewModel(
             )
             updatePlaylist(_playlist.value?.id!!)
         }
-
     }
 
     fun clickDebounce(): Boolean {
@@ -47,7 +49,6 @@ class PlaylistViewModel(
             }
         }
         return current
-        //return true
     }
 
     fun onDestroy() {
@@ -63,6 +64,37 @@ class PlaylistViewModel(
                 .collect { result ->
                     _playlist.postValue(result)
                 }
+        }
+    }
+
+    fun sharePlaylist(count: String) {
+        val playlistInfo = getPlaylistInfo(count)
+        playlistSharingInteractor.shareTrackList(playlistInfo)
+    }
+
+    private fun getPlaylistInfo(count: String): String {
+        val name = _playlist.value!!.playlistName + "\n"
+        val description =
+            if (_playlist.value!!.playlistDescription.isNullOrEmpty()) "" else _playlist.value!!.playlistDescription + "\n"
+        val tracksCount = _playlist.value!!.tracksCount.toString() + " " + count + "\n"
+        var counter = 0
+        var tracksInfo = ""
+        _playlist.value!!.tracks.forEach { track ->
+            counter++
+            tracksInfo += counter.toString() + ". " + track.artistName + " - " + track.trackName + " (" + SimpleDateFormat(
+                "mm:ss",
+                Locale.getDefault()
+            ).format(track.trackTimeMillis) + ")"
+            if (counter != _playlist.value!!.tracksCount) {
+                tracksInfo += "\n"
+            }
+        }
+        return name + description + tracksCount + tracksInfo
+    }
+
+    fun deletePlaylist() {
+        viewModelScope.launch {
+            playListInteractor.deletePlayList(_playlist.value!!.id)
         }
     }
 

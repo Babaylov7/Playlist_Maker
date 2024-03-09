@@ -12,8 +12,8 @@ interface PlayListDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)                //Добавить плейлист
     suspend fun insertPlaylist(playlist: PlayListEntity)
 
-//    @Query("DELETE FROM playlists_table WHERE id = :idPlayList")   //Удалить плейлист по id
-//    suspend fun deletePlayList(idPlayList: Int)
+    @Query("DELETE FROM playlists_table WHERE id = :idPlayList")   //Удалить плейлист по id
+    suspend fun deletePlayList(idPlayList: Int)
 
     @Query("SELECT * FROM playlists_table")      //Получить сущность
     suspend fun getPlayLists(): List<PlayListEntity>

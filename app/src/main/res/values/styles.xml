@@ -171,6 +171,10 @@
         <item name="android:textColor">@color/black</item>
     </style>
 
+    <style name="bottom_sheet_title_style2">
+        <item name="android:textColor">@color/yp_text_gray</item>
+    </style>
+
     <style name="bottom_sheet_style">
         <item name="android:backgroundTint">@color/white</item>
     </style>

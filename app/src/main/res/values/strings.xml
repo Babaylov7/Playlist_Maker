@@ -73,6 +73,12 @@
         <item quantity="other">минут</item>
     </plurals>
     <string name="playlist_is_empty">В плейлист еще не добавлен\nни один трек</string>
+    <string name="del_track">Удалить трек?</string>
+    <string name="del_track_qestion">Вы уверены, что хотите удалить трек из плейлиста?</string>
+    <string name="del">Удалить</string>
+    <string name="share">Поделиться</string>
+    <string name="edit_inf">Редактировать информацию</string>
+    <string name="del_playlist">Удалить плейлист</string>
 
 </resources>
 

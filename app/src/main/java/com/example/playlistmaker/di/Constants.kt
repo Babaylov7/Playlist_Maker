@@ -15,6 +15,7 @@ const val TRACK_DB_CONVERTOR = "track_db_convertor"
 const val PLAYLIST_DB_CONVERTOR = "play_list_db_convertor"
 const val MEDIA_PLAYER = "media_player"
 const val NETWORK_CLIENT = "network_client"
+const val PLAYLIST_SHARING_INTERACTOR = "playlist_sharing_interactor"
 
 
 

@@ -60,7 +60,8 @@ val activityModule = module {
 
     viewModel {
         PlaylistViewModel(
-            get(named(PLAY_LIST_INTERACTOR))
+            get(named(PLAY_LIST_INTERACTOR)),
+            get(named(PLAYLIST_SHARING_INTERACTOR))
         )
     }
 }

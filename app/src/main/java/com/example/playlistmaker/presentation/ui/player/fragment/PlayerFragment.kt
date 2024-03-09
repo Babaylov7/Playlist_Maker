@@ -196,7 +196,6 @@ class PlayerFragment : Fragment() {
 
     private fun showBottomSheet() {
         BottomSheetBehavior.from(binding!!.playlistsBottomSheet).state = BottomSheetBehavior.STATE_COLLAPSED
-
     }
 
 //    private fun changeButtonQueueImage() {            //Большой вопрос о необходимости из-за макетов предыдущих спринтов

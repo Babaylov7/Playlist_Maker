@@ -137,9 +137,9 @@
         android:orientation="vertical"
         android:foreground="?android:attr/selectableItemBackground"
         app:behavior_hideable="false"
-        app:behavior_peekHeight="170dp"
+        app:behavior_peekHeight="@dimen/padding170"
         app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
-        tools:visibility="visible">
+        tools:visibility="gone">
 
         <View
             android:layout_width="40dp"
@@ -169,6 +169,85 @@
             android:orientation="vertical"
             android:paddingTop="@dimen/padding8"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/menu_bottom_sheet"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@style/bottom_sheet_style"
+        android:background="@drawable/bottom_sheet_bg"
+        android:orientation="vertical"
+        android:foreground="?android:attr/selectableItemBackground"
+        app:behavior_hideable="true"
+        app:behavior_peekHeight="auto"
+        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
+        tools:visibility="visible">
+
+        <View
+            android:layout_width="40dp"
+            android:layout_height="4dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/rounder"/>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_album"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="@dimen/padding8"
+            android:paddingHorizontal="@dimen/padding16"
+            android:clickable="true"
+            android:orientation="vertical"
+            android:paddingTop="@dimen/padding8"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            tools:visibility="gone"/>
+
+        <TextView
+            android:id="@+id/tv_share"
+            style="@style/MessageError"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="@dimen/padding16"
+            android:paddingHorizontal="@dimen/padding16"
+            android:fontFamily="@font/ys_display_medium"
+            android:textSize="@dimen/primary_text_size_19"
+            android:textAlignment="textStart"
+            android:text="@string/share"
+            android:paddingTop="@dimen/padding8"
+            android:paddingBottom="@dimen/padding8"/>
+
+        <TextView
+            android:id="@+id/tv_edit_inf"
+            style="@style/MessageError"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="@dimen/padding16"
+            android:paddingHorizontal="@dimen/padding16"
+            android:fontFamily="@font/ys_display_medium"
+            android:textSize="@dimen/primary_text_size_19"
+            android:textAlignment="textStart"
+            android:text="@string/edit_inf"
+            android:paddingTop="@dimen/padding8"
+            android:paddingBottom="@dimen/padding8"/>
+
+        <TextView
+            android:id="@+id/tv_delete_playlist"
+            style="@style/MessageError"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="@dimen/padding16"
+            android:paddingHorizontal="@dimen/padding16"
+            android:fontFamily="@font/ys_display_medium"
+            android:textSize="@dimen/primary_text_size_19"
+            android:textAlignment="textStart"
+            android:text="@string/del_playlist"
+            android:paddingTop="@dimen/padding8"
+            android:paddingBottom="@dimen/padding8"/>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/padding170"/>
 
     </LinearLayout>
 

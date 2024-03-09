@@ -41,4 +41,10 @@
     <string name="cancel">Cancel</string>
     <string name="add_to_playlist">Add to playlist</string>
     <string name="playlist_is_empty">No tracks have been added\\nto the playlist yet</string>
+    <string name="del_track">Delete track?</string>
+    <string name="del_track_qestion">Are you sure you want to remove the track from the playlist?</string>
+    <string name="del">Delete</string>
+    <string name="share">Share</string>
+    <string name="edit_inf">Edit information</string>
+    <string name="del_playlist">Delete playlist</string>
 </resources>
