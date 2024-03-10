@@ -79,6 +79,8 @@
     <string name="share">Поделиться</string>
     <string name="edit_inf">Редактировать информацию</string>
     <string name="del_playlist">Удалить плейлист</string>
+    <string name="save">Сохранить</string>
+    <string name="edit">Редактировать</string>
 
 </resources>
 

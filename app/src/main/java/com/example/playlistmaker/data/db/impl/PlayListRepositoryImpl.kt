@@ -38,6 +38,14 @@ class PlayListRepositoryImpl(
         emit(playListDbConvertor.map(playlist))
     }
 
+    override suspend fun updatePlaylistInfo(
+        idPlayList: Int,
+        playlistName: String,
+        playlistDescription: String
+    ) {
+        appDatabase.playListDao().updatePlaylistInfo(idPlayList, playlistName, playlistDescription)
+    }
+
     private fun convertFromPlayListEntity(playLists: List<PlayListEntity>) : List<PlayList> {
         return playLists.map { playList ->  playListDbConvertor.map(playList)}
     }

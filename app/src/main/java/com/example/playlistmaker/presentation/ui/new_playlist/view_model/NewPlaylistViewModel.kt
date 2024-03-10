@@ -6,7 +6,7 @@ import com.example.playlistmaker.domain.db.PlayListInteractor
 import com.example.playlistmaker.domain.playlist.models.PlayList
 import kotlinx.coroutines.launch
 
-class NewPlaylistViewModel(
+open class NewPlaylistViewModel(
     private val playListInteractor: PlayListInteractor
 ): ViewModel() {
 

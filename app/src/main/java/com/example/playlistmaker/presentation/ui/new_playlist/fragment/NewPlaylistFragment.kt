@@ -24,7 +24,7 @@ import java.io.File
 import java.io.FileOutputStream
 import java.util.Calendar
 
-class NewPlaylistFragment : BindingFragment<CreateNewPlaylistFragmentBinding>() {
+open class NewPlaylistFragment : BindingFragment<CreateNewPlaylistFragmentBinding>() {
 
     private val viewModel by viewModel<NewPlaylistViewModel>()
     private lateinit var dialog: MaterialAlertDialogBuilder

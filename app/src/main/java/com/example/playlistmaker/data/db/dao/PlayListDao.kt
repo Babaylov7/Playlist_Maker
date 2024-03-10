@@ -24,5 +24,6 @@ interface PlayListDao {
     @Query("SELECT * FROM playlists_table WHERE id = :idPlayList")
     suspend fun getPlaylist(idPlayList: Int): PlayListEntity
 
-
+    @Query("UPDATE playlists_table SET playList_name = :playlistName, playList_description = :playlistDescription WHERE id = :idPlayList")
+    suspend fun updatePlaylistInfo(idPlayList: Int, playlistName: String, playlistDescription: String)
 }

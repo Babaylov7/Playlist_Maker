@@ -120,9 +120,12 @@ class PlaylistFragment : BindingFragment<PlaylistFragmentBinding>() {
             handlingShareClick()
         }
 
+        binding.tvEditInf.setOnClickListener {
+            startPlaylistEditingFragment()
+        }
+
         binding.tvDeletePlaylist.setOnClickListener {
             MaterialAlertDialogBuilder(requireContext())
-                //.setTitle("Заголовок") // Заголовок диалога
                 .setMessage("Хотите удалить «${viewModel.playlist().value!!.playlistName}»?") // Описание диалога
                 .setNegativeButton("Нет") { dialog, which -> // Добавляет кнопку «Нет»
                 }
@@ -179,6 +182,12 @@ class PlaylistFragment : BindingFragment<PlaylistFragmentBinding>() {
         findNavController().navigate(R.id.action_playlistFragment_to_playerFragment2, bundle)
     }
 
+    private fun startPlaylistEditingFragment() {
+        val bundle = Bundle()
+        bundle.putInt(PLAYLIST_KEY, viewModel.playlist().value!!.id)
+        findNavController().navigate(R.id.action_playlistFragment_to_playlistEditingFragment, bundle)
+    }
+
     private fun showBottomSheet() {
         BottomSheetBehavior.from(binding.menuBottomSheet).state = BottomSheetBehavior.STATE_COLLAPSED
     }
@@ -201,5 +210,6 @@ class PlaylistFragment : BindingFragment<PlaylistFragmentBinding>() {
         private const val PLAYLIST_KEY_ID = "playlistId"
         private const val DIRECTORY = "album_images"
         private const val TRACK_KEY = "track"
+        private const val PLAYLIST_KEY = "playlist"
     }
 }

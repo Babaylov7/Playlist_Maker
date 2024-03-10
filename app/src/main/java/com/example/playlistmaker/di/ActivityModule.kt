@@ -4,6 +4,7 @@ import com.example.playlistmaker.presentation.ui.library.view_model.LibraryFavor
 import com.example.playlistmaker.presentation.ui.library.view_model.LibraryPlaylistsViewModel
 import com.example.playlistmaker.presentation.ui.library.view_model.LibraryViewModel
 import com.example.playlistmaker.presentation.ui.new_playlist.view_model.NewPlaylistViewModel
+import com.example.playlistmaker.presentation.ui.new_playlist.view_model.PlaylistEditingViewModel
 import com.example.playlistmaker.presentation.ui.player.view_model.PlayerViewModel
 import com.example.playlistmaker.presentation.ui.playlist.view_model.PlaylistViewModel
 import com.example.playlistmaker.presentation.ui.search.view_model.SearchViewModel
@@ -62,6 +63,12 @@ val activityModule = module {
         PlaylistViewModel(
             get(named(PLAY_LIST_INTERACTOR)),
             get(named(PLAYLIST_SHARING_INTERACTOR))
+        )
+    }
+
+    viewModel{
+        PlaylistEditingViewModel(
+            get(named(PLAY_LIST_INTERACTOR))
         )
     }
 }

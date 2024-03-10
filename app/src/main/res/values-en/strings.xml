@@ -47,4 +47,6 @@
     <string name="share">Share</string>
     <string name="edit_inf">Edit information</string>
     <string name="del_playlist">Delete playlist</string>
+    <string name="save">Save</string>
+    <string name="edit">Edit</string>
 </resources>

@@ -15,4 +15,6 @@ interface PlayListInteractor {
     suspend fun updateTracks(idPlayList: Int, tracks: ArrayList<Track>, tracksCount: Int)
 
     fun getPlaylist(idPlayList: Int): Flow<PlayList>
+
+    suspend fun updatePlaylistInfo(idPlayList: Int, playlistName: String, playlistDescription: String)
 }
