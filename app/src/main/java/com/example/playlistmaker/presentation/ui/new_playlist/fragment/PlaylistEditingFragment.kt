@@ -5,6 +5,8 @@ import android.os.Environment
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
+import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
@@ -53,6 +55,9 @@ class PlaylistEditingFragment(): NewPlaylistFragment() {
 
         binding.ivButtonBack.setOnClickListener {
             findNavController().navigateUp()
+        }
+
+        binding.ivAlbum.setOnClickListener {
         }
     }
 
