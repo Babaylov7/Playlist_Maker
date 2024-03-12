@@ -62,7 +62,10 @@ class SearchFragment : BindingFragment<SearchFragmentBinding>() {
         }
 
         viewModel.foundTracks().observe(viewLifecycleOwner) { it ->
-            processingSearchStatus(it)
+            if(binding.editText.text.isNotEmpty()){
+                processingSearchStatus(it)
+                adapterSearch.notifyDataSetChanged()
+            }
         }
 
         viewModel.tracksHistory().observe(viewLifecycleOwner) { it ->
@@ -218,6 +221,11 @@ class SearchFragment : BindingFragment<SearchFragmentBinding>() {
     private fun showAndHideHistoryLayout(action: Boolean) {
         binding.historyLayout.isVisible =
             action && viewModel.tracksHistory().value!!.isNotEmpty() && binding.editText.hasFocus()
+//        if (action && viewModel.tracksHistory().value!!.isNotEmpty() && binding.editText.hasFocus()) {
+//            binding.historyLayout.isVisible = true
+//        } else {
+//            binding.historyLayout.isVisible = false
+//        }
      }
 
     private fun processingSearchStatus(trackSearchResult: TrackSearchResult) {
