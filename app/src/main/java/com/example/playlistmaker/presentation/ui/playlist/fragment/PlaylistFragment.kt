@@ -55,7 +55,7 @@ class PlaylistFragment : BindingFragment<PlaylistFragmentBinding>() {
 
         viewModel.playlist().observe(viewLifecycleOwner){
             tracks.clear()
-            tracks.addAll(it.tracks)
+            tracks.addAll(it.tracks.reversed())
             playlistForBottomSheet.clear()
             playlistForBottomSheet.add(it)
             writeDataInFragment(it)
@@ -72,12 +72,12 @@ class PlaylistFragment : BindingFragment<PlaylistFragmentBinding>() {
 
         trackAdapter.itemLongClickListener = { track ->
             val dialog = MaterialAlertDialogBuilder(requireContext()).apply {
-                setTitle(getString(R.string.del_track))
-                setMessage(getString(R.string.del_track_qestion))
-                setPositiveButton(getString(R.string.del)) { _, _ ->
+                //setTitle(getString(R.string.del_track))
+                setMessage(getString(R.string.del_track))
+                setPositiveButton(getString(R.string.yes_caps)) { _, _ ->
                     viewModel.deleteTrackFromPlaylist(track)
                 }
-                setNegativeButton(getString(R.string.cancel)) { _, _ ->
+                setNegativeButton(getString(R.string.no_caps)) { _, _ ->
                 }
             }
             dialog.show()
@@ -126,10 +126,10 @@ class PlaylistFragment : BindingFragment<PlaylistFragmentBinding>() {
 
         binding.tvDeletePlaylist.setOnClickListener {
             MaterialAlertDialogBuilder(requireContext())
-                .setMessage("Хотите удалить «${viewModel.playlist().value!!.playlistName}»?") // Описание диалога
-                .setNegativeButton("Нет") { dialog, which -> // Добавляет кнопку «Нет»
+                .setMessage(getString(R.string.del_qestion) + viewModel.playlist().value!!.playlistName + "»?") // Описание диалога
+                .setNegativeButton(getString(R.string.no_caps)) { dialog, which -> // Добавляет кнопку «Нет»
                 }
-                .setPositiveButton("Да") { dialog, which -> // Добавляет кнопку «Да»
+                .setPositiveButton(getString(R.string.yes_caps)) { dialog, which -> // Добавляет кнопку «Да»
                     viewModel.deletePlaylist()
                     findNavController().navigateUp()
                 }
