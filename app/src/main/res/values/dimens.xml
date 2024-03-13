@@ -25,6 +25,7 @@
     <dimen name="button_switch_compat_width">56dp</dimen>
     <dimen name="height_panel_header">56dp</dimen>
     <dimen name="settings_element_height">60dp</dimen>
+    <dimen name="height64">64dp</dimen>
     <dimen name="margin_top_80">80dp</dimen>
     <dimen name="margin_top_108">108dp</dimen>
     <dimen name="padding170">170dp</dimen>

@@ -71,8 +71,7 @@ class PlaylistFragment : BindingFragment<PlaylistFragmentBinding>() {
         }
 
         trackAdapter.itemLongClickListener = { track ->
-            val dialog = MaterialAlertDialogBuilder(requireContext()).apply {
-                //setTitle(getString(R.string.del_track))
+            val dialog = MaterialAlertDialogBuilder(requireContext(), R.style.dialog_theme).apply {
                 setMessage(getString(R.string.del_track))
                 setPositiveButton(getString(R.string.yes_caps)) { _, _ ->
                     viewModel.deleteTrackFromPlaylist(track)
