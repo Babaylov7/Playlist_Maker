@@ -22,19 +22,26 @@
         <item name="android:textSize">@dimen/primary_text_size_19</item>
         <item name="android:height">@dimen/height64</item>
         <item name="android:windowBackground">@drawable/dialog_background</item>
-        <item name="buttonBarPositiveButtonStyle">@style/PositiveButtonStyle</item>
-        <item name="buttonBarNegativeButtonStyle">@style/NegativeButtonStyle</item>
+        <item name="materialAlertDialogBodyTextStyle">@style/custom_body_text_style</item>
+        <item name="buttonBarPositiveButtonStyle">@style/positive_button_style</item>
+        <item name="buttonBarNegativeButtonStyle">@style/negative_button_style</item>
     </style>
 
-    <style name="PositiveButtonStyle">
+    <style name="custom_body_text_style" parent="MaterialAlertDialog.MaterialComponents.Title.Text">
+        <item name="android:textColor">@color/yp_black</item>
+        <item name="android:textSize">@dimen/primary_text_size_19</item>
+    </style>
+
+    <style name="positive_button_style">
         <item name="android:textColor">@color/yp_blue</item>
         <item name="backgroundTint">@color/white</item>
     </style>
 
-    <style name="NegativeButtonStyle">
+    <style name="negative_button_style">
         <item name="android:textColor">@color/yp_blue</item>
         <item name="backgroundTint">@color/white</item>
     </style>
+
 
     <!-- Стили для Стартового экрана -->
 
