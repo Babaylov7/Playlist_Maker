@@ -124,7 +124,7 @@ class PlaylistFragment : BindingFragment<PlaylistFragmentBinding>() {
         }
 
         binding.tvDeletePlaylist.setOnClickListener {
-            MaterialAlertDialogBuilder(requireContext())
+            MaterialAlertDialogBuilder(requireContext(), R.style.dialog_theme)
                 .setMessage(getString(R.string.del_qestion) + viewModel.playlist().value!!.playlistName + "»?") // Описание диалога
                 .setNegativeButton(getString(R.string.no_caps)) { dialog, which -> // Добавляет кнопку «Нет»
                 }

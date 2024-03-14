@@ -16,12 +16,13 @@
     </style>
 
     <!-- Стиль для всплывающих окон -->
-    <style name="dialog_theme" parent="Theme.AppCompat.Light.Dialog.Alert">
+    <style name="dialog_theme" parent="ThemeOverlay.MaterialComponents.MaterialAlertDialog">
         <item name="android:background">@color/white</item>
         <item name="android:textColor">@color/yp_black</item>
         <item name="android:textSize">@dimen/primary_text_size_19</item>
         <item name="android:height">@dimen/height64</item>
         <item name="android:windowBackground">@drawable/dialog_background</item>
+        <item name="materialAlertDialogTitleTextStyle">@style/custom_body_text_style</item>
         <item name="materialAlertDialogBodyTextStyle">@style/custom_body_text_style</item>
         <item name="buttonBarPositiveButtonStyle">@style/positive_button_style</item>
         <item name="buttonBarNegativeButtonStyle">@style/negative_button_style</item>
