@@ -54,7 +54,7 @@
 
 
     <!-- Склонения слова "Трек" -->
-    <plurals name="plurals" translatable="false">
+    <plurals name="plurals_track" translatable="false">
         <item quantity="zero">треков</item>
         <item quantity="one">трек</item>
         <item quantity="two">трека</item>
@@ -62,6 +62,29 @@
         <item quantity="many">треков</item>
         <item quantity="other">треков</item>
     </plurals>
+
+    <!-- Склонения слова "Трек" -->
+    <plurals name="plurals_min" translatable="false">
+        <item quantity="zero">минут</item>
+        <item quantity="one">минута</item>
+        <item quantity="two">минуты</item>
+        <item quantity="few">минуты</item>
+        <item quantity="many">минут</item>
+        <item quantity="other">минут</item>
+    </plurals>
+    <string name="playlist_is_empty">В плейлист еще не добавлен\nни один трек</string>
+    <string name="del_track">Хотите удалить трек?</string>
+    <string name="del_track_qestion">Вы уверены, что хотите удалить трек из плейлиста?</string>
+    <string name="del">Удалить</string>
+    <string name="share">Поделиться</string>
+    <string name="edit_inf">Редактировать информацию</string>
+    <string name="del_playlist">Удалить плейлист</string>
+    <string name="save">Сохранить</string>
+    <string name="edit">Редактировать</string>
+    <string name="yes_caps">ДА</string>
+    <string name="no_caps">НЕТ</string>
+    <string name="del_qestion">Хотите удалить плейлист «</string>
+
 </resources>
 
 

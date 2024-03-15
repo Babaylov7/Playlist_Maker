@@ -23,12 +23,6 @@ class LibraryFavoriteFragment : BindingFragment<LibraryFavoriteFragmentBinding>(
     private lateinit var tracks: ArrayList<Track>
     private val viewModel by viewModel<LibraryFavoriteViewModel>()
 
-    private val onClick: (track: Track) -> Unit = {
-        if (viewModel.clickDebounce()) {
-            startPlayerActivity(it)
-        }
-    }
-
     override fun createBinding(
         inflater: LayoutInflater,
         container: ViewGroup?
@@ -39,9 +33,15 @@ class LibraryFavoriteFragment : BindingFragment<LibraryFavoriteFragmentBinding>(
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         tracks = ArrayList<Track>()
-        adapter = TrackAdapter(tracks, onClick)
+        adapter = TrackAdapter(tracks)
         viewModel.onCreate()
         binding.rvFavoriteTracks.adapter = adapter
+
+        adapter.itemClickListener = { track ->
+            if (viewModel.clickDebounce()) {
+                startPlayerActivity(track)
+            }
+        }
 
         viewModel.favoriteTracks().observe(viewLifecycleOwner) {
             showFavoriteTracksList(it)
@@ -96,7 +96,7 @@ class LibraryFavoriteFragment : BindingFragment<LibraryFavoriteFragmentBinding>(
 
         val bundle = Bundle()
         bundle.putParcelable(LibraryFavoriteFragment.TRACK_KEY, track)
-        findNavController().navigate( R.id.action_libraryFragment_to_playerFragment, bundle)
+        findNavController().navigate(R.id.action_libraryFragment_to_playerFragment, bundle)
     }
 
     companion object {

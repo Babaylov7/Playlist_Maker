@@ -1,7 +1,7 @@
 package com.example.playlistmaker.data.converters
 
 import com.example.playlistmaker.data.db.entity.PlayListEntity
-import com.example.playlistmaker.domain.playlist.PlayList
+import com.example.playlistmaker.domain.playlist.models.PlayList
 import com.example.playlistmaker.domain.search.models.Track
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken

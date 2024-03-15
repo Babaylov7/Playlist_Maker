@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.bumptech.glide.Glide
 import com.example.playlistmaker.R
 import com.example.playlistmaker.databinding.LibraryPlaylistsFragmentBinding
-import com.example.playlistmaker.domain.playlist.PlayList
+import com.example.playlistmaker.domain.playlist.models.PlayList
 import com.example.playlistmaker.presentation.isNightModeOn
 import com.example.playlistmaker.presentation.ui.BindingFragment
 import com.example.playlistmaker.presentation.ui.library.PlayListAdapter
@@ -25,11 +25,6 @@ class LibraryPlaylistsFragment: BindingFragment<LibraryPlaylistsFragmentBinding>
 
     private val viewModel by viewModel<LibraryPlaylistsViewModel>()
 
-    private val onClick: (playList: PlayList) -> Unit = {
-        if (viewModel.clickDebounce()) {
-           // startPlayerActivity(it)   думаю пригодится на следующем ДЗ
-        }
-    }
 
     override fun createBinding(
         inflater: LayoutInflater,
@@ -42,9 +37,15 @@ class LibraryPlaylistsFragment: BindingFragment<LibraryPlaylistsFragmentBinding>
         super.onViewCreated(view, savedInstanceState)
 
         playLists = ArrayList<PlayList>()
-        adapter = PlayListAdapter(playLists, onClick)
+        adapter = PlayListAdapter(playLists)
         binding.recyclerView.layoutManager = GridLayoutManager(requireContext(), 2)
         binding.recyclerView.adapter = adapter
+
+        adapter.itemClickListener = { _, playlist ->
+            if (viewModel.clickDebounce()) {
+                startPlaylistFragment(playlist)
+            }
+        }
 
         viewModel.checkPlayListsInDb()
         viewModel.playLists().observe(viewLifecycleOwner){
@@ -63,6 +64,10 @@ class LibraryPlaylistsFragment: BindingFragment<LibraryPlaylistsFragmentBinding>
         (activity as? MainActivity)?.showNawBar()
     }
 
+    override fun onDestroyView() {
+        viewModel.onDestroy()
+        super.onDestroyView()
+    }
 
     private fun showPlayLists(findPlayLists: List<PlayList>){
         if (findPlayLists.isEmpty()){
@@ -95,7 +100,17 @@ class LibraryPlaylistsFragment: BindingFragment<LibraryPlaylistsFragmentBinding>
         binding.tvMessageError.isVisible = false
     }
 
+    private fun startPlaylistFragment(playlist: PlayList){
+        (activity as? MainActivity)?.hideNavBar()
+
+        val bundle = Bundle()
+        bundle.putInt(PLAYLIST_KEY_ID, playlist.id)
+        findNavController().navigate( R.id.action_libraryFragment_to_playlistFragment, bundle)
+    }
+
     companion object{
         fun newInstance() = LibraryPlaylistsFragment()
+        private const val PLAYLIST_KEY_ID = "playlistId"
     }
+
 }

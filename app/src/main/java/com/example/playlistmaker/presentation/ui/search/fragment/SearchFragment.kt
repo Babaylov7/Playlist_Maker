@@ -32,14 +32,6 @@ class SearchFragment : BindingFragment<SearchFragmentBinding>() {
 
     private val viewModel by viewModel<SearchViewModel>()
 
-    private val onClick: (track: Track) -> Unit = {
-        if (viewModel.clickDebounce()) {
-            viewModel.addTrackInSearchHistory(it)
-            adapterHistory.notifyDataSetChanged()
-            startPlayerActivity(it)
-        }
-    }
-
     override fun createBinding(
         inflater: LayoutInflater,
         container: ViewGroup?
@@ -51,11 +43,29 @@ class SearchFragment : BindingFragment<SearchFragmentBinding>() {
         super.onViewCreated(view, savedInstanceState)
 
         tracks = ArrayList<Track>()
-        adapterSearch = TrackAdapter(tracks, onClick)
-        adapterHistory = TrackAdapter(viewModel.tracksHistory().value!!, onClick)
+        adapterSearch = TrackAdapter(tracks)
+        adapterHistory = TrackAdapter(viewModel.tracksHistory().value!!)
+
+        adapterSearch.itemClickListener = { track ->
+            if (viewModel.clickDebounce()) {
+                viewModel.addTrackInSearchHistory(track)
+                adapterHistory.notifyDataSetChanged()
+                startPlayerFragment(track)
+            }
+        }
+        adapterHistory.itemClickListener = { track ->
+            if (viewModel.clickDebounce()) {
+                viewModel.addTrackInSearchHistory(track)
+                adapterHistory.notifyDataSetChanged()
+                startPlayerFragment(track)
+            }
+        }
 
         viewModel.foundTracks().observe(viewLifecycleOwner) { it ->
-            processingSearchStatus(it)
+            if(binding.editText.text.isNotEmpty()){
+                processingSearchStatus(it)
+                adapterSearch.notifyDataSetChanged()
+            }
         }
 
         viewModel.tracksHistory().observe(viewLifecycleOwner) { it ->
@@ -87,14 +97,14 @@ class SearchFragment : BindingFragment<SearchFragmentBinding>() {
                 binding.clearButton.isVisible = !s.isNullOrEmpty()
                 binding.historyLayout.isVisible =
                     (binding.editText.hasFocus()         //Есть фокус
-                        && s?.isEmpty() == true             //Строка поиска пуста
-                        && viewModel.tracksHistory().value!!.isNotEmpty()       //Список треков не пустой
-                    )            //отображение Layout при изменении текста в строке поиска
+                            && s?.isEmpty() == true             //Строка поиска пуста
+                            && viewModel.tracksHistory().value!!.isNotEmpty()       //Список треков не пустой
+                            )            //отображение Layout при изменении текста в строке поиска
 
                 editTextValue = binding.editText.text.toString()
                 if (editTextValue.isEmpty()) {
                     changeStateWhenSearchBarIsEmpty()
-                    viewModel.removeCallbacks()
+                    viewModel.onDestroy()
 
                 } else {
                     viewModel.changeRequestText(binding.editText.text.toString())
@@ -131,16 +141,16 @@ class SearchFragment : BindingFragment<SearchFragmentBinding>() {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        viewModel.removeCallbacks()
+        viewModel.onDestroy()
     }
 
-    private fun startPlayerActivity(track: Track) {              //Запустили активити с плеером
+    private fun startPlayerFragment(track: Track) {              //Запустили активити с плеером
 
         (activity as? MainActivity)?.hideNavBar()
 
         val bundle = Bundle()
         bundle.putParcelable(TRACK_KEY, track)
-        findNavController().navigate( R.id.action_searchFragment_to_playerFragment, bundle)
+        findNavController().navigate(R.id.action_searchFragment_to_playerFragment, bundle)
 
     }
 
@@ -209,12 +219,14 @@ class SearchFragment : BindingFragment<SearchFragmentBinding>() {
     }
 
     private fun showAndHideHistoryLayout(action: Boolean) {
-        if (action && viewModel.tracksHistory().value!!.isNotEmpty() && binding.editText.hasFocus()) {
-            binding.historyLayout.isVisible = true
-        } else {
-            binding.historyLayout.isVisible = false
-        }
-    }
+        binding.historyLayout.isVisible =
+            action && viewModel.tracksHistory().value!!.isNotEmpty() && binding.editText.hasFocus()
+//        if (action && viewModel.tracksHistory().value!!.isNotEmpty() && binding.editText.hasFocus()) {
+//            binding.historyLayout.isVisible = true
+//        } else {
+//            binding.historyLayout.isVisible = false
+//        }
+     }
 
     private fun processingSearchStatus(trackSearchResult: TrackSearchResult) {
         tracks.clear()

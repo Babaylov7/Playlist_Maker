@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.playlistmaker.R
-import com.example.playlistmaker.domain.playlist.PlayList
+import com.example.playlistmaker.domain.playlist.models.PlayList
 import java.io.File
 
 class PlayListViewHolderForBottomSheet (itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -19,7 +19,7 @@ class PlayListViewHolderForBottomSheet (itemView: View) : RecyclerView.ViewHolde
 
     fun bind(model: PlayList) {
         playlistName.text = model.playlistName
-        tracksCount.text = model.tracksCount.toString() + " " + getWord(model.tracksCount)
+        tracksCount.text = model.tracksCount.toString() + " " + itemView.context.resources.getQuantityString(R.plurals.plurals_track, model.tracksCount)
 
         val filePath =
             File(itemView.context.getExternalFilesDir(Environment.DIRECTORY_PICTURES), DIRECTORY)
@@ -30,14 +30,6 @@ class PlayListViewHolderForBottomSheet (itemView: View) : RecyclerView.ViewHolde
             .centerCrop()
             .transform(RoundedCorners(itemView.resources.getDimensionPixelSize(R.dimen.corner_radius_2)))
             .into(playlistImage)
-    }
-
-
-    private fun getWord(count: Int): String {
-        if (count == 0) return itemView.context.getString(R.string.more_that_one_track_2)
-        if ((count >= 5) && (count <= 20)) return itemView.context.getString(R.string.more_that_one_track_2)
-        if (count % 10 == 1) return itemView.context.getString(R.string.one_track)
-        return itemView.context.getString(R.string.more_that_one_track_1)
     }
 
     companion object {

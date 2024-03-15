@@ -4,7 +4,7 @@ import com.example.playlistmaker.data.converters.PlayListDbConvertor
 import com.example.playlistmaker.data.db.AppDatabase
 import com.example.playlistmaker.data.db.entity.PlayListEntity
 import com.example.playlistmaker.domain.db.PlayListRepository
-import com.example.playlistmaker.domain.playlist.PlayList
+import com.example.playlistmaker.domain.playlist.models.PlayList
 import com.example.playlistmaker.domain.search.models.Track
 import com.google.gson.Gson
 import kotlinx.coroutines.flow.Flow
@@ -19,9 +19,9 @@ class PlayListRepositoryImpl(
         appDatabase.playListDao().insertPlaylist(playListEntity)
     }
 
-//    override suspend fun deletePlayList(id: Int) {
-//        appDatabase.playListDao().deletePlayList(id)
-//    }
+    override suspend fun deletePlayList(id: Int) {
+        appDatabase.playListDao().deletePlayList(id)
+    }
 
     override fun getPlayLists(): Flow<List<PlayList>> = flow {
         val playLists = appDatabase.playListDao().getPlayLists()
@@ -31,6 +31,19 @@ class PlayListRepositoryImpl(
     override suspend fun updateTracks(idPlayList: Int, tracks: ArrayList<Track>, tracksCount: Int) {
         val tracksForDb = createJsonFromTracks(tracks)
         appDatabase.playListDao().updateTracks(idPlayList, tracksForDb, tracksCount)
+    }
+
+    override fun getPlaylist(idPlayList: Int): Flow<PlayList> = flow {
+        val playlist = appDatabase.playListDao().getPlaylist(idPlayList)
+        emit(playListDbConvertor.map(playlist))
+    }
+
+    override suspend fun updatePlaylistInfo(
+        idPlayList: Int,
+        playlistName: String,
+        playlistDescription: String
+    ) {
+        appDatabase.playListDao().updatePlaylistInfo(idPlayList, playlistName, playlistDescription)
     }
 
     private fun convertFromPlayListEntity(playLists: List<PlayListEntity>) : List<PlayList> {

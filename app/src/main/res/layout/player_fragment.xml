@@ -60,6 +60,7 @@
             android:layout_height="0dp"
             android:layout_marginTop="@dimen/padding16"
             android:layout_marginBottom="@dimen/padding24"
+            android:layout_marginHorizontal="1dp"
             android:scaleType="centerCrop"
             app:layout_constraintBottom_toTopOf="@id/track_name"
             app:layout_constraintDimensionRatio="w, 1:1"
@@ -342,7 +343,8 @@
         android:foreground="?android:attr/selectableItemBackground"
         app:behavior_hideable="true"
         app:behavior_peekHeight="360dp"
-        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
+        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior"
+        tools:visibility="gone">
 
         <View
             android:layout_width="40dp"

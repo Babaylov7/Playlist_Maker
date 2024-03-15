@@ -13,6 +13,7 @@
     <dimen name="padding24">24dp</dimen>
     <dimen name="margin_top_24">24dp</dimen>
     <dimen name="padding28">28dp</dimen>
+    <dimen name="padding32">32dp</dimen>
     <dimen name="edit_text_height">36dp</dimen>
     <dimen name="height40">40dp</dimen>
     <dimen name="album_image_size">45dp</dimen>
@@ -24,14 +25,19 @@
     <dimen name="button_switch_compat_width">56dp</dimen>
     <dimen name="height_panel_header">56dp</dimen>
     <dimen name="settings_element_height">60dp</dimen>
+    <dimen name="height64">64dp</dimen>
     <dimen name="margin_top_80">80dp</dimen>
     <dimen name="margin_top_108">108dp</dimen>
+    <dimen name="padding170">170dp</dimen>
+    <dimen name="height280">280dp</dimen>
+    <dimen name="height300">300dp</dimen>
     <dimen name="primary_text_size_13">13sp</dimen>
     <dimen name="primary_text_size_14">14sp</dimen>
     <dimen name="primary_text_size_15">15sp</dimen>
     <dimen name="primary_text_size_16">16sp</dimen>
     <dimen name="primary_text_size_19">19sp</dimen>
     <dimen name="primary_text_size_22">22sp</dimen>
+    <dimen name="primary_text_size_24">24sp</dimen>
     <dimen name="primary_text_size_26">26sp</dimen>
 
 </resources>

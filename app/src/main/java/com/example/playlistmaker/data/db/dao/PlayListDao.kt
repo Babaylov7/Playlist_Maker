@@ -12,8 +12,8 @@ interface PlayListDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)                //Добавить плейлист
     suspend fun insertPlaylist(playlist: PlayListEntity)
 
-//    @Query("DELETE FROM playlists_table WHERE id = :idPlayList")   //Удалить плейлист по id
-//    suspend fun deletePlayList(idPlayList: Int)
+    @Query("DELETE FROM playlists_table WHERE id = :idPlayList")   //Удалить плейлист по id
+    suspend fun deletePlayList(idPlayList: Int)
 
     @Query("SELECT * FROM playlists_table")      //Получить сущность
     suspend fun getPlayLists(): List<PlayListEntity>
@@ -21,5 +21,9 @@ interface PlayListDao {
     @Query("UPDATE playlists_table SET tracks_id = :tracksId, tracks_count = :tracksCount  WHERE id = :idPlayList")     //Обновить список треков
     suspend fun updateTracks(idPlayList: Int, tracksId: String, tracksCount: Int)
 
+    @Query("SELECT * FROM playlists_table WHERE id = :idPlayList")
+    suspend fun getPlaylist(idPlayList: Int): PlayListEntity
 
+    @Query("UPDATE playlists_table SET playList_name = :playlistName, playList_description = :playlistDescription WHERE id = :idPlayList")
+    suspend fun updatePlaylistInfo(idPlayList: Int, playlistName: String, playlistDescription: String)
 }

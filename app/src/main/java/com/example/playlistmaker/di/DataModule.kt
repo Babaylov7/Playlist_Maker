@@ -34,22 +34,22 @@ val dataModule = module {
         )
     }
 
-    factory {
+    factory(named(MEDIA_PLAYER)) {
         MediaPlayer()
     }
 
-    factory<NetworkClient> {
+    factory<NetworkClient>(named(NETWORK_CLIENT)) {
         RetrofitNetworkClient(get())
     }
 
     //Database
-    single {
+    single(named(APP_DATABASE)) {
         Room.databaseBuilder(androidContext(), AppDatabase::class.java, "database.db").build()
     }
 
-    factory { TrackDbConvertor() }
+    factory(named(TRACK_DB_CONVERTOR)) { TrackDbConvertor() }
 
-    factory { PlayListDbConvertor() }
+    factory(named(PLAYLIST_DB_CONVERTOR)) { PlayListDbConvertor() }
 
 }
 

@@ -4,6 +4,7 @@ import com.example.playlistmaker.data.converters.TrackDbConvertor
 import com.example.playlistmaker.data.db.impl.FavoriteTracksRepositoryImpl
 import com.example.playlistmaker.data.db.impl.PlayListRepositoryImpl
 import com.example.playlistmaker.data.player.network.impl.MediaPlayerRepositoryImpl
+import com.example.playlistmaker.data.playlist.impl.PlaylistSharingRepositoryImpl
 import com.example.playlistmaker.data.search.local.impl.SearchHistoryRepositoryImpl
 import com.example.playlistmaker.data.search.network.impl.TrackRepositoryImpl
 import com.example.playlistmaker.data.settings.impl.SavedSettingsRepositoryImpl
@@ -12,6 +13,7 @@ import com.example.playlistmaker.domain.db.FavoriteTracksRepository
 import com.example.playlistmaker.domain.db.PlayListRepository
 import com.example.playlistmaker.domain.player.MediaPlayerRepository
 import com.example.playlistmaker.domain.player.models.MediaPlayerStatus
+import com.example.playlistmaker.domain.playlist.PlaylistSharingRepository
 import com.example.playlistmaker.domain.search.SearchHistoryRepository
 import com.example.playlistmaker.domain.search.TrackRepository
 import com.example.playlistmaker.domain.settings.SavedSettingsRepository
@@ -23,19 +25,29 @@ import org.koin.dsl.module
 val repositoryModule = module {
 
     factory<TrackRepository> {
-        TrackRepositoryImpl(get(), get())
+        TrackRepositoryImpl(
+            get(named(NETWORK_CLIENT)),
+            get(named(APP_DATABASE))
+        )
     }
 
     factory<SearchHistoryRepository> {
-        SearchHistoryRepositoryImpl(get(named(SEARCH_HISTORY)))
+        SearchHistoryRepositoryImpl(
+            get(named(SEARCH_HISTORY))
+        )
     }
 
     factory<MediaPlayerRepository> {
-        MediaPlayerRepositoryImpl(get(), get())
+        MediaPlayerRepositoryImpl(
+            get(named(MEDIA_PLAYER)),
+            get()
+        )
     }
 
     factory<SavedSettingsRepository> {
-        SavedSettingsRepositoryImpl(get(named(SETTINGS_PREFERENCES)))
+        SavedSettingsRepositoryImpl(
+            get(named(SETTINGS_PREFERENCES))
+        )
     }
 
     factory<SharingRepository> {
@@ -47,11 +59,21 @@ val repositoryModule = module {
 
     //Database
     single<FavoriteTracksRepository> {
-        FavoriteTracksRepositoryImpl(get(), get())
+        FavoriteTracksRepositoryImpl(
+            get(named(APP_DATABASE)),
+            get(named(TRACK_DB_CONVERTOR))
+        )
     }
 
     single<PlayListRepository>{
-        PlayListRepositoryImpl(get(), get())
+        PlayListRepositoryImpl(
+            get(named(APP_DATABASE)),
+            get(named(PLAYLIST_DB_CONVERTOR))
+        )
+    }
+
+    single<PlaylistSharingRepository>{
+        PlaylistSharingRepositoryImpl(androidContext())
     }
 
 }

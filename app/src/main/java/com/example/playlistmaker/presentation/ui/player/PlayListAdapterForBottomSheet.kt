@@ -4,8 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.playlistmaker.R
-import com.example.playlistmaker.domain.playlist.PlayList
-import com.example.playlistmaker.presentation.ui.library.PlayListViewHolder
+import com.example.playlistmaker.domain.playlist.models.PlayList
 
 class PlayListAdapterForBottomSheet(
     private val playLists: List<PlayList>,

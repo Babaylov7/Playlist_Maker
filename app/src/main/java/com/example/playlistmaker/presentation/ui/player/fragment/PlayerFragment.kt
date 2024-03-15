@@ -14,7 +14,7 @@ import com.example.playlistmaker.domain.search.models.Track
 import com.example.playlistmaker.databinding.PlayerFragmentBinding
 import com.example.playlistmaker.domain.player.models.MediaPlayerStatus
 import com.example.playlistmaker.domain.player.models.PlayerProgressStatus
-import com.example.playlistmaker.domain.playlist.PlayList
+import com.example.playlistmaker.domain.playlist.models.PlayList
 import com.example.playlistmaker.presentation.isNightModeOn
 import com.example.playlistmaker.presentation.ui.player.PlayListAdapterForBottomSheet
 import com.example.playlistmaker.presentation.ui.player.view_model.PlayerViewModel
@@ -57,7 +57,7 @@ class PlayerFragment : Fragment() {
 
         track = arguments?.getParcelable<Track>(TRACK_KEY) as Track
 
-        writeDataInActivity(track)
+        writeDataInFragment(track)
         viewModel.onCreate(track)
         viewModel.checkPlayListsInDb()
 
@@ -80,7 +80,6 @@ class PlayerFragment : Fragment() {
 
         binding!!.ibButtonQueue.setOnClickListener {
             showBottomSheet()
-            //changeButtonQueueImage()
         }
 
         binding!!.ivButtonFavorite.setOnClickListener {
@@ -161,7 +160,7 @@ class PlayerFragment : Fragment() {
         }
     }
 
-    private fun writeDataInActivity(track: Track) {
+    private fun writeDataInFragment(track: Track) {
         binding!!.trackName.text = track.trackName
         binding!!.artistName.text = track.artistName
         binding!!.songDuration.text =
@@ -197,18 +196,17 @@ class PlayerFragment : Fragment() {
 
     private fun showBottomSheet() {
         BottomSheetBehavior.from(binding!!.playlistsBottomSheet).state = BottomSheetBehavior.STATE_COLLAPSED
-
     }
 
-    private fun changeButtonQueueImage() {
-        if (trackAddInQueue) {
-            trackAddInQueue = false
-            binding!!.ibButtonQueue.setImageResource(R.drawable.button_queue)
-        } else {
-            trackAddInQueue = true
-            binding!!.ibButtonQueue.setImageResource(R.drawable.button_add_in_queue)
-        }
-    }
+//    private fun changeButtonQueueImage() {            //Большой вопрос о необходимости из-за макетов предыдущих спринтов
+//        if (trackAddInQueue) {
+//            trackAddInQueue = false
+//            binding!!.ibButtonQueue.setImageResource(R.drawable.button_queue)
+//        } else {
+//            trackAddInQueue = true
+//            binding!!.ibButtonQueue.setImageResource(R.drawable.button_add_in_queue)
+//        }
+//    }
 
     private fun showErrorMassage() {
         StyleableToast.makeText(

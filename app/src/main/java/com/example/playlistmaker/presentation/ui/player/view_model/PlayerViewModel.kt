@@ -9,7 +9,7 @@ import com.example.playlistmaker.domain.db.PlayListInteractor
 import com.example.playlistmaker.domain.player.MediaPlayerInteractor
 import com.example.playlistmaker.domain.player.models.MediaPlayerStatus
 import com.example.playlistmaker.domain.player.models.PlayerProgressStatus
-import com.example.playlistmaker.domain.playlist.PlayList
+import com.example.playlistmaker.domain.playlist.models.PlayList
 import com.example.playlistmaker.domain.search.SearchHistoryInteractor
 import com.example.playlistmaker.domain.search.models.Track
 import kotlinx.coroutines.Job
@@ -24,7 +24,6 @@ class PlayerViewModel(
 ) :
     ViewModel() {
     private var updateTimeOfPlayJob: Job? = null
-    private var favoriteButtonJob: Job? = null
     private var addTrackInDb: Job? = null
     private var deleteTrackFromDb: Job? = null
 
@@ -59,7 +58,6 @@ class PlayerViewModel(
 
     fun destroyMediaPlayer() {
         updateTimeOfPlayJob?.cancel()
-        favoriteButtonJob?.cancel()
         addTrackInDb?.cancel()
         deleteTrackFromDb?.cancel()
         mediaPlayerInteractor.destroyPlayer()

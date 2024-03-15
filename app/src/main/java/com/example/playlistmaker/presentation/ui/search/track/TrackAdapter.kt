@@ -7,9 +7,11 @@ import com.example.playlistmaker.R
 import com.example.playlistmaker.domain.search.models.Track
 
 class TrackAdapter(
-    private val tracks: List<Track>,
-    private val listener: (Track) -> Unit
+    private val tracks: List<Track>
 ): RecyclerView.Adapter<TrackViewHolder>()  {
+
+    var itemClickListener: ((Track) -> Unit)? = null
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TrackViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.track_item, parent, false)
         return TrackViewHolder(view)
@@ -22,7 +24,7 @@ class TrackAdapter(
     override fun onBindViewHolder(holder: TrackViewHolder, position: Int) {
         holder.bind(tracks[position])
         holder.itemView.setOnClickListener {
-            listener.invoke(tracks[position])
+            itemClickListener?.invoke(tracks[position])
         }
     }
 

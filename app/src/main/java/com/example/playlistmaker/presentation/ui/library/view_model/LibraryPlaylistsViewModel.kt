@@ -5,12 +5,14 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.playlistmaker.domain.db.PlayListInteractor
-import com.example.playlistmaker.domain.playlist.PlayList
+import com.example.playlistmaker.domain.playlist.models.PlayList
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-class LibraryPlaylistsViewModel(private val playListInteractor: PlayListInteractor) : ViewModel() {
+class LibraryPlaylistsViewModel(
+    private val playListInteractor: PlayListInteractor
+) : ViewModel() {
 
     private var isClickAllowed = true
     private var clickJob: Job? = null
@@ -35,11 +37,16 @@ class LibraryPlaylistsViewModel(private val playListInteractor: PlayListInteract
         if (isClickAllowed) {
             clickJob = viewModelScope.launch {
                 isClickAllowed = false
-                delay(LibraryPlaylistsViewModel.CLICK_DEBOUNCE_DELAY_MILLIS)
+                delay(CLICK_DEBOUNCE_DELAY_MILLIS)
                 isClickAllowed = true
             }
         }
         return current
+    }
+
+    fun onDestroy() {
+        clickJob?.cancel()
+        isClickAllowed = true
     }
 
     private companion object {

@@ -39,8 +39,10 @@ class SearchViewModel(
         sendRequest()
     }
 
-    fun removeCallbacks() {
+    fun onDestroy() {
         searchJob?.cancel()
+        clickJob?.cancel()
+        isClickAllowed = true
     }
 
     fun changeRequestText(text: String) {
