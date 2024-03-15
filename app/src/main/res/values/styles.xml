@@ -31,6 +31,7 @@
     <style name="custom_body_text_style" parent="MaterialAlertDialog.MaterialComponents.Title.Text">
         <item name="android:textColor">@color/yp_black</item>
         <item name="android:textSize">@dimen/primary_text_size_19</item>
+
     </style>
 
     <style name="positive_button_style">
@@ -171,11 +172,10 @@
 
 
     <!-- Стили для экрана создания нового альбома -->
-    <style name="play_list_create_text_input_layout" parent="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+    <style name="play_list_create_text_input_layout" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="fontWeight">400</item>
-        <item name="android:textSize">16sp</item>
         <item name="boxCornerRadiusBottomEnd">8dp</item>
         <item name="boxCornerRadiusBottomStart">8dp</item>
         <item name="boxCornerRadiusTopEnd">8dp</item>
@@ -186,6 +186,10 @@
         <item name="android:backgroundTint">@color/white</item>
     </style>
 
+    <style name="text_input_layout_style" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense">
+        <item name="boxStrokeColor">@color/yp_text_gray</item>
+        <item name="boxStrokeWidth">2dp</item>
+    </style>
     <!-- Стиль для BottomSheet на экране аудиоплеера  -->
 
     <style name="bottom_sheet_audio_player" parent="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
