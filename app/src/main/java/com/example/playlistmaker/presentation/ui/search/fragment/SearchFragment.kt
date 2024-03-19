@@ -16,6 +16,7 @@ import com.example.playlistmaker.domain.search.models.SearchStatus
 import com.example.playlistmaker.domain.search.models.Track
 import com.example.playlistmaker.domain.search.models.TrackSearchResult
 import com.example.playlistmaker.databinding.SearchFragmentBinding
+import com.example.playlistmaker.presentation.TrackListDiffUtilCallback
 import com.example.playlistmaker.presentation.ui.search.track.TrackAdapter
 import com.example.playlistmaker.presentation.isNightModeOn
 import com.example.playlistmaker.presentation.ui.BindingFragment
@@ -29,6 +30,8 @@ class SearchFragment : BindingFragment<SearchFragmentBinding>() {
     private lateinit var adapterSearch: TrackAdapter
     private lateinit var adapterHistory: TrackAdapter
     private lateinit var tracks: ArrayList<Track>
+
+    var trackListDiffUtilCallback: TrackListDiffUtilCallback? = null
 
     private val viewModel by viewModel<SearchViewModel>()
 
@@ -45,6 +48,8 @@ class SearchFragment : BindingFragment<SearchFragmentBinding>() {
         tracks = ArrayList<Track>()
         adapterSearch = TrackAdapter(tracks)
         adapterHistory = TrackAdapter(viewModel.tracksHistory().value!!)
+        //trackListDiffUtilCallback = TrackListDiffUtilCallback(adapterHistory.data)
+
 
         adapterSearch.itemClickListener = { track ->
             if (viewModel.clickDebounce()) {
