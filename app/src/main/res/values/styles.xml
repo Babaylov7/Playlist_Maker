@@ -186,11 +186,7 @@
         <item name="android:backgroundTint">@color/white</item>
     </style>
 
-    <style name="text_input_layout_style" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense">
-        <item name="boxStrokeColor">@color/yp_text_gray</item>
-        <item name="boxStrokeWidth">2dp</item>
-    </style>
-    <!-- Стиль для BottomSheet на экране аудиоплеера  -->
+   <!-- Стиль для BottomSheet на экране аудиоплеера  -->
 
     <style name="bottom_sheet_audio_player" parent="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
         <item name="android:layout_width">0dp</item>
